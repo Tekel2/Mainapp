@@ -1,12 +1,294 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 import SelectDropdown from 'react-native-select-dropdown'
 
 
 function Form_Installation (props) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
   const couplage = ["Etoile", "Triangle"]
+
+  const [data, setData] = React.useState({
+    obsevervation_gene: '',
+    atelier: '',
+    equipement: '',
+    ancienmoteur_item: '',
+    motifremplacement: '',
+    couplage: '',
+    continuite_U1_U2: 0.0,
+    continuite_V1_V2: 0.0,
+    continuite_W1_W2: 0.0,
+    isolementbobine_W2_U2: 0.0,
+    isolementbobine_W2_V2: 0.0,
+    isolementbobine_U1_V2: 0.0,
+    isolementbobinemasse_U1_M: 0.0,
+    isolementbobinemasse_V1_M: 0.0,
+    isolementbobinemasse_W1_M: 0.0,
+    proposition: '',
+    temperature: 0.0,
+
+
+
+    // secureTextEntry: true,
+    // isValidUser: true,
+    // isValidPassword: true,
+});
+
+const handle_Obsevervation_gene = (val) => {
+  if( val.trim().length >= 3 ) {
+      setData({
+          ...data,
+          obsevervation_gene: val,
+      });
+  } else {
+      setData({
+          ...data,
+          obsevervation_gene: val,
+      });
+  }
+}
+const handle_Atelier = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          atelier: val,
+      });
+  } else {
+      setData({
+          ...data,
+          atelier: val,
+      });
+  }
+}
+const handle_Equipement = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          equipement: val,
+      });
+  } else {
+      setData({
+          ...data,
+          equipement: val,
+      });
+  }
+}
+const handle_Ancienmoteur_item = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          ancienmoteur_item: val,
+      });
+  } else {
+      setData({
+          ...data,
+          ancienmoteur_item: val,
+      });
+  }
+}
+const handle_Motifremplacement = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          motifremplacement: val,
+      });
+  } else {
+      setData({
+          ...data,
+          motifremplacement: val,
+      });
+  }
+}
+const handle_Couplage = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          couplage: val,
+      });
+  } else {
+      setData({
+          ...data,
+          couplage: val,
+      });
+  }
+}
+const handle_Continuite_U1_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  }
+}
+const handle_Continuite_V1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  }
+}
+const handle_Continuite_W1_W2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  }
+}
+const handle_Isolementbobine_U1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_U1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_V1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_W1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  }
+}
+const handle_Proposition = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  } else {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  }
+}
+const handle_Temperature = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  } else {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  }
+}
+
+const resetAllTextInput = () => {
+  setData({
+      ...data,
+      obsevervation_gene: '',
+      atelier: '',
+      equipement: '',
+      ancienmoteur_item: '',
+      motifremplacement: '',
+      couplage: '',
+      continuite_U1_U2: 0.0,
+      continuite_V1_V2: 0.0,
+      continuite_W1_W2: 0.0,
+      isolementbobine_W2_U2: 0.0,
+      isolementbobine_W2_V2: 0.0,
+      isolementbobine_U1_V2: 0.0,
+      isolementbobinemasse_U1_M: 0.0,
+      isolementbobinemasse_V1_M: 0.0,
+      isolementbobinemasse_W1_M: 0.0,
+      proposition: '',
+      temperature: 0.0,
+  });
+
+}
+
+
+
+
+
+const saveDatatoServer = (data) => {
+  console.log(data)
+}
+
+
     return (
         <SafeAreaView 
             style={styles.MainContainer}
@@ -38,10 +320,11 @@ function Form_Installation (props) {
             <TextInput
                   placeholder="Notez ici toutes vos observations avant tout action"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="words"
                   numberOfLines={7}
                   multiline={true}
-                  
+                  onChangeText={(val) => handle_Obsevervation_gene(val)}
+                            
                   style={[styles.textinput,styles.textinputmulti]}
               />              
           </View>
@@ -53,9 +336,9 @@ function Form_Installation (props) {
               <TextInput
                 placeholder="...."
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="words"
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Atelier(val)}
               />  
           </View>
           <View style={{flex:1, marginTop: 20}}>
@@ -63,19 +346,19 @@ function Form_Installation (props) {
               <TextInput
                 placeholder="...."
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="words"
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Equipement(val)}
               />  
           </View>
           <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Ancien Moteur</Text>
+            <Text style={styles.titrechamp}>Item Ancien Moteur</Text>
               <TextInput
                 placeholder="...."
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="words"
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Ancienmoteur_item(val)}
               />  
           </View>
           <View style={{flex:1, marginTop: 20}}>
@@ -83,9 +366,12 @@ function Form_Installation (props) {
               <TextInput
                 placeholder="...."
                 placeholderTextColor="#777"
-                autoCapitalize="none"
-                style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                autoCapitalize="words"
+                numberOfLines={3}
+                multiline={true}
+                // style={[styles.textinput, {}]}
+                style={[styles.textinput,styles.textinputmulti]}
+                onChangeText={(val) => handle_Motifremplacement(val)}
               />  
           </View>
           
@@ -101,6 +387,7 @@ function Form_Installation (props) {
 
                 onSelect={(selectedItem, index) => {
                     console.log(selectedItem, index)
+                    handle_Couplage(selectedItem)
                 }}
 
                 buttonTextAfterSelection={(selectedItem, index) => {
@@ -133,10 +420,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_U1_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -144,10 +431,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_V1_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -155,10 +442,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_W1_W2(val)}
                         />  
                    </View>    
             </View>
@@ -173,10 +460,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -184,10 +471,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -195,10 +482,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                         />  
                    </View>    
             </View>
@@ -213,10 +500,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -224,10 +511,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -235,10 +522,10 @@ function Form_Installation (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                         />  
                    </View>    
             </View>
@@ -250,7 +537,7 @@ function Form_Installation (props) {
               <TextInput
                 placeholder="°C"
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="words"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
                 //onChangeText={(val) => handlePasswordChange(val)}
@@ -262,7 +549,7 @@ function Form_Installation (props) {
             <TextInput
                   placeholder="Notez ici vos observations"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="words"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
@@ -274,10 +561,12 @@ function Form_Installation (props) {
             <TextInput
                   placeholder="Notez ici vos propositions"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="words"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
+                onChangeText={(val) => handle_Proposition(val)}
+
               />              
           </View>
           <View style={{flex:1}}>
@@ -285,18 +574,25 @@ function Form_Installation (props) {
               <TextInput
                 placeholder="°C"
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="words"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Temperature(val)}
               />  
           </View>
           <View style={{flexDirection: 'row', marginTop:25}}>
-            <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+            <TouchableOpacity 
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              onPress={() => {resetAllTextInput()}}
+
+              >
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+            <TouchableOpacity 
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              onPress={() => {saveDatatoServer( data )}}
+              >
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
@@ -362,6 +658,7 @@ const styles = StyleSheet.create({
     },
     titrechamp:{
       fontSize: 20,
+      color: '#000'
       // marginLeft:5,
     },
     textinput: {

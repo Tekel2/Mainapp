@@ -292,6 +292,8 @@ const styles = StyleSheet.create({
     },
     titrechamp:{
       fontSize: 20,
+      color: '#000'
+
       // marginLeft:5,
     },
     textinput: {

@@ -9,12 +9,14 @@ import Feather from "react-native-vector-icons/Feather";
 
 
 
-const MenuMoteurScreen = ({navigation}) => {
+const MenuMoteurScreen = ({navigation, route}) => {
 
 
   const [data, setData] = React.useState({
     
   });
+
+  const {moteurItem} = route.params
 
  
     return (
@@ -29,7 +31,7 @@ const MenuMoteurScreen = ({navigation}) => {
         <ScrollView>
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center'}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.id}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10, 
                        }}>
@@ -37,31 +39,47 @@ const MenuMoteurScreen = ({navigation}) => {
             <Text style={{fontSize: 20, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Information</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Informations</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('caracteristique')}
+                >
                   <Text style={styles.btninfo}>Caractéristiques</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('bilanMoteur', {moteurItem:moteurItem})}
+                >
                   <Text style={styles.btninfo}>Bilan moteur</Text>
                 </TouchableOpacity>
 
             </View>
           </View>
 
+
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Interventions</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Form_Pre')}
+                >
                   <Text style={styles.btninfo}>Préventive</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Form_Insatll')}
+                >
                   <Text style={styles.btninfo}>Installation</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Form_Cur')}
+                >
                   <Text style={styles.btninfo}>Curative</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Form_HorService')}
+                >
                   <Text style={styles.btninfo}>Hors service</Text>
                 </TouchableOpacity>
 

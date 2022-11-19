@@ -186,7 +186,7 @@ const HomeScreen = ({navigation}) => {
                   <TouchableOpacity
                       // onPress={updateSecureTextEntry}
                     >                     
-                      <Text style={{fontSize: 16, flexWrap: 'wrap', fontWeight:'900'}}>Filtrer</Text>
+                      <Text style={{fontSize: 16, flexWrap: 'wrap', fontWeight:'900', color:'#316094'}}>Filtrer</Text>
                   </TouchableOpacity>        
                 </View>               
             </View>            
@@ -201,10 +201,27 @@ const HomeScreen = ({navigation}) => {
                 data={dataMoteurInstalled}
                 style={{height: 100}}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem = {({ item }) => <MoteurInstalledItem moteur={item} 
-                  // _displaysprofiledetail={this._displaysprofiledetail} favoritesProfileStore={this.props.favoritesProfile}
+                renderItem = {({ item }) => 
+                // <MoteurInstalledItem moteur={item} 
+                //   // _displaysprofiledetail={this._displaysprofiledetail} favoritesProfileStore={this.props.favoritesProfile}
 
-                  /> 
+                //   /> 
+
+                <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
+                    <TouchableOpacity 
+                        style={{flexDirection:'row', height:70, }}
+                        onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                        >
+                          <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
+                              <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
+                          </View>
+                          <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
+                            <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.id}</Text>
+                            <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
+                            <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                          </View>
+                      </TouchableOpacity>
+                </View>
                 }
             />            
           

@@ -6,7 +6,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '../Screens/SplashScreen'
 import HomeScreen from '../Screens/HomeScreen'
 import MenuMoteurScreen from '../Screens/MenuMoteurScreen'
-
+import CaracteristiqueScreen from '../Screens/CaracteristiqueScreen'
+import Form_HorserviceScreen from '../Screens/Form_HorserviceScreen'
+import Form_Installation from '../Screens/Form_Installation'
+import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
+import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
+import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
 
 
 const Stack = createStackNavigator();
@@ -41,6 +46,12 @@ const MainStackNavigator = ({navigation}) => (
           title:'',          
           }}/>
         <Stack.Screen name="MenuMoteur" component={MenuMoteurScreen}/>
+        <Stack.Screen name="caracteristique" component={CaracteristiqueScreen}/>
+        <Stack.Screen name="bilanMoteur" component={BilanMoteurScreen}/>
+        <Stack.Screen name="Form_HorService" component={Form_HorserviceScreen}/>
+        <Stack.Screen name="Form_Insatll" component={Form_Installation}/>
+        <Stack.Screen name="Form_Cur" component={Form_Inter_Cur_Screen}/>
+        <Stack.Screen name="Form_Pre" component={Form_Inter_Prev_Screen}/>
         
         
 

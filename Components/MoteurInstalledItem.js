@@ -22,7 +22,7 @@ function  MoteurInstalledItem ({route, navigation }) {
 
   // render() 
     // const moteur = this.props.moteur
-    const moteur =  route.params.moteur
+    const moteur =  route.moteur
     // const _displaysprofiledetail = this.props._displaysprofiledetail
     
     return (

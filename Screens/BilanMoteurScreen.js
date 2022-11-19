@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 // import {LineChart} from 'react-native-charts-wrapper';
 
 
-function BilanMoteurScreen (props) {
+function BilanMoteurScreen ({props, route, navigation}) {
 
   const [modalvisibleccb, setmodalVisibleccb] = useState(false)
   const [modalvisiblecbb, setmodalVisiblecbb] = useState(false)
@@ -62,6 +62,8 @@ function BilanMoteurScreen (props) {
     console.log('btn courbe press '+ modalvisiblect)
   }
 
+  const {moteurItem} = route.params
+
 
     return (
         <SafeAreaView 
@@ -75,7 +77,7 @@ function BilanMoteurScreen (props) {
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.id}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                        }}>
@@ -95,7 +97,7 @@ function BilanMoteurScreen (props) {
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Date Installation</Text>
-            <Text style={styles.txtdatachamp}>22/09/2018</Text>
+            <Text style={styles.txtdatachamp}>{moteurItem.createdOn}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Nombre Inter. Préventiven</Text>
@@ -111,7 +113,7 @@ function BilanMoteurScreen (props) {
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Couplage</Text>
-            <Text style={styles.txtdatachamp}>Triangle</Text>
+            <Text style={styles.txtdatachamp}>{moteurItem.couplage}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Dernière Inter. Curative</Text>
@@ -212,7 +214,7 @@ function BilanMoteurScreen (props) {
 
           <View style={{flex:1, flexDirection: 'column', marginTop:15}}>
             <View style={{ flexDirection: 'row'}}>
-                <Text style={styles.titrecourbe}>Isolement entre les bobines et la masse MΩ</Text>
+                <Text style={[styles.titrecourbe, ]}>Isolement entre les bobines et la masse MΩ</Text>
                 <TouchableOpacity style={{flex:1, }}
                   onPress ={()=> {toggleModalCBM()}}
                 >
@@ -354,6 +356,7 @@ const styles = StyleSheet.create({
       textAlign:'left',
       paddingTop: 5,
       paddingBottom:5,
+      color: '#000'
     },
     btncourbe:{
       flex:1, 
@@ -385,7 +388,8 @@ const styles = StyleSheet.create({
     HeadStyle: { 
       height: 50,
       alignContent: "center",
-      backgroundColor: '#ffe0f0'
+      backgroundColor: '#ffe0f0',
+      
     },
     TableText: { 
       margin: 5,

@@ -15,7 +15,7 @@ const SplashScreen = ({navigation}) => {
     setTimeout(() =>{
         // this.props.navigation.navigate('Home')
         navigation.navigate('Home')
-      }, 5000);
+      }, 3000);
     return(
         <View style={styles.container}>
             <View style={styles.header}>
