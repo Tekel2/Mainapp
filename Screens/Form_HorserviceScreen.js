@@ -5,6 +5,186 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBa
 
 function Form_HorserviceScreen (props) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+
+  const [data, setData] = React.useState({
+    motifhorservice:'',
+    continuite_U1_U2: 0.0,
+    continuite_V1_V2: 0.0,
+    continuite_W1_W2: 0.0,
+    isolementbobine_W2_U2: 0.0,
+    isolementbobine_W2_V2: 0.0,
+    isolementbobine_U1_V2: 0.0,
+    isolementbobinemasse_U1_M: 0.0,
+    isolementbobinemasse_V1_M: 0.0,
+    isolementbobinemasse_W1_M: 0.0,
+    proposition: '',
+    temperature: 0.0,
+
+});
+
+const handle_Motifhorservice = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          motifhorservice: val,
+      });
+  } else {
+      setData({
+          ...data,
+          motifhorservice: val,
+      });
+  }
+}
+
+
+const handle_Continuite_U1_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  }
+}
+const handle_Continuite_V1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  }
+}
+const handle_Continuite_W1_W2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  }
+}
+const handle_Isolementbobine_U1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_U1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_V1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_W1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  }
+}
+const handle_Proposition = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  } else {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  }
+}
+const handle_Temperature = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  } else {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  }
+}
+
+const saveDatatoServer = (data) => {
+  console.log(data)
+}
+
     return (
         <SafeAreaView 
             style={styles.MainContainer}
@@ -31,31 +211,22 @@ function Form_HorserviceScreen (props) {
         </View>
 
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
-          {/* <View style={{flex:1}}>
-            <Text style={styles.titrechamp}>Observation Général avant</Text>
+        <View style={{flex:1, marginTop:10}}>
+            <Text style={styles.titrechamp}>Motif mise hors service</Text>
             <TextInput
-                  placeholder="Notez ici toutes vos observations avant tout action"
+                  placeholder=".. ."
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
-                  numberOfLines={7}
-                  multiline={true}
-                  
-                  style={[styles.textinput,styles.textinputmulti]}
-              />              
-          </View> */}
-          {/* <View style={{flex:1}}>
-            <Text style={styles.titrechamp}>Observation de la connectique</Text>
-            <TextInput
-                  placeholder="Notez ici une description de la panne"
-                  placeholderTextColor="#777"
-                  autoCapitalize="none"
-                  numberOfLines={7}
+                  autoCapitalize="sentences"
+                  numberOfLines={4}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
-              />              
-          </View> */}
+                  onChangeText={(val) => handle_Motifhorservice(val)}
 
+              />              
+          </View>
+         
           <View style={{flex:1}}>
+                       
             <Text style={styles.titrechamp}>Continuité des enroulements en Ω</Text>
             <View style={{flex:1, flexDirection: 'row'}}>
                    <View style={{flex:1}}>
@@ -63,10 +234,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_U1_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -74,10 +245,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_V1_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -85,10 +256,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_W1_W2(val)}
                         />  
                    </View>    
             </View>
@@ -103,10 +274,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -114,10 +285,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -125,10 +296,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>    
             </View>
@@ -143,10 +314,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -154,10 +325,10 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -165,49 +336,27 @@ function Form_HorserviceScreen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                         />  
                    </View>    
             </View>
                       
           </View>
 
-          {/* <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Température</Text>
-              <TextInput
-                placeholder="°C"
-                placeholderTextColor="#777"
-                autoCapitalize="none"
-                keyboardType='decimal-pad'
-                style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
-              />  
-          </View> */}
-
-          {/* <View style={{flex:1,marginTop:20}}>
-            <Text style={styles.titrechamp}>Observation général après</Text>
-            <TextInput
-                  placeholder="Notez ici vos observations"
-                  placeholderTextColor="#777"
-                  autoCapitalize="none"
-                  numberOfLines={7}
-                  multiline={true}
-                  style={[styles.textinput,styles.textinputmulti]}
-              />              
-          </View> */}
-
           <View style={{flex:1, marginTop:10}}>
             <Text style={styles.titrechamp}>Proposition</Text>
             <TextInput
                   placeholder="Notez ici vos propositions"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="sentences"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Proposition(val)}
+
               />              
           </View>
           <View style={{flex:1}}>
@@ -215,10 +364,10 @@ function Form_HorserviceScreen (props) {
               <TextInput
                 placeholder="°C"
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="sentences"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Temperature(val)}
               />  
           </View>
           <View style={{flexDirection: 'row', marginTop:25}}>
@@ -226,7 +375,10 @@ function Form_HorserviceScreen (props) {
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+            <TouchableOpacity 
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              onPress={() => {saveDatatoServer( data )}}
+            >
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            

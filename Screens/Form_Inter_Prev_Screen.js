@@ -5,6 +5,212 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBa
 
 function Form_Inter_Prev_Screen (props) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+
+  const [data, setData] = React.useState({
+    obsevervation_gene_av: '',
+    obsevervation_gene_ap: '',
+    obsevervation_conectique: '',
+    continuite_U1_U2: 0.0,
+    continuite_V1_V2: 0.0,
+    continuite_W1_W2: 0.0,
+    isolementbobine_W2_U2: 0.0,
+    isolementbobine_W2_V2: 0.0,
+    isolementbobine_U1_V2: 0.0,
+    isolementbobinemasse_U1_M: 0.0,
+    isolementbobinemasse_V1_M: 0.0,
+    isolementbobinemasse_W1_M: 0.0,
+    proposition: '',
+    temperature: 0.0,
+
+});
+
+const handle_Obsevervation_gene_av = (val) => {
+  if( val.trim().length >= 3 ) {
+      setData({
+          ...data,
+          obsevervation_gene_av: val,
+      });
+  } else {
+      setData({
+          ...data,
+          obsevervation_gene_av: val,
+      });
+  }
+}
+const handle_Obsevervation_gene_ap = (val) => {
+  if( val.trim().length >= 3 ) {
+      setData({
+          ...data,
+          obsevervation_gene_ap: val,
+      });
+  } else {
+      setData({
+          ...data,
+          obsevervation_gene_ap: val,
+      });
+  }
+}
+const handle_Obsevervation_conectique = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          obsevervation_conectique: val,
+      });
+  } else {
+      setData({
+          ...data,
+          obsevervation_conectique: val,
+      });
+  }
+}
+const handle_Continuite_U1_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_U1_U2: val,
+      });
+  }
+}
+const handle_Continuite_V1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_V1_V2: val,
+      });
+  }
+}
+const handle_Continuite_W1_W2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          continuite_W1_W2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_U2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_U2: val,
+      });
+  }
+}
+const handle_Isolementbobine_W2_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_W2_V2: val,
+      });
+  }
+}
+const handle_Isolementbobine_U1_V2 = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobine_U1_V2: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_U1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_U1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_V1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_V1_M: val,
+      });
+  }
+}
+const handle_Isolementbobinemasse_W1_M = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  } else {
+      setData({
+          ...data,
+          isolementbobinemasse_W1_M: val,
+      });
+  }
+}
+const handle_Proposition = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  } else {
+      setData({
+          ...data,
+          proposition: val,
+      });
+  }
+}
+const handle_Temperature = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  } else {
+      setData({
+          ...data,
+          temperature: val,
+      });
+  }
+}
+
+const saveDatatoServer = (data) => {
+  console.log(data)
+}
+
     return (
         <SafeAreaView 
             style={styles.MainContainer}
@@ -36,11 +242,12 @@ function Form_Inter_Prev_Screen (props) {
             <TextInput
                   placeholder="Notez ici toutes vos observations avant tout action"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="sentences"
                   numberOfLines={7}
-                  multiline={true}
-                  
+                  multiline={true}                  
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Obsevervation_gene_av(val)}
+
               />              
           </View>
           <View style={{flex:1}}>
@@ -48,10 +255,11 @@ function Form_Inter_Prev_Screen (props) {
             <TextInput
                   placeholder="Notez ici une description de la panne"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="sentences"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Obsevervation_conectique(val)}
               />              
           </View>
 
@@ -63,10 +271,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_U1_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -74,10 +282,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_V1_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -85,10 +293,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Continuite_W1_W2(val)}
                         />  
                    </View>    
             </View>
@@ -103,10 +311,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -114,10 +322,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -125,10 +333,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                         />  
                    </View>    
             </View>
@@ -143,10 +351,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -154,10 +362,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                         />  
                    </View>  
                    <View style={{flex:1}}>
@@ -165,10 +373,10 @@ function Form_Inter_Prev_Screen (props) {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="none"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          //onChangeText={(val) => handlePasswordChange(val)}
+                          onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                         />  
                    </View>    
             </View>
@@ -180,10 +388,10 @@ function Form_Inter_Prev_Screen (props) {
               <TextInput
                 placeholder="°C"
                 placeholderTextColor="#777"
-                autoCapitalize="none"
+                autoCapitalize="sentences"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
+                onChangeText={(val) => handle_Temperature(val)}
               />  
           </View>
 
@@ -192,10 +400,12 @@ function Form_Inter_Prev_Screen (props) {
             <TextInput
                   placeholder="Notez ici vos observations"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="sentences"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Obsevervation_gene_ap(val)}
+
               />              
           </View>
 
@@ -204,10 +414,11 @@ function Form_Inter_Prev_Screen (props) {
             <TextInput
                   placeholder="Notez ici vos propositions"
                   placeholderTextColor="#777"
-                  autoCapitalize="none"
+                  autoCapitalize="sentences"
                   numberOfLines={7}
                   multiline={true}
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Proposition(val)}
               />              
           </View>
           <View style={{flexDirection: 'row'}}>
@@ -215,7 +426,10 @@ function Form_Inter_Prev_Screen (props) {
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+            <TouchableOpacity 
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              onPress={() => {saveDatatoServer( data )}}
+            >
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
