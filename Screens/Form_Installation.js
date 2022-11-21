@@ -532,30 +532,7 @@ const saveDatatoServer = (data) => {
                       
           </View>
 
-          {/* <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Température</Text>
-              <TextInput
-                placeholder="°C"
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                keyboardType='decimal-pad'
-                style={[styles.textinput, {}]}
-                //onChangeText={(val) => handlePasswordChange(val)}
-              />  
-          </View> */}
-
-          {/* <View style={{flex:1,marginTop:20}}>
-            <Text style={styles.titrechamp}>Observation général après</Text>
-            <TextInput
-                  placeholder="Notez ici vos observations"
-                  placeholderTextColor="#777"
-                  autoCapitalize="words"
-                  numberOfLines={7}
-                  multiline={true}
-                  style={[styles.textinput,styles.textinputmulti]}
-              />              
-          </View> */}
-
+          
           <View style={{flex:1, marginTop:10}}>
             <Text style={styles.titrechamp}>Proposition</Text>
             <TextInput
