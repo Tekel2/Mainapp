@@ -10,6 +10,7 @@ import { Drawer } from 'react-native-paper';
  
 // import  Icon  from 'react-native-vector-icons/MaterialCommunityIcon';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Row } from 'react-native-table-component';
 // import Icon from 'react-native-vector-icons/EvilIcons'
 
 
@@ -31,7 +32,17 @@ export function CustomDrawer (props){
             </View>
         </DrawerContentScrollView>
         <View>
-            <Text>Out site item</Text>
+            <TouchableOpacity 
+                onPress={() =>{}}
+                style={{paddingVertical:15}}
+            >
+            <View style={{flexDirection:'row', alignItems:'center'}}>
+            <Text style={{fontSize:15,fontFamily:'Roboto-medium',marginLeft:5}}>Out site item</Text>
+
+
+            </View>
+
+            </TouchableOpacity>
         </View>
        </View>
     )

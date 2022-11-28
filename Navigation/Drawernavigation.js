@@ -7,6 +7,14 @@ import SplashScreen from '../Screens/SplashScreen'
 import HomeScreen from '../Screens/HomeScreen'
 import { CustomDrawer } from '../Components/CustomDrawer';
 
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import HomeNavigator from './HomeNavigator';
+import MenuMoteurScreen from '../Screens/MenuMoteurScreen';
+import PlannindNavigator from './PlanningNavigator';
+import HistoriqueNavigator from './HistoriqueNavigator';
+import ReparationNavigator from './ReparationNavigator';
+import MoteurNavigator from './MoteurNavigator';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -16,17 +24,11 @@ const Drawer = createDrawerNavigator();
 export default function Drawernavigation() {
     return (
       <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />} screenOptions={{headershow:false}}>
-          <Drawer.Screen name="Splash" component={SplashScreen}/>
-          <Drawer.Screen name="Home" component={HomeScreen}options={{
-            title:'',          
-            }}/>
-        {/* <Drawer.Screen name="MenuMoteur" component={MenuMoteurScreen}/>
-          <Drawer.Screen name="caracteristique" component={CaracteristiqueScreen}/>
-          <Drawer.Screen name="bilanMoteur" component={BilanMoteurScreen}/>
-          <Drawer.Screen name="Form_HorService" component={Form_HorserviceScreen}/>
-          <Drawer.Screen name="Form_Insatll" component={Form_Installation}/>
-          <Drawer.Screen name="Form_Cur" component={Form_Inter_Cur_Screen}/>
-          <Drawer.Screen name="Form_Pre" component={Form_Inter_Prev_Screen}/> */}
+          <Drawer.Screen name='Home' component={HomeNavigator}/>
+          <Drawer.Screen name="Moteur" component={MoteurNavigator }/>
+          <Drawer.Screen name="Plannig" component={PlannindNavigator}/>
+          <Drawer.Screen name="Historique" component={HistoriqueNavigator}/>
+          <Drawer.Screen name="Répartion" component={ReparationNavigator}/>
       </Drawer.Navigator>
     );
   }

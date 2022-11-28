@@ -12,13 +12,14 @@ import Form_Installation from '../Screens/Form_Installation'
 import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
 import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
 import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
+import HomeScreen from '../Screens/HomeScreen';
 
 
 const Stack = createStackNavigator();
 
 
 
-const MainStackNavigator = ({navigation}) => (
+const HomeNavigator = ({navigation}) => (
     <Stack.Navigator 
       screenOptions={{
         headerStyle:{
@@ -31,10 +32,8 @@ const MainStackNavigator = ({navigation}) => (
         }}
         headerMode='none'
         >
-        {/* <Stack.Screen name="Splash" component={SplashScreen}/>
-        <Stack.Screen name="Home" component={HomeScreen}options={{
-          title:'',          
-          }}/> */}
+        {/* <Stack.Screen name="Splash" component={SplashScreen}/> */}
+        <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="MenuMoteur" component={MenuMoteurScreen}/>
         <Stack.Screen name="caracteristique" component={CaracteristiqueScreen}/>
         <Stack.Screen name="bilanMoteur" component={BilanMoteurScreen}/>
@@ -46,6 +45,6 @@ const MainStackNavigator = ({navigation}) => (
     </Stack.Navigator>
 );
 
-export default MainStackNavigator
+export default HomeNavigator
 
 
