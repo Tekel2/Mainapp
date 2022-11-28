@@ -161,9 +161,18 @@ const HomeScreen = ({navigation}) => {
       <SafeAreaView 
         style={styles.MainContainer}
       >
-      <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+      {/* <StatusBar backgroundColor='#316094' barStyle='light-content'/> */}
+        <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+          <TouchableOpacity
+            onPress={() => navigation.openDrawer()}
+            style={{marginLeft:10, marginTop:5}}
+          >
+          <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/menu.png")}/>
+
+          </TouchableOpacity>
+            <View style={{flex:1}}>
+              <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+            </View>
         </View>
         <View style={styles.inputzone }>
             <View style={{flexDirection: 'row',}}>
