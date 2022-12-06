@@ -320,7 +320,7 @@ const saveDatatoServer = (data) => {
                 style={[styles.textinput, {}]}
                 onChangeText={(val) => handle_ItemMoteur(val)}
               />  
-              <Text style={{fontStyle:'italic', fontSize:15}}>(Doit être un numero article de SAP)</Text>
+              <Text style={{fontStyle:'italic', fontSize:15, color:'#000'}}>(Doit être un numero article de SAP)</Text>
           </View>
           <View style={{flex:1, marginTop: 10}}>
             <Text style={styles.titrechamp}>Reférence</Text>
@@ -363,7 +363,7 @@ const saveDatatoServer = (data) => {
               />  
           </View>
 
-          <View style={{flex:1, marginTop: 0}}>
+          <View style={{flex:1, marginTop: 10}}>
             <Text style={styles.titrechamp}>Phase</Text>
               <TextInput
                 placeholder="...."
@@ -451,7 +451,7 @@ const saveDatatoServer = (data) => {
             <Text style={styles.titrechamp}>Etoile</Text>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:1}}>
-                    <Text style={{marginLeft:5}}>Courant</Text>
+                    <Text style={{marginLeft:5, color:'#000'}}>Courant</Text>
                     <TextInput
                         placeholder="...."
                         placeholderTextColor="#777"
@@ -461,7 +461,7 @@ const saveDatatoServer = (data) => {
                     />  
                 </View>
                 <View style={{flex:1}}>
-                    <Text style={{marginLeft:5}}>Tension</Text>
+                    <Text style={{marginLeft:5, color:'#000'}}>Tension</Text>
                     <TextInput
                         placeholder="...."
                         placeholderTextColor="#777"
@@ -477,7 +477,7 @@ const saveDatatoServer = (data) => {
             <Text style={styles.titrechamp}>Triangle</Text>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:1}}>
-                    <Text style={{marginLeft:5}}>Courant</Text>
+                    <Text style={{marginLeft:5, color:'#000'}}>Courant</Text>
                     <TextInput
                         placeholder="...."
                         placeholderTextColor="#777"
@@ -487,7 +487,7 @@ const saveDatatoServer = (data) => {
                     />  
                 </View>
                 <View style={{flex:1}}>
-                    <Text style={{marginLeft:5}}>Tension</Text>
+                    <Text style={{marginLeft:5,color:'#000'}}>Tension</Text>
                     <TextInput
                         placeholder="...."
                         placeholderTextColor="#777"

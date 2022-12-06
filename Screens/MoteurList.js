@@ -169,7 +169,9 @@ const MoteurList = ({navigation}) => {
                             </View>
                             <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
                               <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.id}</Text>
+                              <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.createdOn}</Text>
                             </View>
+
                         </TouchableOpacity>
                   </View>
                   <View>

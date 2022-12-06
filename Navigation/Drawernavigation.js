@@ -26,9 +26,9 @@ export default function Drawernavigation() {
       <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />} screenOptions={{headershow:false}}>
           <Drawer.Screen name='Home' component={HomeNavigator}/>
           <Drawer.Screen name="Moteur" component={MoteurNavigator }/>
-          <Drawer.Screen name="Plannig" component={PlannindNavigator}/>
+          <Drawer.Screen name="Planning" component={PlannindNavigator}/>
+          <Drawer.Screen name="Repartion" component={ReparationNavigator}/>
           <Drawer.Screen name="Historique" component={HistoriqueNavigator}/>
-          <Drawer.Screen name="Répartion" component={ReparationNavigator}/>
       </Drawer.Navigator>
     );
   }

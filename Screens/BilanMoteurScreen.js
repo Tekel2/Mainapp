@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 // import {LineChart} from 'react-native-charts-wrapper';
 
 
-function BilanMoteurScreen ({props, route, navigation}) {
+function BilanMoteurScreen ({route, navigation}) {
 
   const [modalvisibleccb, setmodalVisibleccb] = useState(false)
   const [modalvisiblecbb, setmodalVisiblecbb] = useState(false)

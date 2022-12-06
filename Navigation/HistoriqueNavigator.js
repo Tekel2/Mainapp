@@ -13,6 +13,8 @@ import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
 import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
 import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
 import HomeScreen from '../Screens/HomeScreen';
+import HistoriqueMenu from '../Screens/HistoriqueMenu';
+import HistoriqueSreen from '../Screens/HistoriqueScreen';
 
 
 const Stack = createStackNavigator();
@@ -33,8 +35,8 @@ const HistoriqueNavigator = ({navigation}) => (
         headerMode='none'
         >
         {/* <Stack.Screen name="Splash" component={SplashScreen}/> */}
-        <Stack.Screen name="Home" component={HomeScreen}/>
-        <Stack.Screen name="MenuMoteur" component={MenuMoteurScreen}/>
+        {/* <Stack.Screen name="Historique" component={HistoriqueMenu}/> */}
+        <Stack.Screen name="Historique" component={HistoriqueMenu}/>
         <Stack.Screen name="caracteristique" component={CaracteristiqueScreen}/>
         <Stack.Screen name="bilanMoteur" component={BilanMoteurScreen}/>
         <Stack.Screen name="Form_HorService" component={Form_HorserviceScreen}/>

@@ -1,7 +1,7 @@
 //This is an example code for NavigationDrawer//
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 //import react in our code.
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
+import { RefreshControl, StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView,ScrollView, StatusBar, ActivityIndicator } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import {getProfileFromWithSearchedText} from '../API/PDBA'
 import Feather from "react-native-vector-icons/Feather";
@@ -19,6 +19,10 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
     
   };
 
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
   const dataMoteurInstalled = [
     {
         "id": 6,
@@ -29,7 +33,7 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "observation_avant": "RAS",
         "observation_apres": "RAS",
         "atelier": "SECHEUR",
-        "equipement": "COMPRESSEUR",
+        "equipement": "ONDULEUR",
         "couplage": "ETOILE",
         "motif_remplacement": "RAS",
         "continuite_u1_U2": 0.0,
@@ -56,7 +60,8 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "moteur": 3,
         "old_moteur": null,
         "technicien": 2,
-        "superviceur": 3
+        "superviceur": 3,
+        "item_moteur": "12009386",
     },
     {
         "id": 7,
@@ -67,7 +72,7 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "observation_avant": "RAS",
         "observation_apres": "RAS",
         "atelier": "SECHEUR",
-        "equipement": "COMPRESSEUR",
+        "equipement": "SAS",
         "couplage": "ETOILE",
         "motif_remplacement": "RAS",
         "continuite_u1_U2": 0.0,
@@ -94,7 +99,8 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "moteur": 4,
         "old_moteur": null,
         "technicien": 2,
-        "superviceur": 3
+        "superviceur": 3,
+        "item_moteur": "12009387",
     },
     {
         "id": 8,
@@ -105,7 +111,7 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "observation_avant": "RAS",
         "observation_apres": "RAS",
         "atelier": "SECHEUR",
-        "equipement": "COMPRESSEUR",
+        "equipement": "SUPPRESSUE",
         "couplage": "ETOILE",
         "motif_remplacement": "RAS",
         "continuite_u1_U2": 0.0,
@@ -132,7 +138,9 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
         "moteur": 5,
         "old_moteur": null,
         "technicien": 2,
-        "superviceur": 3
+        "superviceur": 3,
+        "item_moteur": "12009390",
+
     }
 ]
 
@@ -145,15 +153,50 @@ const HomeScreen = ({navigation}) => {
   searchedLocality_old= ""
   newRequet = false
   isValidProfie = true
+
+  const [data , setData] = useState([])
+  const [filtrerData, setFiltrerData] = useState([])
+      
     
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() =>{
+    fetchData("http://192.168.227.30:8000/api/moteur_installed_list")
+  }, [])
+
   
 
-  const [data, setData] = React.useState({
-    profiles: [],
-    isLoading: false,
-    ifProfileFavorite: false,
-    requetLost: false
-  });
+  const fetchData = async (url) => {
+    try{
+      const response = await fetch(url)
+      const json = await response.json()
+      setData(json);
+      setFiltrerData(json);
+    } catch (error){
+      console.log(error)
+    }
+  }
+
+  const searcheFilterFunction = (text) =>{
+    if(text){
+        const newData = data.filter(item => {
+            console.log(item.equipement)
+            console.log(text)
+             const itemData = item.item_moteur ;
+             const textData = toString(text);
+             return itemData.indexOf(text) > -1;
+        })
+        setFiltrerData(newData)
+    }
+    else{
+        setFiltrerData(data)
+    }
+}
 
 
  
@@ -176,66 +219,53 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.inputzone }>
             <View style={{flexDirection: 'row',}}>
-                <View style={{flex:9, }}>
+                <View style={{flex:1, }}>
                     <TextInput
                         style={styles.rechercheinput}
-                        // onChangeText={(val) => besointextInputChange(val)}
                         clearButtonMode="while-editing"
                         maxLength= {22}
                         placeholder="item moteur" 
+                        keyboardType='decimal-pad'
                         placeholderTextColor = "#A4A5A4"
-                        // value={nommedicament}
-                        // onChangeText = {(text) => setInputText(text)}
-                        // underlineColorAndroid= "#fff"
+                        onChangeText={(val) => searcheFilterFunction(val)}
                     /> 
-                </View>
-                    
-                    
-                <View style={{flex:2, justifyContent: 'center', alignContent: 'center',}}>
-                  <TouchableOpacity
-                      // onPress={updateSecureTextEntry}
-                    >                     
-                      <Text style={{fontSize: 16, flexWrap: 'wrap', fontWeight:'900', color:'#316094'}}>Filtrer</Text>
-                  </TouchableOpacity>        
-                </View>               
+                </View>  
             </View>            
         </View>
       
 
-         <View style={styles.view_liste}> 
-       
-            
-            <FlatList 
-                // data={this.state.profiles}
-                data={dataMoteurInstalled}
-                style={{height: 100}}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem = {({ item }) => 
-                // <MoteurInstalledItem moteur={item} 
-                //   // _displaysprofiledetail={this._displaysprofiledetail} favoritesProfileStore={this.props.favoritesProfile}
+         <ScrollView 
+            style={{ flex:9, marginLeft:10,marginRight:10,marginBottom: 5, paddingBottom:5}}
+            contentContainerStyle={styles.scrollView}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />}
+            >
 
-                //   /> 
-
-                <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
-                    <TouchableOpacity 
-                        style={{flexDirection:'row', height:70, }}
-                        onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
-                        >
-                          <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
-                              <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
-                          </View>
-                          <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                            <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.id}</Text>
-                            <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                            <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
-                          </View>
-                      </TouchableOpacity>
-                </View>
-                }
-            />            
-          
-         </View>
-        {/* {this._displayLoading()}  */}
+            {
+                filtrerData.map((item, index) =>{
+                    return(
+                        <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
+                        <TouchableOpacity 
+                            style={{flexDirection:'row', height:70, }}
+                            onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                            >
+                              <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
+                                  <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
+                              </View>
+                              <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
+                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
+                                <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
+                                <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                              </View>
+                          </TouchableOpacity>
+                    </View>
+                  )
+                }) 
+              }
+          </ScrollView>
         </SafeAreaView>
     );
 }
@@ -245,9 +275,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#E4E4E4',
       paddingTop: 10,
-      // alignItems: 'center',
-      // marginTop: 50,
-      // justifyContent: 'center',
+      
     },
    
     View_formcontaine: {
@@ -264,8 +292,8 @@ const styles = StyleSheet.create({
       // flex:2,
       flexDirection: 'column',
       alignItems: 'center',
-      paddingLeft: 10,
-      paddingRight: 10,
+      paddingLeft: 5,
+      paddingRight: 5,
       borderBottomWidth:1,
       paddingBottom:10,
       marginTop: 10,
@@ -294,7 +322,7 @@ const styles = StyleSheet.create({
       height: 40, 
       width: 270,
       borderColor: 'gray',
-      borderWidth: 1.5, 
+      // borderWidth: 1.5, 
       borderColor: "#1B2F70", 
       fontSize: 18,
       borderRadius: 16,
@@ -444,14 +472,8 @@ const styles = StyleSheet.create({
     }
   });
 
-  // const mapStateToProps = (state) => {
-  //   return {
-  //     favoritesProfile: state.favoritesProfile
-  //   }
-  // }
-  
+
 export default HomeScreen;
-  // export default connect(mapStateToProps)(RechercheSreen)
 
 
 

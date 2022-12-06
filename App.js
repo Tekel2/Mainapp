@@ -25,11 +25,8 @@ const App = () =>{
 
   return(
   <NavigationContainer>
-    {/* <Drawer.Navigator drawerContent={props => <DrawerContent {...props }/>}>
-      <Drawer.Screen name = 'Home' component={HomeNavigator}/>
-    </Drawer.Navigator> */}
+   
     <Drawernavigation/>
-    {/* <HomeNavigator/>  */}
                     
   </NavigationContainer>
    
