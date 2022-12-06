@@ -197,15 +197,15 @@ const Form_new_planning = ({route, navigation}) => {
             </View>
             <View style={{flex:1, flexDirection:'row',marginTop:10,}}>
                 <Text style={{flex:2, fontSize:18, color:'#000'}}>Item Moteur</Text>
-                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.item_moteur}</Text>
+                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.item.item_moteur}</Text>
             </View>
             <View style={{flex:1, flexDirection:'row',marginTop:10,}}>
                 <Text style={{flex:2, fontSize:18, color:'#000'}}>Atelier</Text>
-                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.atelier}</Text>
+                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.item.atelier}</Text>
             </View>
             <View style={{flex:1, flexDirection:'row',marginTop:10,}}>
                 <Text style={{flex:2, fontSize:18, color:'#000'}}>Equipement</Text>
-                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.equipement}</Text>
+                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>{moteurItem.item.equipement}</Text>
             </View>
             <View style={{flex:1, flexDirection:'row',marginTop:10,}}>
                 {/* <Text style={{flex:2, fontSize:18, color:'#000'}}>Date intervention</Text>

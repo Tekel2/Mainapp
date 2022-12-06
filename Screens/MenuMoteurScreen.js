@@ -65,11 +65,11 @@ const MenuMoteurScreen = ({navigation, route}) => {
                   <Text style={styles.btninfo}>Préventive</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => navigation.navigate('Form_Insatll')}
                 >
                   <Text style={styles.btninfo}>Installation</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Form_Cur')}

@@ -15,6 +15,8 @@ import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
 import HomeScreen from '../Screens/HomeScreen';
 import ReparationList from '../Screens/ReparationList';
 import ReparationDetail from '../Screens/ReparationDetail';
+import Formreparation from '../Screens/Formreparation';
+import Recherche_moteur from '../Screens/Recherche_moteur';
 
 
 const Stack = createStackNavigator();
@@ -36,6 +38,9 @@ const PlanningNavigator = ({navigation}) => (
         >
         <Stack.Screen name="Repartion" component={ReparationList}/>
         <Stack.Screen name="Repartion_detail" component={ReparationDetail}/>
+        <Stack.Screen name="Repartion_form" component={Formreparation}/>
+        <Stack.Screen name="Repartion_find" component={Recherche_moteur}/>
+        
       
     </Stack.Navigator>
 );

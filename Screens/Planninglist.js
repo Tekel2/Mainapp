@@ -252,7 +252,7 @@ const searcheFilterFunction = (text) =>{
           </View>
           <View style={{}}>
             <TouchableOpacity
-              onPress={() =>navigation.navigate('Planning_find')}
+              onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
             >
               <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>

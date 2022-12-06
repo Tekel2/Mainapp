@@ -189,7 +189,7 @@ const dataMoteurInstalled = [
 }
 ]
 
-const planning_recherche_moteur = ({navigation}) => {
+const Recherche_moteur = ({navigation, route}) => {
 //   const [toggleCheckBox, setToggleCheckBox] = useState(false)
   const couplage = ["Etoile", "Triangle"]
 
@@ -203,6 +203,7 @@ const [data , setData] = useState([])
 const [filtrerData, setFiltrerData] = useState([])
 
 const [selected, setSelected] = useState();
+const [direction, setDirection] = useState(false);
 
 const selectHandler = item => {
   setSelected(item);
@@ -211,6 +212,29 @@ const selectHandler = item => {
 useEffect(() => {
   setData(dataMoteurInstalled)
   setFiltrerData(dataMoteurInstalled)
+}, []);
+
+const {option} = route.params
+const navigateTo = (direct, valParam) =>{
+  if (direct){
+    console.log(valParam)
+    return(
+      navigation.navigate('Repartion_form',{moteurItem:valParam})
+    )
+  }
+  else{
+    console.log(valParam)
+    return(
+      navigation.navigate('Planning_new',{moteurItem:valParam})
+    )
+  }
+}
+const handleDirection = () =>{
+  // if (option === 'repar')
+  {option === 'repar' ? setDirection(true) :setDirection(false)  }
+}
+useEffect(() => {
+  handleDirection()
 }, []);
 
 
@@ -277,7 +301,7 @@ const saveDatatoServer = (data) => {
                     <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
                     <TouchableOpacity 
                         style={{flexDirection:'row', height:70, }}
-                        onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+                        onPress={() => navigateTo(direction, {item})}
                         >
                           <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
                               <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
@@ -408,4 +432,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default planning_recherche_moteur;
+export default Recherche_moteur;
