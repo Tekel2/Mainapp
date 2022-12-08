@@ -13,6 +13,7 @@ import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
 import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
 import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
 import HomeScreen from '../Screens/HomeScreen';
+import Camera from '../Screens/Camera';
 
 
 const Stack = createStackNavigator();
@@ -41,6 +42,8 @@ const HomeNavigator = ({navigation}) => (
         <Stack.Screen name="Form_Insatll" component={Form_Installation}/>
         <Stack.Screen name="Form_Cur" component={Form_Inter_Cur_Screen}/>
         <Stack.Screen name="Form_Pre" component={Form_Inter_Prev_Screen}/>
+        <Stack.Screen name="Camera" component={Camera}/>
+      
       
     </Stack.Navigator>
 );

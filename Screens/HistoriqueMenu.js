@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBa
 
 
 
-const HistoriqueMenu = ({}) => {
+const HistoriqueMenu = ({navigation}) => {
 
 
   const [data, setData] = useState({
@@ -24,7 +24,11 @@ const HistoriqueMenu = ({}) => {
                 <Text style={{fontSize: 22, flexWrap:'wrap', fontWeight:'bold', color:'#0A233E'}}>Historique des Interventions</Text>
             </View>
             <View style={{flexDirection:'column'}}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={()=> navigation.navigate('His_preventive')}
+                //   onPress={() => navigation.navigate('bilanMoteur', {moteurItem:moteurItem})}
+
+                >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
                         <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_preventive.png")}/>
                     </View>

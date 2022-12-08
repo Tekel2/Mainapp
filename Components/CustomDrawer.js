@@ -31,17 +31,14 @@ export function CustomDrawer (props){
                 <DrawerItemList{...props} />
             </View>
         </DrawerContentScrollView>
-        <View>
+        <View style={{borderTopWidth:1, borderTopColor:'#ccc', padding:10}}>
             <TouchableOpacity 
                 onPress={() =>{}}
                 style={{paddingVertical:15}}
             >
             <View style={{flexDirection:'row', alignItems:'center'}}>
-            <Text style={{fontSize:15,fontFamily:'Roboto-medium',marginLeft:5}}>Out site item</Text>
-
-
+                <Text style={{fontSize:18,fontFamily:'Roboto-medium',marginLeft:5, color:'#000', fontWeight:'800'}}>Se déconnecter</Text>
             </View>
-
             </TouchableOpacity>
         </View>
        </View>

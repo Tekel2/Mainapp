@@ -1,10 +1,14 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
 // import CheckBox from 'expo-checkbox';
-
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 function Form_Inter_Cur_Screen (props) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [image_1, setImage_1] = useState('')
+  const [image_2, setImage_2] = useState('')
+  const [image_3, setImage_3] = useState('')
+  const [image_4, setImage_4] = useState('')
 
   const [data, setData] = React.useState({
     obsevervation_gene_av: '',
@@ -22,12 +26,119 @@ function Form_Inter_Cur_Screen (props) {
     proposition: '',
     temperature: 0.0,
 
-
-
-    // secureTextEntry: true,
-    // isValidUser: true,
-    // isValidPassword: true,
 });
+  const getImage_1 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_1(source)
+
+      }
+    })
+  }
+  const getImage_2 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_2(source)
+
+      }
+    })
+  }
+  const getImage_3 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_3(source)
+
+      }
+    })
+  }
+  const getImage_4 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_4(source)
+
+      }
+    })
+  }
 
 const handle_Obsevervation_gene_av = (val) => {
   if( val.trim().length >= 3 ) {
@@ -414,6 +525,87 @@ const saveDatatoServer = (data) => {
                 onChangeText={(val) => handle_Obsevervation_gene_ap(val)}
 
               />              
+          </View>
+
+          <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_1?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_1()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 1</Text>
+                  </View>
+              </View>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_2?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_2()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
+                  </View>
+              </View>
+            </View>
+            <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_3?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_3()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
+                  </View>
+              </View>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_4?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_4()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
+                  </View>
+              </View>
           </View>
 
           <View style={{flex:1,}}>

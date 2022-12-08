@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
 
-
+import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
 const MenuMoteurScreen = ({navigation}) => {
 

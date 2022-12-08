@@ -1,17 +1,10 @@
 import React, { useEffect } from 'react'
 // import { View, Text } from 'react-native'
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeNavigator from './Navigation/HomeNavigator'
-
-import { DrawerContent } from './Screens/DrawerContent'
-import HomeScreen from './Screens/HomeScreen';
 import Drawernavigation from './Navigation/Drawernavigation';
-
+import { Provider } from 'react-redux';
+import { Store } from './Reduxe/store';
 import SplashScreen from 'react-native-splash-screen'
-
-// const Drawer = createDrawerNavigator();
-
 
 
 
@@ -24,11 +17,13 @@ const App = () =>{
 
 
   return(
-  <NavigationContainer>
-   
-    <Drawernavigation/>
-                    
-  </NavigationContainer>
+    <Provider store={Store}>
+      <NavigationContainer>
+      
+        <Drawernavigation/>
+                        
+      </NavigationContainer>
+    </Provider>
    
   )
 }

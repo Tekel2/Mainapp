@@ -1,10 +1,24 @@
-import React, { Component, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
+import React, { Component, useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, Alert } from 'react-native';
 // import CheckBox from 'expo-checkbox';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPreventive } from '../Reduxe/action';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
+const Form_Inter_Prev_Screen = ({navigation,route}) => {
 
-function Form_Inter_Prev_Screen (props) {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [checkBoxSerage, setCheckBoxSerage] = useState(false)
+  const [checkBoxEquil, setCheckBoxEquil] = useState(false)
+  const [image_1, setImage_1] = useState('')
+  const [image_2, setImage_2] = useState('')
+  const [image_3, setImage_3] = useState('')
+  const [image_4, setImage_4] = useState('')
+
+  // const {preventive, preventiveID} = useSelector(state => state.preventiveReducer);
+  // const dispatch = useDispatch()
+  
 
   const [data, setData] = React.useState({
     obsevervation_gene_av: '',
@@ -23,6 +37,227 @@ function Form_Inter_Prev_Screen (props) {
     temperature: 0.0,
 
 });
+
+
+  // const savePreventive = () =>{
+  //   try{
+  //     var Preventive ={
+  //       ID:preventiveID,
+  //       obsevervation_gene_av:data.obsevervation_gene_av,
+  //       obsevervation_conectique:data.obsevervation_conectique,
+  //       continuite_U1_U2: data.continuite_U1_U2,
+  //       continuite_V1_V2: data.continuite_V1_V2,
+  //       continuite_W1_W2: data.continuite_W1_W2,
+  //       isolementbobine_W2_U2: data.isolementbobine_W2_U2,
+  //       isolementbobine_W2_V2: data.isolementbobine_W2_V2,
+  //       isolementbobine_U1_V2: data.isolementbobine_U1_V2,
+  //       isolementbobinemasse_U1_M: data.isolementbobinemasse_U1_M,
+  //       isolementbobinemasse_V1_M: data.isolementbobinemasse_V1_M,
+  //       isolementbobinemasse_W1_M: data.isolementbobinemasse_W1_M,
+  //       proposition: data.proposition,
+  //       temperature: data.temperature,
+  //       image:image, 
+  //       image_2:image_2, 
+  //       image_3:image_3, 
+  //       image_4:image_4, 
+
+  //     }
+  //     let newPreventive = [...preventive, Preventive];
+  //     AsyncStorage.setItem('Preventive', JSON.stringify(newPreventive))
+  //     .then(()=>{
+  //       dispatch(setPreventive(newPreventive))
+  //       Alert.alert('Success!', 'Intervention Preventive sauvegardé')
+  //       navigation.goBack()
+  //     })
+  //     .catch(err => console.log(err))
+  //   } catch (error){
+  //     console.log(error)
+  //   }
+  // }
+
+    // const getPreventive = () =>{
+    //   const prev = preventive.find(prevent=>prevent.ID === preventiveID)
+    //   if (prev){
+    //     // console.log('5555555555555555')
+    //     setImage(prev.Image)
+    //     setImage_2(prev.Image_2)
+    //     setImage_3(prev.Image_3)
+    //     setImage_4(prev.Image_4)
+    //     setData({
+    //       ...data,
+    //       obsevervation_gene_av:prev.obsevervation_gene_av,
+    //       // obsevervation_conectique:prev.obsevervation_conectique,
+    //       // continuite_U1_U2: prev.continuite_U1_U2,
+    //       // continuite_V1_V2: prev.continuite_V1_V2,
+    //       // continuite_W1_W2: prev.continuite_W1_W2,
+    //       // isolementbobine_W2_U2: prev.isolementbobine_W2_U2,
+    //       // isolementbobine_W2_V2: prev.isolementbobine_W2_V2,
+    //       // isolementbobine_U1_V2: prev.isolementbobine_U1_V2,
+    //       // isolementbobinemasse_U1_M: prev.isolementbobinemasse_U1_M,
+    //       // isolementbobinemasse_V1_M: prev.isolementbobinemasse_V1_M,
+    //       // isolementbobinemasse_W1_M: prev.isolementbobinemasse_W1_M,
+    //       // proposition: prev.proposition,
+    //       // temperature: prev.temperature,
+    //   });
+    //   }
+
+    // }
+
+
+
+  // useEffect(()=>{
+    
+  //   getPreventive();
+  //   // console.log(image)
+  // })
+
+  const toggleSerage =() =>{
+    setCheckBoxSerage(!checkBoxSerage)
+  }
+
+
+
+  const getImage_1 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_1(source)
+
+      }
+    })
+  }
+  const getImage_2 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_2(source)
+
+      }
+    })
+  }
+  const getImage_3 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_3(source)
+
+      }
+    })
+  }
+  const getImage_4 = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_4(source)
+
+      }
+    })
+  }
+
+
+
+  const iconeSerage =()=>{
+    return(
+      <View>
+        {checkBoxSerage ? 
+          <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_check_true.png")}/>
+          :
+          <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_check_false.png")}/>
+        }
+      </View>
+    )
+  }
+
+const toggleEquilibrage =() =>{
+  setCheckBoxEquil(!checkBoxEquil)
+}
+const iconeEquilibrage =()=>{
+  return(
+    <View>
+      {checkBoxEquil ? 
+        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_check_true.png")}/>
+        :
+        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_check_false.png")}/>
+      }
+    </View>
+  )
+}
 
 const handle_Obsevervation_gene_av = (val) => {
   if( val.trim().length >= 3 ) {
@@ -207,9 +442,9 @@ const handle_Temperature = (val) => {
   }
 }
 
-const saveDatatoServer = (data) => {
-  console.log(data)
-}
+// const saveDatatoServer = (data) => {
+//   console.log(data)
+// }
 
     return (
         <SafeAreaView 
@@ -409,7 +644,103 @@ const saveDatatoServer = (data) => {
               />              
           </View>
 
-          <View style={{flex:1,}}>
+         <View style={{flex:1,  flexDirection: 'row', alignItems:'center'}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Sérage</Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleSerage()}}>
+                {iconeSerage()}
+            </TouchableOpacity> 
+         </View>
+
+         <View style={{flex:1,  flexDirection: 'row', alignItems:'center', marginTop:10}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Equilibrage Moteur </Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleEquilibrage()}}>
+                {iconeEquilibrage()}
+            </TouchableOpacity> 
+         </View>
+          
+        <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+              {
+                image_1?
+                 <View >
+                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
+                </View>                
+                :
+                null
+              }
+              
+              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                <TouchableOpacity
+                  onPress={()=> getImage_1()}
+                >
+                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                </TouchableOpacity>
+                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 1</Text>
+              </View>
+          </View>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+              {
+                image_2?
+                 <View >
+                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
+                </View>                
+                :
+                null
+              }
+              
+              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                <TouchableOpacity
+                  onPress={()=> getImage_2()}
+                >
+                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                </TouchableOpacity>
+                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
+              </View>
+          </View>
+        </View>
+        <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+              {
+                image_3?
+                 <View >
+                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
+                </View>                
+                :
+                null
+              }
+              
+              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                <TouchableOpacity
+                  onPress={()=> getImage_3()}
+                >
+                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                </TouchableOpacity>
+                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
+              </View>
+          </View>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+              {
+                image_4?
+                 <View >
+                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
+                </View>                
+                :
+                null
+              }
+              
+              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                <TouchableOpacity
+                  onPress={()=> getImage_4()}
+                >
+                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                </TouchableOpacity>
+                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
+              </View>
+          </View>
+        </View>
+        
+
+          <View style={{flex:1,marginTop:10}}>
             <Text style={styles.titrechamp}>Proposition</Text>
             <TextInput
                   placeholder="Notez ici vos propositions"
@@ -428,7 +759,7 @@ const saveDatatoServer = (data) => {
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-              onPress={() => {saveDatatoServer( data )}}
+              // onPress={() => {savePreventive()}}
             >
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>

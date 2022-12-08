@@ -15,6 +15,7 @@ import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
 import HomeScreen from '../Screens/HomeScreen';
 import HistoriqueMenu from '../Screens/HistoriqueMenu';
 import HistoriqueSreen from '../Screens/HistoriqueScreen';
+import HistoriquePreventive from '../Screens/HistoriquePreventive';
 
 
 const Stack = createStackNavigator();
@@ -37,12 +38,8 @@ const HistoriqueNavigator = ({navigation}) => (
         {/* <Stack.Screen name="Splash" component={SplashScreen}/> */}
         {/* <Stack.Screen name="Historique" component={HistoriqueMenu}/> */}
         <Stack.Screen name="Historique" component={HistoriqueMenu}/>
-        <Stack.Screen name="caracteristique" component={CaracteristiqueScreen}/>
-        <Stack.Screen name="bilanMoteur" component={BilanMoteurScreen}/>
-        <Stack.Screen name="Form_HorService" component={Form_HorserviceScreen}/>
-        <Stack.Screen name="Form_Insatll" component={Form_Installation}/>
-        <Stack.Screen name="Form_Cur" component={Form_Inter_Cur_Screen}/>
-        <Stack.Screen name="Form_Pre" component={Form_Inter_Prev_Screen}/>
+        <Stack.Screen name="His_preventive" component={HistoriquePreventive}/>
+        <Stack.Screen name="Form_edit_prev" component={Form_Inter_Prev_Screen}/>
       
     </Stack.Navigator>
 );

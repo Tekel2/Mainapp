@@ -1,10 +1,14 @@
 //This is an example code for NavigationDrawer//
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 //import react in our code.
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import {getProfileFromWithSearchedText} from '../API/PDBA'
 import Feather from "react-native-vector-icons/Feather";
+import { useDispatch, useSelector } from 'react-redux';
+import { setPreventive, setPreventiveID } from '../Reduxe/action';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -12,13 +16,26 @@ import Feather from "react-native-vector-icons/Feather";
 const MenuMoteurScreen = ({navigation, route}) => {
 
 
-  const [data, setData] = React.useState({
-    
-  });
+  const {preventive} = useSelector(state => state.preventiveReducer);
+  const dispatch = useDispatch()
 
   const {moteurItem} = route.params
 
- 
+  const getPreventive =()=>{
+    AsyncStorage.getItem('Preventive')
+    .then(preventive =>{
+      const parsedPreventive = JSON.parse(preventive)
+      if (parsedPreventive && typeof parsedPreventive === 'object'){
+        dispatch(setPreventive(parsedPreventive));
+      }
+    })
+    .catch(err => console.log(err))
+  }
+
+  useEffect(()=>{
+    getPreventive()
+  }, [])
+  
     return (
         <SafeAreaView 
             style={styles.MainContainer}
@@ -60,7 +77,10 @@ const MenuMoteurScreen = ({navigation, route}) => {
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Interventions</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Form_Pre')}
+                  onPress={() => {
+                    dispatch(setPreventiveID(preventive.length))                    
+                    navigation.navigate('Form_Pre')
+                    }}
                 >
                   <Text style={styles.btninfo}>Préventive</Text>
                 </TouchableOpacity>
