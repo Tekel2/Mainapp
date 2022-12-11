@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { 
     View, 
     Text, 
@@ -17,13 +17,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 
 import { useTheme } from 'react-native-paper';
-
-//import { AuthContext } from '../components/context';
-
-//import Users from '../model/users';
+import { AuthContext } from '../context/Authcontext';
 
 
 const LoginScreen = ({navigation}) => {
+
+    const {login} = useContext(AuthContext)
 
     const [data, setData] = React.useState({
         username: '',
@@ -129,14 +128,14 @@ const LoginScreen = ({navigation}) => {
         >
             <Text style={[styles.text_footer, {
                 color: colors.text
-            }]}>Username</Text>
+            }]}>Nom d'utisateur</Text>
             <View style={styles.action}>
                 {/* <FontAwesome 
                     name="user-o"
                     color={colors.text}
                     size={20}
                 /> */}
-                <ion-icon name="person"></ion-icon>
+                {/* <ion-icon name="person"></ion-icon> */}
                 
                 <TextInput 
                     placeholder="Your Username"
@@ -170,7 +169,7 @@ const LoginScreen = ({navigation}) => {
             <Text style={[styles.text_footer, {
                 color: colors.text,
                 marginTop: 35
-            }]}>Password</Text>
+            }]}>Mot de passe</Text>
             <View style={styles.action}>
                 <Feather 
                     name="lock"
@@ -210,23 +209,22 @@ const LoginScreen = ({navigation}) => {
             <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
             </Animatable.View>
             }
-            
-
+{/*     
             <TouchableOpacity>
                 <Text style={{color: '#316094', marginTop:15}}>Forgot password?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <View style={styles.button}>
                 <TouchableOpacity
                     style={[styles.signIn, {
                         borderColor: '#316094',
                         borderWidth: 1,
                     }]}
-                    onPress={() => {loginHandle( data.username, data.password )}}
+                    onPress={() => {login()}}
                 >
 
                 <Text style={[styles.textSign, {
                         color:'#316094'
-                    }]}>Se connecter</Text>
+                    }]}>Se connecter </Text>
                 </TouchableOpacity>
 
                 {/* <TouchableOpacity
@@ -296,6 +294,9 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+        borderWidth:1,
+        borderRadius:8,
+        fontSize:15
     },
     errorMsg: {
         color: '#FF0000',

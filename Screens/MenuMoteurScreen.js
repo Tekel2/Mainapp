@@ -16,25 +16,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const MenuMoteurScreen = ({navigation, route}) => {
 
 
-  const {preventive} = useSelector(state => state.preventiveReducer);
-  const dispatch = useDispatch()
+  // const {preventive} = useSelector(state => state.preventiveReducer);
+  // const dispatch = useDispatch()
 
   const {moteurItem} = route.params
 
-  const getPreventive =()=>{
-    AsyncStorage.getItem('Preventive')
-    .then(preventive =>{
-      const parsedPreventive = JSON.parse(preventive)
-      if (parsedPreventive && typeof parsedPreventive === 'object'){
-        dispatch(setPreventive(parsedPreventive));
-      }
-    })
-    .catch(err => console.log(err))
-  }
+  // const getPreventive =()=>{
+  //   AsyncStorage.getItem('Preventive')
+  //   .then(preventive =>{
+  //     const parsedPreventive = JSON.parse(preventive)
+  //     if (parsedPreventive && typeof parsedPreventive === 'object'){
+  //       dispatch(setPreventive(parsedPreventive));
+  //     }
+  //   })
+  //   .catch(err => console.log(err))
+  // }
 
-  useEffect(()=>{
-    getPreventive()
-  }, [])
+  // useEffect(()=>{
+  //   getPreventive()
+  // }, [])
   
     return (
         <SafeAreaView 
@@ -48,7 +48,7 @@ const MenuMoteurScreen = ({navigation, route}) => {
         <ScrollView>
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center'}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.id}</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10, 
                        }}>
@@ -63,11 +63,19 @@ const MenuMoteurScreen = ({navigation, route}) => {
                 >
                   <Text style={styles.btninfo}>Caractéristiques</Text>
                 </TouchableOpacity>
+                
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('moteur_installed_info', {moteurItem:moteurItem})}
+                >
+                  <Text style={styles.btninfo}>Détails Installation</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => navigation.navigate('bilanMoteur', {moteurItem:moteurItem})}
                 >
-                  <Text style={styles.btninfo}>Bilan moteur</Text>
+                  <Text style={styles.btninfo}>Bilan Moteur</Text>
                 </TouchableOpacity>
+
 
             </View>
           </View>
@@ -76,14 +84,14 @@ const MenuMoteurScreen = ({navigation, route}) => {
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Interventions</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
-                    dispatch(setPreventiveID(preventive.length))                    
+                    // dispatch(setPreventiveID(preventive.length))                    
                     navigation.navigate('Form_Pre')
                     }}
                 >
                   <Text style={styles.btninfo}>Préventive</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 {/* <TouchableOpacity
                   onPress={() => navigation.navigate('Form_Insatll')}

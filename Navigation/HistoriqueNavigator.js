@@ -11,11 +11,12 @@ import Form_HorserviceScreen from '../Screens/Form_HorserviceScreen'
 import Form_Installation from '../Screens/Form_Installation'
 import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
 import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
-import BilanMoteurScreen from '../Screens/BilanMoteurScreen'
-import HomeScreen from '../Screens/HomeScreen';
 import HistoriqueMenu from '../Screens/HistoriqueMenu';
-import HistoriqueSreen from '../Screens/HistoriqueScreen';
 import HistoriquePreventive from '../Screens/HistoriquePreventive';
+import HistoriqueCurative from '../Screens/HistoriqueCurative';
+import HistoriqueHS from '../Screens/HistoriqueHS';
+import HistoriqueInstallation from '../Screens/HistoriqueInstallation';
+import HistoriqueReparation from '../Screens/HistoriqueReparation';
 
 
 const Stack = createStackNavigator();
@@ -39,6 +40,10 @@ const HistoriqueNavigator = ({navigation}) => (
         {/* <Stack.Screen name="Historique" component={HistoriqueMenu}/> */}
         <Stack.Screen name="Historique" component={HistoriqueMenu}/>
         <Stack.Screen name="His_preventive" component={HistoriquePreventive}/>
+        <Stack.Screen name="His_curative" component={HistoriqueCurative}/>
+        <Stack.Screen name="His_hs" component={HistoriqueHS}/>
+        <Stack.Screen name="His_install" component={HistoriqueInstallation}/>
+        <Stack.Screen name="His_reparation" component={HistoriqueReparation}/>
         <Stack.Screen name="Form_edit_prev" component={Form_Inter_Prev_Screen}/>
       
     </Stack.Navigator>

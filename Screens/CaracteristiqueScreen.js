@@ -15,9 +15,9 @@ const CaracteristiqueScreen = ({navigation}) => {
         <SafeAreaView 
             style={styles.MainContainer}
         >
-        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
+        {/* <StatusBar backgroundColor='#316094' barStyle='light-content'/> */}
         <View style={{ flexDirection: 'column'}}>
-            <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+            {/* <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
             </View>
         
@@ -29,14 +29,14 @@ const CaracteristiqueScreen = ({navigation}) => {
                        }}>
             <Text style={{fontSize: 20, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
             <Text style={{fontSize: 20, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
-          </View>
+          </View> */}
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
             <Text style={styles.etatprovenance}> NEUF</Text>
             <Text style={[styles.etatprovenance, {width: 200, marginLeft:15, color: '#000'}]}> RECONDITIONNé</Text>
           </View>
         </View>
 
-        <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
+        {/* <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}> */}
          <View style={{flexDirection:'column'}}>
             <View style={styles.cat}>
                 <Text style={styles.txtcat}> CAPSULE</Text>
@@ -89,7 +89,7 @@ const CaracteristiqueScreen = ({navigation}) => {
             
          </View>
                    
-        </ScrollView>
+        {/* </ScrollView> */}
            
 
         </SafeAreaView>
@@ -97,17 +97,17 @@ const CaracteristiqueScreen = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
-    MainContainer: {
-      flex: 1,
-      backgroundColor: '#E4E4E4',
-      paddingTop: 10,
-      paddingLeft: 10, 
-      paddingRight: 10,
-      justifyContent: 'center',
-      alignContent:'center'
-    },
+    // MainContainer: {
+    //   flex: 1,
+    //   backgroundColor: '#E4E4E4',
+    //   paddingTop: 10,
+    //   paddingLeft: 10, 
+    //   paddingRight: 10,
+    //   justifyContent: 'center',
+    //   alignContent:'center'
+    // },
     etatprovenance:{
-        fontSize: 20, 
+        fontSize: 18, 
         color: '#111', 
         fontWeight: 'bold',
         borderWidth: 1.2,
@@ -130,13 +130,17 @@ const styles = StyleSheet.create({
 
     },
     txtcat:{
-        fontSize: 25, 
+        fontSize: 20, 
         color:'#111', 
         textAlign:'center',
         fontWeight: '900',
         
     },
-    txtcat_designa:{fontWeight:'500', color:'rgba(49, 96, 148, 1)'}
+    txtcat_designa:{
+        fontWeight:'500', 
+        fontSize:18,
+        fontStyle:'italic',
+        color:'rgba(49, 96, 148, 1)'}
    
    
   });

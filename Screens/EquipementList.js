@@ -188,10 +188,6 @@ const dataMoteurInstalled = [
 
 const EquipementList = ({navigation}) => {
 
-
-  // const [data, setData] = React.useState({
-    
-  // });
 const [data , setData] = useState([])
 const [filtrerData, setFiltrerData] = useState([])
 const [moteuPlanning, setMoteurPlanning] = useState(false)
@@ -248,11 +244,11 @@ const searcheFilterFunction = (text) =>{
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Planning d'Intervention</Text>
+            Liste des   Equipements</Text>
           </View>
           <View style={{}}>
             <TouchableOpacity
-              onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
+              // onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
             >
               <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
@@ -269,12 +265,12 @@ const searcheFilterFunction = (text) =>{
                             clearButtonMode="while-editing"
                             // maxLength= {22}
                             keyboardType='decimal-pad'
-                            placeholder="rechercher item moteur"
+                            placeholder="rechercher equipement"
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
                         /> 
                     </View>
-                    <View style={{flex:3, justifyContent:'center', alignContent:'center' }}>
+                    {/* <View style={{flex:3, justifyContent:'center', alignContent:'center' }}>
                       <TouchableOpacity
                         onPress={() => {togleMoteurPlanning()}}
                       >
@@ -282,7 +278,7 @@ const searcheFilterFunction = (text) =>{
                           {moteuPlanning ? Stringtext() : Stringtext()}
                       </TouchableOpacity>
                       
-                    </View>
+                    </View> */}
                               
                 </View>            
             </View>
@@ -299,24 +295,25 @@ const searcheFilterFunction = (text) =>{
                           <View> 
                           </View>
                         <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:80, }}
+                            style={{flexDirection:'row', flex:3, height:70, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
                             >
                             
                               <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: 12/12/2022   |   Fin: 12/12/2022</Text>
+                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Eqt: {item.atelier} </Text>
+                                <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'700'}}>Atelier: </Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>ItemEqt: </Text>
+                                {/* <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: 12/12/2022</Text> */}
                                 {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.item_moteur} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement} </Text>
+                                {/* <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.item_moteur} </Text> */}
+                                {/* <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement} </Text> */}
                               </View>
 
                           </TouchableOpacity>
                           <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:80, }}
+                            style={{flexDirection:'row', flex:1, height:70, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
 
                             >
                           <View style={{flex: 5,

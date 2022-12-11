@@ -249,6 +249,20 @@ const Form_new_planning = ({route, navigation}) => {
                 </Text>
 
             </View>
+
+            <View style={{flex:1}}>
+                <Text style={styles.titrechamp}>Tâche</Text>
+                <TextInput
+                    placeholder="Notez ici toutes vos observations avant tout action"
+                    placeholderTextColor="#777"
+                    autoCapitalize="sentences"
+                    numberOfLines={7}
+                    multiline={true}                  
+                    style={[styles.textinput,styles.textinputmulti]}
+                    onChangeText={(val) => handle_Obsevervation_gene_av(val)}
+
+                />              
+            </View>
             <View style={{flexDirection: 'row', marginTop:20}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
@@ -322,8 +336,10 @@ const styles = StyleSheet.create({
     },
     titrechamp:{
       fontSize: 20,
-      color: '#000'
+      color: '#000',
+      marginTop:10
       // marginLeft:5,
+      
     },
     textinput: {
       borderColor: '#ddd',

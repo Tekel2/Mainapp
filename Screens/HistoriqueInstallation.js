@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 
-const HistoriquePreventive = ({navigation}) => {
+const HistoriqueInstallation = ({navigation}) => {
 
     const [preventivelist, setPreventive] = useState([])
     const [filtrerData, setFiltrerData] = useState([])
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default HistoriquePreventive;
+export default HistoriqueInstallation;

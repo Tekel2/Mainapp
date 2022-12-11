@@ -1,13 +1,14 @@
-import CheckBox from '@react-native-community/checkbox';
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, Alert } from 'react-native';
-// import CheckBox from 'expo-checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreventive } from '../Reduxe/action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import CaracteristiqueScreen from './CaracteristiqueScreen';
 
 const Form_Inter_Prev_Screen = ({navigation,route}) => {
+
+  const {moteurItem} = route.params
 
   const [checkBoxSerage, setCheckBoxSerage] = useState(false)
   const [checkBoxEquil, setCheckBoxEquil] = useState(false)
@@ -15,6 +16,9 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
   const [image_2, setImage_2] = useState('')
   const [image_3, setImage_3] = useState('')
   const [image_4, setImage_4] = useState('')
+
+  const [modalvisible, setmodalVisible] = useState(false)
+  const [modalitem, setModalitem] = useState(false)
 
   // const {preventive, preventiveID} = useSelector(state => state.preventiveReducer);
   // const dispatch = useDispatch()
@@ -127,7 +131,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
     };
 
     launchCamera(options, response =>{
-      console.log('Response = ', response)
+      // console.log('Response = ', response)
       if (response.didCancel){
         console.log('User conceeled Image Picker')
       }
@@ -155,7 +159,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
     };
 
     launchCamera(options, response =>{
-      console.log('Response = ', response)
+      // console.log('Response = ', response)
       if (response.didCancel){
         console.log('User conceeled Image Picker')
       }
@@ -183,7 +187,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
     };
 
     launchCamera(options, response =>{
-      console.log('Response = ', response)
+      // console.log('Response = ', response)
       if (response.didCancel){
         console.log('User conceeled Image Picker')
       }
@@ -442,6 +446,43 @@ const handle_Temperature = (val) => {
   }
 }
 
+function viewModal(val){
+  return(
+    <View >
+      <Modal
+        // animationType="slide"
+        transparent={true}
+        visible={modalvisible}
+        // style={styles.MainContainerModal}
+      >
+       
+            <ScrollView >
+              <View style={{ flex: 1, justifyContent: 'center',
+                         backgroundColor: 'rgba(49, 96, 148, 0.15)',  }}>
+
+              <View style={styles.MainContainerModal}>
+
+              
+                <CaracteristiqueScreen/>
+              
+                <Pressable
+                    style={{backgroundColor: '#fff',
+                           borderBottomRightRadius:8, 
+                           borderBottomLeftRadius:8}}
+                    onPress={()=>{setmodalVisible(false)}}
+                >
+                    <Text style={styles.txtbtnmodal}>Fermer</Text>
+                </Pressable>
+                </View>
+              </View>
+            </ScrollView>
+        
+      </Modal>
+    </View>
+  )
+
+  } 
+
 // const saveDatatoServer = (data) => {
 //   console.log(data)
 // }
@@ -456,9 +497,24 @@ const handle_Temperature = (val) => {
                 <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
             </View>
         
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                              // setModalitem(item)
+                              setmodalVisible(true)
+                          }}
+            >
+              <Text style={{fontSize: 20, color: '#ED7524', 
+                            fontWeight: 'bold', marginLeft:15,
+                            // borderWidth: 1.2,
+                            borderRadius:8,
+                            paddingHorizontal: 10,
+                            paddingVertical:2,
+                            backgroundColor:'#316094',
+                            }}>Détails</Text>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                        }}>
@@ -467,7 +523,8 @@ const handle_Temperature = (val) => {
           </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INTERVENTION PREVENTIVE</Text>
+            <Text style={[styles.etatprovenance, {color: '#316094',width: '100%', marginLeft:15,}]}>
+            INTERVENTION PREVENTIVE PROGRAMMée</Text>
           </View>
         </View>
 
@@ -765,6 +822,7 @@ const handle_Temperature = (val) => {
             </TouchableOpacity>
            
           </View>
+          {viewModal(modalitem)}
           
         </ScrollView>
            
@@ -785,7 +843,7 @@ const styles = StyleSheet.create({
       alignContent:'center',
     },
     etatprovenance:{
-        fontSize: 20, 
+        fontSize: 18, 
         color: '#111', 
         fontWeight: 'bold',
         borderBottomWidth: 1.5,
@@ -847,6 +905,38 @@ const styles = StyleSheet.create({
       backgroundColor:'#eee', 
       fontSize: 18,
       padding:5,
+      },
+      MainContainerModal:{
+        flex: 1,
+        justifyContent: "center",
+        // alignItems: "center",
+        marginTop: '5%',
+        // margin:20,
+        // width:400,
+        backgroundColor: '#fff',
+        paddingTop: 10,
+        paddingLeft: 10, 
+        paddingRight: 10,
+        justifyContent: 'center',
+        alignContent:'center',
+        marginHorizontal: 25,
+        borderRadius:8
+        // width:'80%'
+
+      },
+      txtbtnmodal:{
+        // height: 30,
+        color:'#316094',
+        fontSize:20,
+        fontWeight: '900' ,
+        textAlign: 'right',
+        marginBottom: 20,
+        paddingRight:20,
+        marginRight:10,
+
+        borderBottomLeftRadius:4,
+        borderBottomLeftRadius:4,
+        marginVertical: 10
       }
   
     

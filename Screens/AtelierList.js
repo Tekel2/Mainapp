@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Modal, ScrollView } from 'react-native';
 
 
 const dataMoteurInstalled = [
@@ -188,51 +188,88 @@ const dataMoteurInstalled = [
 
 const AtelierList = ({navigation}) => {
 
-const [data , setData] = useState([])
-const [filtrerData, setFiltrerData] = useState([])
-const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const [data , setData] = useState([])
+  const [filtrerData, setFiltrerData] = useState([])
+  const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const [modalvisible, setmodalVisible] = useState(false)
+  const [modalitem, setModalitem] = useState(false)
 
-const [selected, setSelected] = useState();
 
-const selectHandler = item => {
-  setSelected(item);
-}
+  const [selected, setSelected] = useState();
 
-useEffect(() => {
-  setData(dataMoteurInstalled)
-  setFiltrerData(dataMoteurInstalled)
-}, []);
+  const selectHandler = item => {
+    setSelected(item);
+  }
 
-const togleMoteurPlanning = ( ) =>{
-  setMoteurPlanning(!moteuPlanning)
-}
-const Stringtext =() =>{
-  if (moteuPlanning){
+  const toggleModal = (valitem) => {
+      setmodalVisible(!modalvisible)
+      setModalitem(valitem)
+      // console.log('btn courbe press '+ modalvisible)
+    }
+
+  useEffect(() => {
+    setData(dataMoteurInstalled)
+    setFiltrerData(dataMoteurInstalled)
+  }, []);
+
+  const togleMoteurPlanning = ( ) =>{
+    setMoteurPlanning(!moteuPlanning)
+  }
+  const Stringtext =() =>{
+    if (moteuPlanning){
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+      )
+    }
+    else{
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
+      )
+    }
+  }
+  const searcheFilterFunction = (text) =>{
+    if(text){
+        const newData = data.filter(item => {
+            console.log(item.equipement)
+            console.log(text)
+              const itemData = item.item_moteur ;
+              const textData = toString(text);
+              return itemData.indexOf(text) > -1;
+        })
+        setFiltrerData(newData)
+    }
+    else{
+        setFiltrerData(data)
+    }
+  }
+
+  function viewModal(val){
     return(
-      <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+      <View style={styles.MainContainerModal}>
+        <Modal
+          // animationType="slide"
+          transparent={true}
+          visible={modalvisible}
+        >
+          <View  style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={styles.titremodal}>Atelier
+            </Text>
+            <Text style={styles.testcontentmodal}>
+                {val.id}
+            </Text>
+            
+            <Pressable
+                style={{backgroundColor: '#fff'}}
+                onPress={()=>{setmodalVisible(false)}}
+            >
+                <Text style={styles.txtbtnmodal}>Fermer</Text>
+            </Pressable>
+          </View>
+        </Modal>
+      </View>
+
     )
   }
-  else{
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
-    )
-  }
-}
-const searcheFilterFunction = (text) =>{
-  if(text){
-      const newData = data.filter(item => {
-          console.log(item.equipement)
-          console.log(text)
-            const itemData = item.item_moteur ;
-            const textData = toString(text);
-            return itemData.indexOf(text) > -1;
-      })
-      setFiltrerData(newData)
-  }
-  else{
-      setFiltrerData(data)
-  }
-}
 
  
     return (
@@ -244,11 +281,11 @@ const searcheFilterFunction = (text) =>{
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Planning d'Intervention</Text>
+            Liste des   Ateliers</Text>
           </View>
           <View style={{}}>
             <TouchableOpacity
-              onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
+              onPress={() =>navigation.navigate('Form_atelier')}
             >
               <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
@@ -265,21 +302,11 @@ const searcheFilterFunction = (text) =>{
                             clearButtonMode="while-editing"
                             // maxLength= {22}
                             keyboardType='decimal-pad'
-                            placeholder="rechercher item moteur"
+                            placeholder="rechercher atelier"
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
                         /> 
                     </View>
-                    <View style={{flex:3, justifyContent:'center', alignContent:'center' }}>
-                      <TouchableOpacity
-                        onPress={() => {togleMoteurPlanning()}}
-                      >
-                       
-                          {moteuPlanning ? Stringtext() : Stringtext()}
-                      </TouchableOpacity>
-                      
-                    </View>
-                              
                 </View>            
             </View>
             <ScrollView>
@@ -295,24 +322,29 @@ const searcheFilterFunction = (text) =>{
                           <View> 
                           </View>
                         <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:80, }}
+                            style={{flexDirection:'row', flex:3, height:70, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
+                            onPress ={()=> {
+                                setModalitem(item)
+                                setmodalVisible(true)
+                              }}
                             >
                             
                               <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: 12/12/2022   |   Fin: 12/12/2022</Text>
-                                {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.item_moteur} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement} </Text>
-                              </View>
+                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Atelier: {item.id} </Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>ItemAtelier: </Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: 12/12/2022</Text>
 
+                                {viewModal(modalitem)}
+                                {/* <viewModal val={modalitem}/> */}
+                               </View>
+
+                              
                           </TouchableOpacity>
                           <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:80, }}
+                            style={{flexDirection:'row', flex:1, height:70, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
 
                             >
                           <View style={{flex: 5,
@@ -324,37 +356,35 @@ const searcheFilterFunction = (text) =>{
                                       borderColor:'#316094',}}>
                               <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Modifier</Text>
                           </View>
-
                           </TouchableOpacity>
                     </View>
 
                   )
                   })
               }
-                 
+              
             </ScrollView>         
           
          </View>
-           
-
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    MainContainer: {
-      flex: 1,
-      backgroundColor: '#E4E4E4',
-      paddingTop: 10,
-      paddingLeft: 10, 
-      paddingRight: 10
-    },
-    view_liste: {
-      flex: 6,
-      marginTop: 15,
-      // backgroundColor: '#1B2F70',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
+  MainContainer: {
+    flex: 1,
+    backgroundColor: '#E4E4E4',
+    paddingTop: 10,
+    paddingLeft: 10, 
+    paddingRight: 10,
+  },
+  
+  view_liste: {
+    flex: 6,
+    marginTop: 15,
+    // backgroundColor: '#1B2F70',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   loading_container: {
     position: 'absolute',
@@ -465,21 +495,67 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     // borderBottomWidth: 1.5,
     // borderBottomColor: '#316094'
-},
-rechercheinput:{
-    borderWidth:1.2,
-    borderColor: '#316094',
-    borderRadius: 4,
-    height: 10,
-    marginRight: 15,
-    height: 40,
-    paddingLeft: 20,
-    fontWeight:'500',
+  },
+  rechercheinput:{
+      borderWidth:1.2,
+      borderColor: '#316094',
+      borderRadius: 4,
+      height: 10,
+      marginRight: 15,
+      height: 40,
+      paddingLeft: 20,
+      fontWeight:'500',
+      fontSize: 18,
+      textAlign:'center',
+      marginHorizontal: 10,
+      
+  },
+  
+  MainContainerModal:{
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    margin:20,
+    width:400,
+  },
+  titremodal:{
+    fontSize: 20,
+    fontWeight: '900',
+    textAlign: 'left',
+    backgroundColor: '#fff',
+    color: '#316094',
+    paddingTop: 10,
+    paddingLeft: 20, 
+    borderTopRightRadius: 4,
+    borderTopLeftRadius:4,
+    height: 100,
+  },
+  testcontentmodal:{
+    height:100, 
+    backgroundColor: '#fff',
+    // borderRadius: 4,
+    color: '#000',
+    textAlign: 'center',
+    fontWeight: '300',
     fontSize: 18,
-    textAlign:'center',
-    marginHorizontal: 10,
-    
-},
+    paddingTop:10,
+    paddingLeft: 8,
+    paddingRight: 8
+  },
+  txtbtnmodal:{
+      height: 30,
+      color:'#316094',
+      fontSize:20,
+      fontWeight: '900' ,
+      textAlign: 'right',
+      marginBottom: 20,
+      paddingRight:20,
+      marginRight:10,
+      borderBottomLeftRadius:4,
+      borderBottomLeftRadius:4,
+      marginBottom: 5
+    }
    
    
   });

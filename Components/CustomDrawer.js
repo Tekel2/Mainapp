@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
 
 
@@ -11,10 +11,13 @@ import { Drawer } from 'react-native-paper';
 // import  Icon  from 'react-native-vector-icons/MaterialCommunityIcon';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Row } from 'react-native-table-component';
+import { AuthContext } from '../context/Authcontext';
 // import Icon from 'react-native-vector-icons/EvilIcons'
 
 
 export function CustomDrawer (props){
+    const {logout} = useContext(AuthContext)
+
     return(
        <View style={styles.MainContainer}>
          <DrawerContentScrollView 
@@ -33,7 +36,7 @@ export function CustomDrawer (props){
         </DrawerContentScrollView>
         <View style={{borderTopWidth:1, borderTopColor:'#ccc', padding:10}}>
             <TouchableOpacity 
-                onPress={() =>{}}
+                onPress={() =>{logout()}}
                 style={{paddingVertical:15}}
             >
             <View style={{flexDirection:'row', alignItems:'center'}}>

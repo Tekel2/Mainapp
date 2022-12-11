@@ -5,6 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import EquipementList from '../Screens/EquipementList';
+import rechercheatelier from '../Screens/rechercheatelier';
+import Form_new_eqt from '../Screens/Form_new_eqt';
 
 
 const Stack = createStackNavigator();
@@ -25,8 +27,8 @@ const EquipementNavigation = ({navigation}) => (
         headerMode='none'
         >
         <Stack.Screen name="Equipement" component={EquipementList}/>
-        {/* <Stack.Screen name="His_preventive" component={HistoriquePreventive}/>
-        <Stack.Screen name="Form_edit_prev" component={Form_Inter_Prev_Screen}/> */}
+        <Stack.Screen name="rechercherAtelier" component={rechercheatelier}/>
+        <Stack.Screen name="Form_new_eqt" component={Form_new_eqt}/>
       
     </Stack.Navigator>
 );

@@ -186,7 +186,7 @@ const dataMoteurInstalled = [
 }
 ]
 
-const Planninglist = ({navigation}) => {
+const Planninglist_admin = ({navigation}) => {
 
 
   // const [data, setData] = React.useState({
@@ -488,4 +488,4 @@ rechercheinput:{
    
   });
 
-export default Planninglist;
+export default Planninglist_admin;

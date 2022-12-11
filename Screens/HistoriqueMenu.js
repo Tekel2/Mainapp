@@ -34,25 +34,33 @@ const HistoriqueMenu = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
                 
-                <TouchableOpacity>
+                <TouchableOpacity
+                     onPress={()=> navigation.navigate('His_curative')}
+                >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
                         <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_curative.png")}/>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={()=> navigation.navigate('His_hs')}
+                >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
                         <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_hs.png")}/>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={()=> navigation.navigate('His_install')}
+                >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
                         <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_install_2.png")}/>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity
+                     onPress={()=> navigation.navigate('His_reparation')}
+                >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
                         <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_reparation.png")}/>
                     </View>

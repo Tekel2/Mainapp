@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 
-const HistoriquePreventive = ({navigation}) => {
+const HistoriqueHS = ({navigation}) => {
 
     const [preventivelist, setPreventive] = useState([])
     const [filtrerData, setFiltrerData] = useState([])
@@ -22,7 +22,7 @@ const HistoriquePreventive = ({navigation}) => {
         <ScrollView 
             style={{ flex:9, marginLeft:10,marginRight:10,marginBottom: 5, paddingBottom:5}}
             contentContainerStyle={styles.scrollView}
-            // refreshControl={
+            // refreshC²²ontrol={
             //   <RefreshControl
             //     refreshing={refreshing}
             //     onRefresh={onRefresh}
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default HistoriquePreventive;
+export default HistoriqueHS;

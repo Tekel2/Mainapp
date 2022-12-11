@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 // import CustomDrawer from '../Components/CustomDrawer'
 import SplashScreen from '../Screens/SplashScreen'
-import HomeScreen from '../Screens/HomeScreen'
+import HomeScreen from '../Screens/MoteurListScreen'
 import { CustomDrawer } from '../Components/CustomDrawer';
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -19,8 +19,6 @@ import EquipementNavigation from './EquipementNavigation';
 
 
 const Drawer = createDrawerNavigator();
-
-
 
 
 export default function Drawernavigation() {

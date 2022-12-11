@@ -318,7 +318,7 @@ const searcheFilterFunction = (text) =>{
                           <TouchableOpacity 
                             style={{flexDirection:'row', flex:1, height:60, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
 
                             >
                           <View style={{flex: 5,
