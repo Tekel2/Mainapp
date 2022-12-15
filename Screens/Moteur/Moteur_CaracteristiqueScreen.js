@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 
 
 
-const Moteur_CaracteristiqueScreen = ({navigation}) => {
+const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
 
+    const {moteurItem} = route.params
+   
+    useEffect(()=>{
+        console.log(moteurItem)
+    },[])
 
-  const [data, setData] = React.useState({
-    
-  });
 
  
     return (
@@ -18,71 +20,77 @@ const Moteur_CaracteristiqueScreen = ({navigation}) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: '500'}}>Caractéristiques MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
           </View>
 
-          <View style={{justifyContent: 'center', alignContent: 'center',marginTop: 10,}}>
-            <TouchableOpacity
-                onPress={() =>navigation.navigate('moteur_install')}
-            >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_install.png")}/>
-            </TouchableOpacity>
-          </View>
+         { ! moteurItem.install ?
+            <View style={{justifyContent: 'center', alignContent: 'center',marginTop: 10,}}>
+           
+                <TouchableOpacity
+                    onPress={() =>navigation.navigate('moteur_install',{moteurItem:moteurItem})}
+                >
+                    <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_install.png")}/>
+                </TouchableOpacity>
+                
+            </View>
+            :
+            null
+          }
         </View>
 
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
          <View style={{flexDirection:'column'}}>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> CAPSULE</Text>
+                <Text style={styles.txtcat}> {moteurItem.marque}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> marque</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> LS 90 lz</Text>
+                <Text style={styles.txtcat}> {moteurItem.type_moteur}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> type de moteur</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> 595257/3</Text>
-                <Text style={[styles.txtcat,styles.txtcat_designa]}> numéro de série</Text>
+                <Text style={styles.txtcat}> {moteurItem.numeroserie}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> Numéro de Série</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> V 220 | A 6,65</Text>
+                <Text style={styles.txtcat}> V {moteurItem.tension_triangle} | A {moteurItem.courant_triangle}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage triange</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> V3 80 | A 3,84</Text>
+                <Text style={styles.txtcat}> V {moteurItem.tension_etoile} | A {moteurItem.courant_etoile}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage étoile</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>1,5KW</Text>
+                <Text style={styles.txtcat}>{moteurItem.puissance} KW</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> puissance</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>1440 Tr/min</Text>
+                <Text style={styles.txtcat}>{moteurItem.tour_min} Tr/min</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> fréquence de rotation</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>50Hz</Text>
+                <Text style={styles.txtcat}> {moteurItem.frequence} Hz</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}>fréquence</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>0,78</Text>
+                <Text style={styles.txtcat}>{moteurItem.cosfi}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> facteur de puissance</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>37°C</Text>
+                <Text style={styles.txtcat}>{moteurItem.temperature_ambiante_user}°C</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> température ambiante max</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>76%</Text>
+                <Text style={styles.txtcat}>{moteurItem.rendement} %</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}>rendement</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>Triphasé</Text>
+                <Text style={styles.txtcat}>{moteurItem.phase}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}>phase</Text>
             </View>
             

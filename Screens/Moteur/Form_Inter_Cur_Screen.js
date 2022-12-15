@@ -1,14 +1,19 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
+// import CheckBox from 'expo-checkbox';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-
-
-function Form_HorserviceScreen (props) {
+function Form_Inter_Cur_Screen (props) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [image_1, setImage_1] = useState('')
+  const [image_2, setImage_2] = useState('')
+  const [image_3, setImage_3] = useState('')
+  const [image_4, setImage_4] = useState('')
 
   const [data, setData] = React.useState({
-    motifhorservice:'',
+    obsevervation_gene_av: '',
+    obsevervation_gene_ap: '',
+    descriptionpanne: '',
     continuite_U1_U2: 0.0,
     continuite_V1_V2: 0.0,
     continuite_W1_W2: 0.0,
@@ -22,13 +27,7 @@ function Form_HorserviceScreen (props) {
     temperature: 0.0,
 
 });
-
-const [image_1, setImage_1] = useState('')
-const [image_2, setImage_2] = useState('')
-const [image_3, setImage_3] = useState('')
-const [image_4, setImage_4] = useState('')
-
-const getImage_1 = () =>{
+  const getImage_1 = () =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -141,21 +140,45 @@ const getImage_1 = () =>{
     })
   }
 
-const handle_Motifhorservice = (val) => {
-  if( val.trim().length >= 5 ) {
+const handle_Obsevervation_gene_av = (val) => {
+  if( val.trim().length >= 3 ) {
       setData({
           ...data,
-          motifhorservice: val,
+          obsevervation_gene_av: val,
       });
   } else {
       setData({
           ...data,
-          motifhorservice: val,
+          obsevervation_gene_av: val,
       });
   }
 }
-
-
+const handle_Obsevervation_gene_ap = (val) => {
+  if( val.trim().length >= 3 ) {
+      setData({
+          ...data,
+          obsevervation_gene_ap: val,
+      });
+  } else {
+      setData({
+          ...data,
+          obsevervation_gene_ap: val,
+      });
+  }
+}
+const handle_Descriptionpanne = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          descriptionpanne: val,
+      });
+  } else {
+      setData({
+          ...data,
+          descriptionpanne: val,
+      });
+  }
+}
 const handle_Continuite_U1_U2 = (val) => {
   if( val.trim().length >= 5 ) {
       setData({
@@ -311,7 +334,7 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
@@ -325,28 +348,41 @@ const saveDatatoServer = (data) => {
           </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>MISE HORS SERVICE</Text>
+            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INTERVENTION CURATIVE</Text>
           </View>
         </View>
 
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
-        <View style={{flex:1, marginTop:10}}>
-            <Text style={styles.titrechamp}>Motif mise hors service</Text>
+          <View style={{flex:1}}>
+            <Text style={styles.titrechamp}>Observation Général avant</Text>
             <TextInput
-                  placeholder=".. ."
+                  placeholder="Notez ici toutes vos observations avant tout action"
                   placeholderTextColor="#777"
                   autoCapitalize="sentences"
-                  numberOfLines={4}
+                  numberOfLines={7}
                   multiline={true}
+                  
                   style={[styles.textinput,styles.textinputmulti]}
-                  onChangeText={(val) => handle_Motifhorservice(val)}
+                  onChangeText={(val) => handle_Obsevervation_gene_av(val)}
 
               />              
           </View>
-         
           <View style={{flex:1}}>
-                       
-            <Text style={styles.titrechamp}>Continuité des enroulements en Ω</Text>
+            <Text style={styles.titrechamp}>Description de la panne</Text>
+            <TextInput
+                  placeholder="Notez ici une description de la panne"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  numberOfLines={7}
+                  multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Descriptionpanne(val)}
+
+              />              
+          </View>
+
+          <View style={{flex:1}}>
+            <Text style={styles.titrechamp}>Continuité des enroulements</Text>
             <View style={{flex:1, flexDirection: 'row'}}>
                    <View style={{flex:1}}>
                         <Text style={[styles.titrechamp, {textAlign:'center'}]}> U1 - U2</Text>
@@ -386,7 +422,7 @@ const saveDatatoServer = (data) => {
           </View>
 
           <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Isolement entre bobine en MΩ</Text>
+            <Text style={styles.titrechamp}>Isolement entre bobine</Text>
             <View style={{flex:1, flexDirection: 'row'}}>
                    <View style={{flex:1}}>
                         <Text style={[styles.titrechamp, {textAlign:'center'}]}> W2 - U2</Text>
@@ -418,7 +454,7 @@ const saveDatatoServer = (data) => {
                           autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
+                          onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                         />  
                    </View>    
             </View>
@@ -426,7 +462,7 @@ const saveDatatoServer = (data) => {
           </View>
 
           <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Isolement entre les bobines et la masse en MΩ</Text>
+            <Text style={styles.titrechamp}>Isolement entre les bobines et la masse</Text>
             <View style={{flex:1, flexDirection: 'row'}}>
                    <View style={{flex:1}}>
                         <Text style={[styles.titrechamp, {textAlign:'center'}]}> U1 - M</Text>
@@ -465,20 +501,7 @@ const saveDatatoServer = (data) => {
                       
           </View>
 
-          <View style={{flex:1, marginTop:10}}>
-            <Text style={styles.titrechamp}>Proposition</Text>
-            <TextInput
-                  placeholder="Notez ici vos propositions"
-                  placeholderTextColor="#777"
-                  autoCapitalize="sentences"
-                  numberOfLines={7}
-                  multiline={true}
-                  style={[styles.textinput,styles.textinputmulti]}
-                  onChangeText={(val) => handle_Proposition(val)}
-
-              />              
-          </View>
-          <View style={{flex:1}}>
+          <View style={{flex:1, marginTop: 20}}>
             <Text style={styles.titrechamp}>Température</Text>
               <TextInput
                 placeholder="°C"
@@ -490,98 +513,125 @@ const saveDatatoServer = (data) => {
               />  
           </View>
 
+          <View style={{flex:1,marginTop:20}}>
+            <Text style={styles.titrechamp}>Observation général Après</Text>
+            <TextInput
+                  placeholder="Notez ici vos observations"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  numberOfLines={7}
+                  multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                onChangeText={(val) => handle_Obsevervation_gene_ap(val)}
+
+              />              
+          </View>
+
           <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
-            <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
-                {
-                  image_1?
-                  <View >
-                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
-                  </View>                
-                  :
-                  null
-                }
-                
-                <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
-                  <TouchableOpacity
-                    onPress={()=> getImage_1()}
-                  >
-                    <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
-                  </TouchableOpacity>
-                  <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 1</Text>
-                </View>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_1?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_1()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 1</Text>
+                  </View>
+              </View>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_2?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_2()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
+                  </View>
+              </View>
             </View>
-            <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
-                {
-                  image_2?
-                  <View >
-                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
-                  </View>                
-                  :
-                  null
-                }
-                
-                <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
-                  <TouchableOpacity
-                    onPress={()=> getImage_2()}
-                  >
-                    <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
-                  </TouchableOpacity>
-                  <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
-                </View>
-            </View>
-          </View>
-        <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
-          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
-              {
-                image_3?
-                 <View >
-                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
-                </View>                
-                :
-                null
-              }
-              
-              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
-                <TouchableOpacity
-                  onPress={()=> getImage_3()}
-                >
-                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
-                </TouchableOpacity>
-                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
+            <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_3?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_3()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
+                  </View>
+              </View>
+              <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                  {
+                    image_4?
+                    <View >
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
+                    </View>                
+                    :
+                    null
+                  }
+                  
+                  <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                    <TouchableOpacity
+                      onPress={()=> getImage_4()}
+                    >
+                      <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
+                    </TouchableOpacity>
+                    <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
+                  </View>
               </View>
           </View>
-          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
-              {
-                image_4?
-                 <View >
-                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
-                </View>                
-                :
-                null
-              }
-              
-              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
-                <TouchableOpacity
-                  onPress={()=> getImage_4()}
-                >
-                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
-                </TouchableOpacity>
-                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
-              </View>
+
+          <View style={{flex:1,}}>
+            <Text style={styles.titrechamp}>Proposition</Text>
+            <TextInput
+                  placeholder="Notez ici vos propositions"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  numberOfLines={7}
+                  multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                onChangeText={(val) => handle_Proposition(val)}
+
+              />              
           </View>
-        </View>
 
-
-          <View style={{flexDirection: 'row', marginTop:25}}>
+          <View style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}              
               onPress={() => {saveDatatoServer( data )}}
-            >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+              >
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>
@@ -647,7 +697,6 @@ const styles = StyleSheet.create({
     titrechamp:{
       fontSize: 20,
       color: '#000'
-
       // marginLeft:5,
     },
     textinput: {
@@ -675,4 +724,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default Form_HorserviceScreen;
+export default Form_Inter_Cur_Screen;

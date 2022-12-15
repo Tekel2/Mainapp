@@ -1,3 +1,5 @@
+import axios from "axios"
+import { baseUrlApi } from "./urlbase"
 
 
 export  function getProfileFromWithSearchedText(profile, locality){
@@ -67,3 +69,40 @@ export function profilelogin(username_txt, password_txt){
 export function postNoteOfProfile(idPRofile, note, nbreAvis){
     
 }
+
+
+
+export const postData = async (data, route, token) =>{
+        //  console.log(data)
+          try {
+            const response = await axios.post(`${baseUrlApi}/${route}/`, 
+            
+            // `${data}`,
+            data,
+            {
+              headers: {
+                // "Accept":" */*",
+                "Content-Type": "application/json",
+                'Authorization': `token ${token}`
+              }
+            },
+            );
+            if (response.status === 200) {
+              alert(` You have created: ${JSON.stringify(response)}`);
+              console.log(response.data)
+              return (response.status)
+              
+            } else {
+              // throw new Error("An error has occurred");
+              console.log(response.request)
+            }
+          } catch (error) {
+            alert("An error has occurred");
+            // setIsLoading(false);
+            console.log(error)
+            return(error)
+          }
+      
+      
+          
+      }

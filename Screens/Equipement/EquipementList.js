@@ -1,198 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Modal, ScrollView } from 'react-native';
+import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Modal, ScrollView, RefreshControl } from 'react-native';
+import { baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
 
-const dataMoteurInstalled = [
-  {
-      "id": 6,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "ONDULEUR",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 3,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009386",
-  },
-  {
-      "id": 7,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SAS",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 4,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009387",
-  },
-  {
-      "id": 8,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SUPPRESSUE",
-      "item_moteur": "12009390",
-
-  },
-  {
-    "id": 9,
-    "createdOn": "2022-10-27",
-    "updatedOn": "2022-10-27",
-    "temperature": 37.0,
-    "observation_general": "RAS",
-    "observation_avant": "RAS",
-    "observation_apres": "RAS",
-    "atelier": "SECHEUR",
-    "equipement": "SUPPRESSUE",
-    "item_moteur": "12009392",
-
-},
-{
-  "id": 10,
-  "createdOn": "2022-10-27",
-  "updatedOn": "2022-10-27",
-  "temperature": 37.0,
-  "observation_general": "RAS",
-  "observation_avant": "RAS",
-  "observation_apres": "RAS",
-  "atelier": "SECHEUR",
-  "equipement": "SUPPRESSUE",
-  "item_moteur": "12009400",
-
-},
-{
-"id": 11,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009410",
-},
-{
-"id": 12,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009420",
-
-},
-{
-"id": 13,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009421",
-
-},
-{
-"id": 14,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009422",
-
-},
-{
-"id": 15,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009425",
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 }
-]
 
-const AtelierList = ({navigation}) => {
+
+const EquipementList = ({navigation}) => {
+
+  const {userInfo,userToken} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
   const [moteuPlanning, setMoteurPlanning] = useState(false)
   const [modalvisible, setmodalVisible] = useState(false)
   const [modalitem, setModalitem] = useState(false)
+  const [refreshing, setRefreshing] = React.useState(false);
 
 
   const [selected, setSelected] = useState();
@@ -206,10 +33,15 @@ const AtelierList = ({navigation}) => {
       setModalitem(valitem)
       // console.log('btn courbe press '+ modalvisible)
     }
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    getDataAtelier()
+  }, []);
 
   useEffect(() => {
-    setData(dataMoteurInstalled)
-    setFiltrerData(dataMoteurInstalled)
+    getDataAtelier()
+    console.log(userInfo.fonction)
   }, []);
 
   const togleMoteurPlanning = ( ) =>{
@@ -227,6 +59,51 @@ const AtelierList = ({navigation}) => {
       )
     }
   }
+
+  const getDataAtelier = async () => {
+
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/equipement/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `token ${userToken}`
+      }
+    }
+    try{
+
+      const response = await axios(configGetMotor);
+      if (response.status == 200){
+        const data = await response.data
+        setData(data);
+        setFiltrerData(data);
+        console.log(data)
+      }
+      else if (response.status == 401){
+        setData([]);
+        setFiltrerData([]);
+        setMessageErr('-  -')
+
+
+      }
+      else if (response.status == 404){
+        setFiltrerData([]);
+        setData([]);
+        setMessageErr('- Aucun Atelier de disponible -')
+
+      }
+      
+      // console.log(json)
+      // console.log(response.status)
+    } catch (error){
+      console.log(error)
+    }
+  }
+
+
+
+
+
   const searcheFilterFunction = (text) =>{
     if(text){
         const newData = data.filter(item => {
@@ -276,20 +153,23 @@ const AtelierList = ({navigation}) => {
         <SafeAreaView style={styles.MainContainer} >
           <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
         </View>
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Liste des   Ateliers</Text>
+            Liste des Equipenents</Text>
           </View>
-          <View style={{}}>
+          { userInfo.fonction <  3 ?  // teste du niveau hierachique de l'utilisateur. 3 etant le niveau le plus bas
+            <View style={{}}>
             <TouchableOpacity
-              onPress={() =>navigation.navigate('Form_atelier')}
+              onPress={() =>navigation.navigate('rechercherAtelier')}
             >
-              <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_new.png")}/>
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
-          </View>
+          </View> 
+          :null
+          }
         </View>
 
         <View style={styles.view_liste}>
@@ -302,14 +182,20 @@ const AtelierList = ({navigation}) => {
                             clearButtonMode="while-editing"
                             // maxLength= {22}
                             keyboardType='decimal-pad'
-                            placeholder="rechercher atelier"
+                            placeholder="rechercher nom equipement"
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
                         /> 
                     </View>
                 </View>            
             </View>
-            <ScrollView>
+            <ScrollView
+              refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />}
+            >
                 {
                   filtrerData.map((item, index) =>{
                     return(
@@ -322,7 +208,7 @@ const AtelierList = ({navigation}) => {
                           <View> 
                           </View>
                         <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:70, }}
+                            style={{flexDirection:'row', flex:3, height:85, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
                             onPress ={()=> {
                                 setModalitem(item)
@@ -331,9 +217,10 @@ const AtelierList = ({navigation}) => {
                             >
                             
                               <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
-                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Atelier: {item.id} </Text>
-                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>ItemAtelier: </Text>
-                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: 12/12/2022</Text>
+                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Eqt. : {item.nom_equipenent} </Text>
+                                <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'800'}}>Eqt. Item : {item.item_equipenent} </Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Atelier : {item.atelier.nom_atelier} | {item.atelier.item_atelier} </Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: {item.createdOn}</Text>
 
                                 {viewModal(modalitem)}
                                 {/* <viewModal val={modalitem}/> */}
@@ -342,7 +229,7 @@ const AtelierList = ({navigation}) => {
                               
                           </TouchableOpacity>
                           <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:70, }}
+                            style={{flexDirection:'row', flex:1, height:85, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
                             // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
 
@@ -504,8 +391,8 @@ const styles = StyleSheet.create({
       marginRight: 15,
       height: 40,
       paddingLeft: 20,
-      fontWeight:'500',
-      fontSize: 18,
+      // fontWeight:'500',
+      fontSize: 20,
       textAlign:'center',
       marginHorizontal: 10,
       
@@ -560,4 +447,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default AtelierList;
+export default EquipementList;

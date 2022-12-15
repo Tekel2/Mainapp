@@ -3,10 +3,10 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import AtelierList from '../Screens/Atelier/AtelierList';
+import Form_new_atelier from '../Screens/Atelier/Form_new_atelier';
 
-import AtelierList from '../Screens/AtelierList';
-import rechercheatelier from '../Screens/rechercheatelier';
-import Form_new_atelier from '../Screens/Form_new_atelier';
+
 
 
 const Stack = createStackNavigator();

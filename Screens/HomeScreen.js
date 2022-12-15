@@ -1,244 +1,241 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Modal, Pressable, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import warnOnce from 'react-native/Libraries/Utilities/warnOnce';
+import { AuthContext } from '../context/Authcontext';
 
 
-const dataMoteurInstalled = [
-  {
-      "id": 6,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "ONDULEUR",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 3,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009386",
-  },
-  {
-      "id": 7,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SAS",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 4,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009387",
-  },
-  {
-      "id": 8,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SUPPRESSUE",
-      "item_moteur": "12009390",
+// const dataMoteurInstalled = [
+//   {
+//       "id": 6,
+//       "createdOn": "2022-10-27",
+//       "updatedOn": "2022-10-27",
+//       "temperature": 37.0,
+//       "observation_general": "RAS",
+//       "observation_avant": "RAS",
+//       "observation_apres": "RAS",
+//       "atelier": "SECHEUR",
+//       "equipement": "ONDULEUR",
+//       "couplage": "ETOILE",
+//       "motif_remplacement": "RAS",
+//       "continuite_u1_U2": 0.0,
+//       "continuite_v1_v2": 0.0,
+//       "continuite_w1_w2": 0.0,
+//       "isolement_bobine_w2_u2": 0.0,
+//       "isolement_bobine_w2_v2": 0.0,
+//       "isolement_bobine_u2_v2": 0.0,
+//       "isolement_bobine_masse_u1_m": 0.0,
+//       "isolement_bobine_masse_v1_m": 0.0,
+//       "isolement_bobine_masse_w1_m": 0.0,
+//       "serage": true,
+//       "equilibrage": true,
+//       "photo_1": null,
+//       "photo_2": null,
+//       "photo_3": null,
+//       "photo_4": null,
+//       "photo_5": null,
+//       "photo_6": null,
+//       "photo_7": null,
+//       "photo_8": null,
+//       "photo_9": null,
+//       "photo_10": null,
+//       "moteur": 3,
+//       "old_moteur": null,
+//       "technicien": 2,
+//       "superviceur": 3,
+//       "item_moteur": "12009386",
+//   },
+//   {
+//       "id": 7,
+//       "createdOn": "2022-10-27",
+//       "updatedOn": "2022-10-27",
+//       "temperature": 37.0,
+//       "observation_general": "RAS",
+//       "observation_avant": "RAS",
+//       "observation_apres": "RAS",
+//       "atelier": "SECHEUR",
+//       "equipement": "SAS",
+//       "couplage": "ETOILE",
+//       "motif_remplacement": "RAS",
+//       "continuite_u1_U2": 0.0,
+//       "continuite_v1_v2": 0.0,
+//       "continuite_w1_w2": 0.0,
+//       "isolement_bobine_w2_u2": 0.0,
+//       "isolement_bobine_w2_v2": 0.0,
+//       "isolement_bobine_u2_v2": 0.0,
+//       "isolement_bobine_masse_u1_m": 0.0,
+//       "isolement_bobine_masse_v1_m": 0.0,
+//       "isolement_bobine_masse_w1_m": 0.0,
+//       "serage": true,
+//       "equilibrage": true,
+//       "photo_1": null,
+//       "photo_2": null,
+//       "photo_3": null,
+//       "photo_4": null,
+//       "photo_5": null,
+//       "photo_6": null,
+//       "photo_7": null,
+//       "photo_8": null,
+//       "photo_9": null,
+//       "photo_10": null,
+//       "moteur": 4,
+//       "old_moteur": null,
+//       "technicien": 2,
+//       "superviceur": 3,
+//       "item_moteur": "12009387",
+//   },
+//   {
+//       "id": 8,
+//       "createdOn": "2022-10-27",
+//       "updatedOn": "2022-10-27",
+//       "temperature": 37.0,
+//       "observation_general": "RAS",
+//       "observation_avant": "RAS",
+//       "observation_apres": "RAS",
+//       "atelier": "SECHEUR",
+//       "equipement": "SUPPRESSUE",
+//       "item_moteur": "12009390",
 
-  },
-  {
-    "id": 9,
-    "createdOn": "2022-10-27",
-    "updatedOn": "2022-10-27",
-    "temperature": 37.0,
-    "observation_general": "RAS",
-    "observation_avant": "RAS",
-    "observation_apres": "RAS",
-    "atelier": "SECHEUR",
-    "equipement": "SUPPRESSUE",
-    "item_moteur": "12009392",
+//   },
+//   {
+//     "id": 9,
+//     "createdOn": "2022-10-27",
+//     "updatedOn": "2022-10-27",
+//     "temperature": 37.0,
+//     "observation_general": "RAS",
+//     "observation_avant": "RAS",
+//     "observation_apres": "RAS",
+//     "atelier": "SECHEUR",
+//     "equipement": "SUPPRESSUE",
+//     "item_moteur": "12009392",
 
-},
-{
-  "id": 10,
-  "createdOn": "2022-10-27",
-  "updatedOn": "2022-10-27",
-  "temperature": 37.0,
-  "observation_general": "RAS",
-  "observation_avant": "RAS",
-  "observation_apres": "RAS",
-  "atelier": "SECHEUR",
-  "equipement": "SUPPRESSUE",
-  "item_moteur": "12009400",
+// },
+// {
+//   "id": 10,
+//   "createdOn": "2022-10-27",
+//   "updatedOn": "2022-10-27",
+//   "temperature": 37.0,
+//   "observation_general": "RAS",
+//   "observation_avant": "RAS",
+//   "observation_apres": "RAS",
+//   "atelier": "SECHEUR",
+//   "equipement": "SUPPRESSUE",
+//   "item_moteur": "12009400",
 
-},
-{
-"id": 11,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009410",
-},
-{
-"id": 12,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009420",
+// },
+// {
+// "id": 11,
+// "createdOn": "2022-10-27",
+// "updatedOn": "2022-10-27",
+// "temperature": 37.0,
+// "observation_general": "RAS",
+// "observation_avant": "RAS",
+// "observation_apres": "RAS",
+// "atelier": "SECHEUR",
+// "equipement": "SUPPRESSUE",
+// "item_moteur": "12009410",
+// },
+// {
+// "id": 12,
+// "createdOn": "2022-10-27",
+// "updatedOn": "2022-10-27",
+// "temperature": 37.0,
+// "observation_general": "RAS",
+// "observation_avant": "RAS",
+// "observation_apres": "RAS",
+// "atelier": "SECHEUR",
+// "equipement": "SUPPRESSUE",
+// "item_moteur": "12009420",
 
-},
-{
-"id": 13,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009421",
+// },
+// {
+// "id": 13,
+// "createdOn": "2022-10-27",
+// "updatedOn": "2022-10-27",
+// "temperature": 37.0,
+// "observation_general": "RAS",
+// "observation_avant": "RAS",
+// "observation_apres": "RAS",
+// "atelier": "SECHEUR",
+// "equipement": "SUPPRESSUE",
+// "item_moteur": "12009421",
 
-},
-{
-"id": 14,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009422",
+// },
+// {
+// "id": 14,
+// "createdOn": "2022-10-27",
+// "updatedOn": "2022-10-27",
+// "temperature": 37.0,
+// "observation_general": "RAS",
+// "observation_avant": "RAS",
+// "observation_apres": "RAS",
+// "atelier": "SECHEUR",
+// "equipement": "SUPPRESSUE",
+// "item_moteur": "12009422",
 
-},
-{
-"id": 15,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009425",
+// },
+// {
+// "id": 15,
+// "createdOn": "2022-10-27",
+// "updatedOn": "2022-10-27",
+// "temperature": 37.0,
+// "observation_general": "RAS",
+// "observation_avant": "RAS",
+// "observation_apres": "RAS",
+// "atelier": "SECHEUR",
+// "equipement": "SUPPRESSUE",
+// "item_moteur": "12009425",
 
-}
-]
+// }
+// ]
 
 const HomeScreen = ({navigation}) => {
 
+  const {userInfo} = useContext(AuthContext)
 
-  // const [data, setData] = React.useState({
-    
-  // });
-const [data , setData] = useState([])
-const [filtrerData, setFiltrerData] = useState([])
-const [moteuPlanning, setMoteurPlanning] = useState(false)
-const [modalvisible, setmodalVisible] = useState(false)
-const [modalitem, setModalitem] = useState(false)
-const [selected, setSelected] = useState();
+    // const [data, setData] = React.useState({
+      
+    // });
+  const [data , setData] = useState([])
+  const [filtrerData, setFiltrerData] = useState([])
+  const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const [modalvisible, setmodalVisible] = useState(false)
+  const [modalitem, setModalitem] = useState(false)
+  const [selected, setSelected] = useState();
 
-const selectHandler = item => {
-  setSelected(item);
-}
+  const selectHandler = item => {
+    setSelected(item);
+  }
 
-useEffect(() => {
-  setData(dataMoteurInstalled)
-  setFiltrerData(dataMoteurInstalled)
-}, []);
-
-const togleMoteurPlanning = ( ) =>{
-  setMoteurPlanning(!moteuPlanning)
-}
-const Stringtext =() =>{
-  if (moteuPlanning){
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
-    )
+  const togleMoteurPlanning = ( ) =>{
+    setMoteurPlanning(!moteuPlanning)
   }
-  else{
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
-    )
+  const Stringtext =() =>{
+    if (moteuPlanning){
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+      )
+    }
+    else{
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
+      )
+    }
   }
-}
-const searcheFilterFunction = (text) =>{
-  if(text){
-      const newData = data.filter(item => {
-          console.log(item.equipement)
-          console.log(text)
-            const itemData = item.item_moteur ;
-            const textData = toString(text);
-            return itemData.indexOf(text) > -1;
-      })
-      setFiltrerData(newData)
+  const searcheFilterFunction = (text) =>{
+    if(text){
+        const newData = data.filter(item => {
+            console.log(item.equipement)
+            console.log(text)
+              const itemData = item.item_moteur ;
+              const textData = toString(text);
+              return itemData.indexOf(text) > -1;
+        })
+        setFiltrerData(newData)
+    }
+    else{
+        setFiltrerData(data)
+    }
   }
-  else{
-      setFiltrerData(data)
-  }
-}
 
 function viewModal(val){
   return(

@@ -1,21 +1,78 @@
-import React, { Component, useState } from 'react';
+import axios from 'axios';
+import React, { Component, useContext, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
+import { baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+const  Form_new_eqt =({navigation, route}) =>{
 
-function Form_new_eqt (props) {
+
+  const {userInfo,userToken} = useContext(AuthContext)
 
   const [nomeqt, setNomeqt] = useState('')
+  const [itemeqt, setItemeqt] = useState('')
   const [atelierID, setatelierID] = useState(0)
  
-  
-const handleEqtname = (val) => {
-  if( val.trim().length >= 5 ) {
-      setNomeqt(vat)
-  }
-  
-}
+  const item = route.params.atelierItem;
 
+  const handleEqtname = (val) => {
+    if( val.trim().length >= 4 ) {
+        setNomeqt(val)
+    }
+    
+  }
+
+  const handleEqtitem = (val) => {
+    if( val.trim().length >= 4 ) {
+        setItemeqt(val)
+    }
+    
+  }
+
+  const data = () => {
+    return {
+      create_by : userInfo.id,
+      atelier : item.id,
+      item_equipenent : itemeqt,
+      nom_equipenent : nomeqt,
+    }
+  }
+
+  const postData = async (data, route, ) =>{
+    console.log(data)
+    try {
+      // setIsloading(true)
+      const response = await axios.post(`${baseUrlApi}/${route}/`, 
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `token ${userToken}`
+            }
+          },
+        );
+      
+        navigation.navigate('Equipement')
+
+    } catch (error) {
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      console.log(error)
+      // setIsloading(false)
+
+    }    
+  }
 
 const saveDatatoServer = (data) => {
   console.log(data)
@@ -28,16 +85,22 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>CREATION ATELIER</Text>
+            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>Nouvel Equipent</Text>
           </View>
         </View>
 
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
+          <View style={{flex:1, flexDirection: 'row', marginVertical:10}}>
+            <Text style={styles.titrechamp}>Dans l'atelier </Text>
+            <Text style={[styles.titrechamp,{fontWeight:'bold', fontSize:22}]}> { item.nom_atelier}</Text>
+                
+          </View>
+
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Nom équipement</Text>
             <TextInput
@@ -49,17 +112,28 @@ const saveDatatoServer = (data) => {
                   onChangeText={(val) => handleEqtname(val)}
               />              
           </View>
+          <View style={{flex:1}}>
+            <Text style={styles.titrechamp}>Item équipement</Text>
+            <TextInput
+                  placeholder="nom"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  // multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handleEqtitem(val)}
+              />              
+          </View>
           
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}              
-              onPress={() => {saveDatatoServer( data )}}
+              onPress={() => {postData( data(), 'equipement' )}}
               >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>

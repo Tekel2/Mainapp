@@ -2,19 +2,24 @@
 import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import MoteurListScreen from '../Screens/Moteur/MoteurListScreen';
+import MenuMoteurScreen from '../Screens/Moteur/MenuMoteurScreen';
+import Moteur_CaracteristiqueScreen from '../Screens/Moteur/Moteur_CaracteristiqueScreen';
+import Form_New_Moteur from '../Screens/Moteur/Form_New_Moteur'
 
-import MoteurList from '../Screens/MoteurList'
-import MoteurNew from '../Screens/MoteurNew';
-import MoteurDetail from '../Screens/MoteurDetail'
-import Form_New_Moteur from '../Screens/Form_New_Moteur';
-import Form_Installation from '../Screens/Form_Installation';
-import Moteur_CaracteristiqueScreen from '../Screens/Moteur_CaracteristiqueScreen';
-import MoteurListScreen from '../Screens/MoteurListScreen';
-import MenuMoteurScreen from '../Screens/MenuMoteurScreen';
-import BilanMoteurScreen from '../Screens/BilanMoteurScreen';
-import Form_HorserviceScreen from '../Screens/Form_HorserviceScreen';
-import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen';
-import InstallationDetail from '../Screens/InstallationDetail';
+// import MoteurList from '../Screens/MoteurList'
+// import MoteurNew from '../Screens/MoteurNew';
+// import MoteurDetail from '../Screens/Moteur/MoteurDetail'
+// import Form_New_Moteur from '../Screens/Form_New_Moteur';
+import Form_Installation from '../Screens/Moteur/Form_Installation';
+// import Moteur_CaracteristiqueScreen from '../Screens/Moteur_CaracteristiqueScreen';
+// import MoteurListScreen from '../Screens/MoteurListScreen';
+// import MenuMoteurScreen from '../Screens/MenuMoteurScreen';
+import BilanMoteurScreen from '../Screens/Moteur/BilanMoteurScreen';
+import Form_HorserviceScreen from '../Screens/Moteur/Form_HorserviceScreen';
+import Form_Inter_Cur_Screen from '../Screens/Moteur/Form_Inter_Cur_Screen';
+import InstallationDetail from '../Screens/Moteur/InstallationDetail';
+
 const Stack = createStackNavigator();
 
 

@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
+// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+// import Feather from 'react-native-vector-icons/Feather';
 
 import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../context/Authcontext';
@@ -22,7 +22,10 @@ import { AuthContext } from '../context/Authcontext';
 
 const LoginScreen = ({navigation}) => {
 
-    const {login} = useContext(AuthContext)
+    const {login, errMgs} = useContext(AuthContext)
+
+    // const [username, setUsername] = useState('')
+    // const [password, setPassword] = useState(null)
 
     const [data, setData] = React.useState({
         username: '',
@@ -126,6 +129,13 @@ const LoginScreen = ({navigation}) => {
                 backgroundColor: colors.background
             }]}
         >
+            {errMgs? 
+                <View style={{alignItems:'center'}}>
+                    <Text>{errMgs}</Text>
+                </View>
+                :
+                null
+            }
             <Text style={[styles.text_footer, {
                 color: colors.text
             }]}>Nom d'utisateur</Text>
@@ -144,18 +154,18 @@ const LoginScreen = ({navigation}) => {
                         color: colors.text
                     }]}
                     autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                    // onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
+                    onChangeText={(val) => textInputChange(val)}
+                    onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
                 />
                 {data.check_textInputChange ? 
                 <Animatable.View
                     animation="bounceIn"
                 >
-                    <Feather 
+                    {/* <Feather 
                         name="check-circle"
                         color="green"
                         size={20}
-                    />
+                    /> */}
                 </Animatable.View>
                 : null}
             </View>
@@ -171,11 +181,11 @@ const LoginScreen = ({navigation}) => {
                 marginTop: 35
             }]}>Mot de passe</Text>
             <View style={styles.action}>
-                <Feather 
+                {/* <Feather 
                     name="lock"
                     color={colors.text}
                     size={20}
-                />
+                /> */}
                 <TextInput 
                     placeholder="Your Password"
                     placeholderTextColor="#666666"
@@ -184,12 +194,12 @@ const LoginScreen = ({navigation}) => {
                         color: colors.text
                     }]}
                     autoCapitalize="none"
-                    //onChangeText={(val) => handlePasswordChange(val)}
+                    onChangeText={(val) => handlePasswordChange(val)}
                 />
                 <TouchableOpacity
                     onPress={updateSecureTextEntry}
                 >
-                    {data.secureTextEntry ? 
+                    {/* {data.secureTextEntry ? 
                     <Feather 
                         name="eye-off"
                         color="grey"
@@ -201,7 +211,7 @@ const LoginScreen = ({navigation}) => {
                         color="grey"
                         size={20}
                     />
-                    }
+                    } */}
                 </TouchableOpacity>
             </View>
             { data.isValidPassword ? null : 
@@ -219,7 +229,7 @@ const LoginScreen = ({navigation}) => {
                         borderColor: '#316094',
                         borderWidth: 1,
                     }]}
-                    onPress={() => {login()}}
+                    onPress={() => {login(data.username, data.password)}}
                 >
 
                 <Text style={[styles.textSign, {

@@ -1,11 +1,20 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
 // import CheckBox from '@react-native-community/checkbox';
 import SelectDropdown from 'react-native-select-dropdown'
+import { AuthContext } from '../../context/Authcontext';
+// import axios from "axios";
+import axios from '../../API/config-axiox';
 
+// axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+// axios.defaults.xsrfCookieName = "csrftoken";
+
+const baseUrl = "http://192.168.227.30:8000";
 
 function Form_New_Moteur (props) {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const {userInfo,userToken} = useContext(AuthContext)
+  const [csrfToken, setCsrfToken] = useState(null)
+
   const couplage = ["Etoile", "Triangle"]
 
   const [data, setData] = React.useState({
@@ -261,37 +270,92 @@ const handle_indice_protection = (val) => {
     }
   }
 
-const resetAllTextInput = () => {
-  setData({
-      ...data,
-      obsevervation_gene: '',
-      atelier: '',
-      equipement: '',
-      ancienmoteur_item: '',
-      motifremplacement: '',
-      couplage: '',
-      continuite_U1_U2: 0.0,
-      continuite_V1_V2: 0.0,
-      continuite_W1_W2: 0.0,
-      isolementbobine_W2_U2: 0.0,
-      isolementbobine_W2_V2: 0.0,
-      isolementbobine_U1_V2: 0.0,
-      isolementbobinemasse_U1_M: 0.0,
-      isolementbobinemasse_V1_M: 0.0,
-      isolementbobinemasse_W1_M: 0.0,
-      proposition: '',
-      temperature: 0.0,
-  });
 
+useEffect(()=>{
+  // const csrfToken = Cookies.get('csrftoken')
+  console.log(userToken)
+})
+
+const fetchDataMoteur = async () => {
+  console.log(datatofetch())
+   
+    try {
+      const response = await axios.post(`${baseUrl}/api/moteur/`, 
+      
+      {
+        create_by : userInfo.id,
+        item_moteur : data.item,
+        reference : data.reference,
+        numeroserie : data.numeroserie,
+        marque : data.marque,
+        type_moteur : data.type_moteur,
+        phase : data.phase,      
+        frequence : data.frequence,      
+        cosfi : data.cosfi,      
+        rendement : data.rendement,      
+        puissance : data.puissance,      
+        tour_min : data.tour_min,      
+        temperature_ambiante_user : data.temperature_ambiante_user, 
+        tension_etoile : data.tension_etoile,
+        tension_triangle : data.tension_triangle,      
+        courant_triangle : data.courant_triangle,      
+        courant_etoile : data.courant_etoile,
+        poids : 30,
+        indice_protection : data.indice_protection,
+        install : false
+        // datatofetch
+      },
+      {
+        headers: {
+          // "Accept":" */*",
+          "Content-Type": "application/json",
+          'Authorization': `token ${userToken}`
+        }
+      },
+      );
+      if (response.status === 201) {
+        alert(` You have created: ${JSON.stringify(response.data)}`);
+        
+      } else {
+        // throw new Error("An error has occurred");
+        console.log(response.request)
+      }
+    } catch (error) {
+      alert("An error has occurred");
+      // setIsLoading(false);
+      console.log(error)
+    }
+
+
+    
+}
+
+const datatofetch = () =>{
+  return {
+    create_by : userInfo.id,
+    item_moteur : data.item,
+    reference : data.reference,
+    numeroserie : data.numeroserie,
+    marque : data.marque,
+    type_moteur : data.type_moteur,
+    phase : data.phase,      
+    frequence : data.frequence,      
+    cosfi : data.cosfi,      
+    rendement : data.rendement,      
+    puissance : data.puissance,      
+    tour_min : data.tour_min,      
+    temperature_ambiante_user : data.temperature_ambiante_user, 
+    tension_etoile : data.tension_etoile,
+    tension_triangle : data.tension_triangle,      
+    courant_triangle : data.courant_triangle,      
+    courant_etoile : data.courant_etoile,
+    poids : 10,
+    indice_protection : data.indice_protection,
+    install : false
+  }
 }
 
 
-
-
-
-const saveDatatoServer = (data) => {
-  console.log(data)
-}
 
 
     return (
@@ -301,7 +365,7 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
@@ -506,14 +570,14 @@ const saveDatatoServer = (data) => {
               onPress={() => {resetAllTextInput()}}
 
               >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-              onPress={() => {saveDatatoServer( data )}}
+              onPress={() => {fetchDataMoteur()}}
               >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>

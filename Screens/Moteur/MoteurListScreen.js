@@ -1,13 +1,11 @@
 //This is an example code for NavigationDrawer//
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState, useContext } from 'react';
 //import react in our code.
 import { RefreshControl, StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView,ScrollView, StatusBar, ActivityIndicator } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
-import {getProfileFromWithSearchedText} from '../API/PDBA'
-import Feather from "react-native-vector-icons/Feather";
-import MoteurInstalledItem from '../Components/MoteurInstalledItem';
-// import { connect } from 'react-redux';
-// import { event } from 'react-native-reanimated';
+import { baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
 
   const triggerAlerte = () => {
@@ -23,126 +21,7 @@ import MoteurInstalledItem from '../Components/MoteurInstalledItem';
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
-  const dataMoteurInstalled = [
-    {
-        "id": 6,
-        "createdOn": "2022-10-27",
-        "updatedOn": "2022-10-27",
-        "temperature": 37.0,
-        "observation_general": "RAS",
-        "observation_avant": "RAS",
-        "observation_apres": "RAS",
-        "atelier": "SECHEUR",
-        "equipement": "ONDULEUR",
-        "couplage": "ETOILE",
-        "motif_remplacement": "RAS",
-        "continuite_u1_U2": 0.0,
-        "continuite_v1_v2": 0.0,
-        "continuite_w1_w2": 0.0,
-        "isolement_bobine_w2_u2": 0.0,
-        "isolement_bobine_w2_v2": 0.0,
-        "isolement_bobine_u2_v2": 0.0,
-        "isolement_bobine_masse_u1_m": 0.0,
-        "isolement_bobine_masse_v1_m": 0.0,
-        "isolement_bobine_masse_w1_m": 0.0,
-        "serage": true,
-        "equilibrage": true,
-        "photo_1": null,
-        "photo_2": null,
-        "photo_3": null,
-        "photo_4": null,
-        "photo_5": null,
-        "photo_6": null,
-        "photo_7": null,
-        "photo_8": null,
-        "photo_9": null,
-        "photo_10": null,
-        "moteur": 3,
-        "old_moteur": null,
-        "technicien": 2,
-        "superviceur": 3,
-        "item_moteur": "12009386",
-    },
-    {
-        "id": 7,
-        "createdOn": "2022-10-27",
-        "updatedOn": "2022-10-27",
-        "temperature": 37.0,
-        "observation_general": "RAS",
-        "observation_avant": "RAS",
-        "observation_apres": "RAS",
-        "atelier": "SECHEUR",
-        "equipement": "SAS",
-        "couplage": "ETOILE",
-        "motif_remplacement": "RAS",
-        "continuite_u1_U2": 0.0,
-        "continuite_v1_v2": 0.0,
-        "continuite_w1_w2": 0.0,
-        "isolement_bobine_w2_u2": 0.0,
-        "isolement_bobine_w2_v2": 0.0,
-        "isolement_bobine_u2_v2": 0.0,
-        "isolement_bobine_masse_u1_m": 0.0,
-        "isolement_bobine_masse_v1_m": 0.0,
-        "isolement_bobine_masse_w1_m": 0.0,
-        "serage": true,
-        "equilibrage": true,
-        "photo_1": null,
-        "photo_2": null,
-        "photo_3": null,
-        "photo_4": null,
-        "photo_5": null,
-        "photo_6": null,
-        "photo_7": null,
-        "photo_8": null,
-        "photo_9": null,
-        "photo_10": null,
-        "moteur": 4,
-        "old_moteur": null,
-        "technicien": 2,
-        "superviceur": 3,
-        "item_moteur": "12009387",
-    },
-    {
-        "id": 8,
-        "createdOn": "2022-10-27",
-        "updatedOn": "2022-10-27",
-        "temperature": 37.0,
-        "observation_general": "RAS",
-        "observation_avant": "RAS",
-        "observation_apres": "RAS",
-        "atelier": "SECHEUR",
-        "equipement": "SUPPRESSUE",
-        "couplage": "ETOILE",
-        "motif_remplacement": "RAS",
-        "continuite_u1_U2": 0.0,
-        "continuite_v1_v2": 0.0,
-        "continuite_w1_w2": 0.0,
-        "isolement_bobine_w2_u2": 0.0,
-        "isolement_bobine_w2_v2": 0.0,
-        "isolement_bobine_u2_v2": 0.0,
-        "isolement_bobine_masse_u1_m": 0.0,
-        "isolement_bobine_masse_v1_m": 0.0,
-        "isolement_bobine_masse_w1_m": 0.0,
-        "serage": true,
-        "equilibrage": true,
-        "photo_1": null,
-        "photo_2": null,
-        "photo_3": null,
-        "photo_4": null,
-        "photo_5": null,
-        "photo_6": null,
-        "photo_7": null,
-        "photo_8": null,
-        "photo_9": null,
-        "photo_10": null,
-        "moteur": 5,
-        "old_moteur": null,
-        "technicien": 2,
-        "superviceur": 3,
-        "item_moteur": "12009390",
 
-    }
-]
 
 const MoteurListScreen = ({navigation}) => {
 
@@ -154,8 +33,12 @@ const MoteurListScreen = ({navigation}) => {
   newRequet = false
   isValidProfie = true
 
-  const [data , setData] = useState([])
-  const [filtrerData, setFiltrerData] = useState([])
+  const {userInfo,userToken} = useContext(AuthContext)
+
+
+  const [moteurInstalled , setMoteurInstalled] = useState([])
+  const [messageErr , setMessageErr] = useState('')
+  const [filtrermoteurInstalled, setFiltrermoteurInstalled] = useState([])
       
     
   const [refreshing, setRefreshing] = React.useState(false);
@@ -163,32 +46,49 @@ const MoteurListScreen = ({navigation}) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    fetchData("http://192.168.227.30:8000/api/moteur_installed")
+    fetchmoteurInstalled()
   }, []);
 
   useEffect(() =>{
-    fetchData("http://192.168.227.30:8000/api/moteur_installed")
+    fetchmoteurInstalled()
   }, [])
 
   
 
-  const fetchData = async (url) => {
+  const fetchmoteurInstalled = async () => {
+
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/moteur/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `token ${userToken}`
+      }
+    }
     try{
-      const response = await fetch(url)
+
+      const response = await axios(configGetMotor);
       if (response.status == 200){
-        const json = await response.json()
-        setData(json);
-        setFiltrerData(json);
-        console.log(json)
+        const data = await response.data
+        setMoteurInstalled(data);
+        setFiltrermoteurInstalled(data);
       }
       else if (response.status == 401){
-        setData([]);
-        setFiltrerData([]);
+        setMoteurInstalled([]);
+        setFiltrermoteurInstalled([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+
+
+      }
+      else if (response.status == 404){
+        setMoteurInstalled([]);
+        setFiltrermoteurInstalled([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
 
       }
       
       // console.log(json)
-      console.log(response.status)
+      // console.log(response.status)
     } catch (error){
       console.log(error)
     }
@@ -196,17 +96,17 @@ const MoteurListScreen = ({navigation}) => {
 
   const searcheFilterFunction = (text) =>{
     if(text){
-        const newData = data.filter(item => {
+        const newmoteurInstalled = moteurInstalled.filter(item => {
             // console.log(item.equipement)
             // console.log(text)
-             const itemData = item.item_moteur ;
-             const textData = toString(text);
-             return itemData.indexOf(text) > -1;
+             const itemmoteurInstalled = item.item_moteur ;
+             const textmoteurInstalled = toString(text);
+             return itemmoteurInstalled.indexOf(text) > -1;
         })
-        setFiltrerData(newData)
+        setFiltrermoteurInstalled(newmoteurInstalled)
     }
     else{
-        setFiltrerData(data)
+        setFiltrermoteurInstalled(moteurInstalled)
     }
   }
 
@@ -215,6 +115,74 @@ const MoteurListScreen = ({navigation}) => {
     return true;
   }
 
+  const moteurinstaller =() =>{
+    return(
+      filtrermoteurInstalled.map((item, index) =>{
+        return(
+        
+        
+
+            <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
+             {
+                !item.install ?
+                <TouchableOpacity 
+                    style={{flexDirection:'row', height:70, }}
+                    onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                    >
+                      <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
+                          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
+                      </View>
+                      <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
+                        <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
+                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
+                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                      </View>
+                </TouchableOpacity>
+                : 
+                null
+              }
+            </View>
+        
+      )
+    }) 
+    )
+  }
+
+
+  const moteurNONinstaller =() =>{
+    return(
+      
+      filtrermoteurInstalled.map((item, index) =>{
+        return(
+            
+            <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
+              {
+                item.install ?
+
+                
+
+                <TouchableOpacity 
+                  style={{flexDirection:'row', height:70, }}
+                  onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                  >
+                    <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
+                    </View>
+                    <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
+                      <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
+                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
+                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                    </View>
+                </TouchableOpacity>
+
+                : null
+
+                }
+            </View>
+          )
+    }) 
+    )
+  }
 
  
     return (
@@ -227,13 +195,28 @@ const MoteurListScreen = ({navigation}) => {
             onPress={() => navigation.openDrawer()}
             style={{marginLeft:10, marginTop:5}}
           >
-          <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/menu.png")}/>
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
 
           </TouchableOpacity>
             <View style={{flex:1}}>
-              <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         </View>
+
+        <View style={{ flexDirection:'row', marginHorizontal:10}}>
+          <View style={{flex:1, alignContent:'flex-end'}}>
+            <Text style={{paddingLeft: 10,textAlign:'left',fontSize:25,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
+            Moteur Installé</Text>
+          </View>
+          <View style={{}}>
+            <TouchableOpacity
+              onPress={() =>navigation.navigate('moteur_new_moteur')}
+            >
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.inputzone }>
             <View style={{flexDirection: 'row',}}>
                 <View style={{flex:1, }}>
@@ -260,31 +243,25 @@ const MoteurListScreen = ({navigation}) => {
                 onRefresh={onRefresh}
               />}
             >
-
-            { !isEmpty(filtrerData) ?
               
-                filtrerData.map((item, index) =>{
-                    return(
-                        <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
-                        <TouchableOpacity 
-                            style={{flexDirection:'row', height:70, }}
-                            onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
-                            >
-                              <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
-                                  <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
-                              </View>
-                              <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                                <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
-                                <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                                <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
-                              </View>
-                          </TouchableOpacity>
-                    </View>
-                  )
-                }) 
+              { !isEmpty(filtrermoteurInstalled) ?
+                
+                moteurNONinstaller()              
+                
                :
                 <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#000'}}>- Vous n'est pas connecté -</Text>
+                  <Text style={{color:'#000'}}>messageErr</Text>
+
+                </View>
+              }
+
+
+              { !isEmpty(filtrermoteurInstalled) ?
+                
+                moteurinstaller()
+               :
+                <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
+                  <Text style={{color:'#000'}}>messageErr</Text>
 
                 </View>
               }

@@ -4,12 +4,6 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
-import MenuMoteurScreen from '../Screens/MenuMoteurScreen'
-import CaracteristiqueScreen from '../Screens/CaracteristiqueScreen'
-import Form_HorserviceScreen from '../Screens/Form_HorserviceScreen'
-import Form_Installation from '../Screens/Form_Installation'
-import Form_Inter_Cur_Screen from '../Screens/Form_Inter_Cur_Screen'
 import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
 import HistoriqueMenu from '../Screens/HistoriqueMenu';
 import HistoriquePreventive from '../Screens/HistoriquePreventive';

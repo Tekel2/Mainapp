@@ -20,8 +20,8 @@ function AppNav (){
 
     return(
         <NavigationContainer>
-            {/* { userToken !== null ? <Drawernavigation/> : <AuthNavigator/>} */}
-            <Drawernavigation/>
+            { userToken !== null ? <Drawernavigation/> : <AuthNavigator/>}
+            {/* <Drawernavigation/> */}
       </NavigationContainer>
     )
 }

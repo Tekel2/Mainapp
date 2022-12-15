@@ -3,13 +3,10 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 // import CustomDrawer from '../Components/CustomDrawer'
-import SplashScreen from '../Screens/SplashScreen'
-import HomeScreen from '../Screens/MoteurListScreen'
 import { CustomDrawer } from '../Components/CustomDrawer';
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
+
 import HomeNavigator from './HomeNavigator';
-import MenuMoteurScreen from '../Screens/MenuMoteurScreen';
 import PlannindNavigator from './PlanningNavigator';
 import HistoriqueNavigator from './HistoriqueNavigator';
 import ReparationNavigator from './ReparationNavigator';

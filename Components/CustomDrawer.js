@@ -1,4 +1,4 @@
-import React, { Component, useContext } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
 
 
@@ -8,15 +8,13 @@ import {
 } from '@react-navigation/drawer'
 import { Drawer } from 'react-native-paper';
  
-// import  Icon  from 'react-native-vector-icons/MaterialCommunityIcon';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Row } from 'react-native-table-component';
 import { AuthContext } from '../context/Authcontext';
-// import Icon from 'react-native-vector-icons/EvilIcons'
 
 
 export function CustomDrawer (props){
-    const {logout} = useContext(AuthContext)
+    const {logout, userInfo,userToken} = useContext(AuthContext)
+   
 
     return(
        <View style={styles.MainContainer}>
@@ -26,7 +24,7 @@ export function CustomDrawer (props){
             <View style={{padding:10, paddingBottom:30, justifyContent:'center', alignContent:'center', borderBottomRightRadius:8}}>
                 <Text style={{textAlign:'center', fontSize:22, fontWeight:'bold', color:'#ED7524'}}>CIMAF | CAMEROUN </Text>
                 <View style={{marginTop:20, marginLeft:10}}>
-                    <Text style={{fontSize:20, fontWeight:'bold', color:'#E4E4E4'}}>TEKEU</Text>
+                    <Text style={{fontSize:20, fontWeight:'bold', color:'#E4E4E4'}}>{userInfo.username}</Text>
                     <Text style={{fontSize:15, fontWeight:'bold', color:'#E4E4E4'}}>Superviseur</Text>
                 </View>
             </View>

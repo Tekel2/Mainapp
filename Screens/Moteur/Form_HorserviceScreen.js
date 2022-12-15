@@ -1,26 +1,14 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
-// import CheckBox from '@react-native-community/checkbox';
-import SelectDropdown from 'react-native-select-dropdown'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 
-function Form_Installation (props) {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const couplage = ["Etoile", "Triangle"]
 
-  const [image_1, setImage_1] = useState('')
-  const [image_2, setImage_2] = useState('')
-  const [image_3, setImage_3] = useState('')
-  const [image_4, setImage_4] = useState('')
+function Form_HorserviceScreen (props) {
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
   const [data, setData] = React.useState({
-    obsevervation_gene: '',
-    atelier: '',
-    equipement: '',
-    ancienmoteur_item: '',
-    motifremplacement: '',
-    couplage: '',
+    motifhorservice:'',
     continuite_U1_U2: 0.0,
     continuite_V1_V2: 0.0,
     continuite_W1_W2: 0.0,
@@ -33,12 +21,12 @@ function Form_Installation (props) {
     proposition: '',
     temperature: 0.0,
 
-
-
-    // secureTextEntry: true,
-    // isValidUser: true,
-    // isValidPassword: true,
 });
+
+const [image_1, setImage_1] = useState('')
+const [image_2, setImage_2] = useState('')
+const [image_3, setImage_3] = useState('')
+const [image_4, setImage_4] = useState('')
 
 const getImage_1 = () =>{
     const options = {
@@ -153,85 +141,21 @@ const getImage_1 = () =>{
     })
   }
 
+const handle_Motifhorservice = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          motifhorservice: val,
+      });
+  } else {
+      setData({
+          ...data,
+          motifhorservice: val,
+      });
+  }
+}
 
-const handle_Obsevervation_gene = (val) => {
-  if( val.trim().length >= 3 ) {
-      setData({
-          ...data,
-          obsevervation_gene: val,
-      });
-  } else {
-      setData({
-          ...data,
-          obsevervation_gene: val,
-      });
-  }
-}
-const handle_Atelier = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          atelier: val,
-      });
-  } else {
-      setData({
-          ...data,
-          atelier: val,
-      });
-  }
-}
-const handle_Equipement = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          equipement: val,
-      });
-  } else {
-      setData({
-          ...data,
-          equipement: val,
-      });
-  }
-}
-const handle_Ancienmoteur_item = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          ancienmoteur_item: val,
-      });
-  } else {
-      setData({
-          ...data,
-          ancienmoteur_item: val,
-      });
-  }
-}
-const handle_Motifremplacement = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          motifremplacement: val,
-      });
-  } else {
-      setData({
-          ...data,
-          motifremplacement: val,
-      });
-  }
-}
-const handle_Couplage = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          couplage: val,
-      });
-  } else {
-      setData({
-          ...data,
-          couplage: val,
-      });
-  }
-}
+
 const handle_Continuite_U1_U2 = (val) => {
   if( val.trim().length >= 5 ) {
       setData({
@@ -376,38 +300,9 @@ const handle_Temperature = (val) => {
   }
 }
 
-const resetAllTextInput = () => {
-  setData({
-      ...data,
-      obsevervation_gene: '',
-      atelier: '',
-      equipement: '',
-      ancienmoteur_item: '',
-      motifremplacement: '',
-      couplage: '',
-      continuite_U1_U2: 0.0,
-      continuite_V1_V2: 0.0,
-      continuite_W1_W2: 0.0,
-      isolementbobine_W2_U2: 0.0,
-      isolementbobine_W2_V2: 0.0,
-      isolementbobine_U1_V2: 0.0,
-      isolementbobinemasse_U1_M: 0.0,
-      isolementbobinemasse_V1_M: 0.0,
-      isolementbobinemasse_W1_M: 0.0,
-      proposition: '',
-      temperature: 0.0,
-  });
-
-}
-
-
-
-
-
 const saveDatatoServer = (data) => {
   console.log(data)
 }
-
 
     return (
         <SafeAreaView 
@@ -416,118 +311,41 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
           </View>
-          
+          <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
+                       }}>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
+          </View>
+        
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INSTALLATION</Text>
+            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>MISE HORS SERVICE</Text>
           </View>
         </View>
 
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
-          <View style={{flex:1}}>
-            <Text style={styles.titrechamp}>Observation Général</Text>
+        <View style={{flex:1, marginTop:10}}>
+            <Text style={styles.titrechamp}>Motif mise hors service</Text>
             <TextInput
-                  placeholder="Notez ici toutes vos observations avant tout action"
+                  placeholder=".. ."
                   placeholderTextColor="#777"
-                  autoCapitalize="words"
-                  numberOfLines={7}
+                  autoCapitalize="sentences"
+                  numberOfLines={4}
                   multiline={true}
-                  onChangeText={(val) => handle_Obsevervation_gene(val)}
-                            
                   style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Motifhorservice(val)}
+
               />              
           </View>
-
-          
-
+         
           <View style={{flex:1}}>
-            <Text style={styles.titrechamp}>Atelier</Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_Atelier(val)}
-              />  
-          </View>
-          <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Equipement</Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_Equipement(val)}
-              />  
-          </View>
-          <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Item Ancien Moteur</Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_Ancienmoteur_item(val)}
-              />  
-          </View>
-          <View style={{flex:1, marginTop: 20}}>
-            <Text style={styles.titrechamp}>Motif de remplacement </Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                numberOfLines={3}
-                multiline={true}
-                // style={[styles.textinput, {}]}
-                style={[styles.textinput,styles.textinputmulti]}
-                onChangeText={(val) => handle_Motifremplacement(val)}
-              />  
-          </View>
-          
-          <View style={{flex:1, marginTop:20}}>
-            <Text style={styles.titrechamp}>Couplage</Text>
-
-            <SelectDropdown
-                data={couplage}
-                rowTextStyle={{textAlign:'left'}}
-                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
-                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
-                // buttonTextStyle={{textAlign:'center', color:'#111'}}
-
-                onSelect={(selectedItem, index) => {
-                    console.log(selectedItem, index)
-                    handle_Couplage(selectedItem)
-                }}
-
-                buttonTextAfterSelection={(selectedItem, index) => {
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
-                    return selectedItem
-                }}
-                rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item
-                }}
-            />     
-
-            {/* <View style={{}}>
-                <CheckBox
-                    disabled={false}
-                    value={toggleCheckBox}
-                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                />
-                <Text style={styles.label}>Do you like React Native?</Text>
-            </View>       */}
-          </View>
-
-          <View style={{flex:1}}>
+                       
             <Text style={styles.titrechamp}>Continuité des enroulements en Ω</Text>
             <View style={{flex:1, flexDirection: 'row'}}>
                    <View style={{flex:1}}>
@@ -535,7 +353,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Continuite_U1_U2(val)}
@@ -546,7 +364,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Continuite_V1_V2(val)}
@@ -557,7 +375,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="Ohm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Continuite_W1_W2(val)}
@@ -575,7 +393,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
@@ -586,7 +404,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
@@ -597,10 +415,10 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
-                          onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
+                          onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>    
             </View>
@@ -615,7 +433,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
@@ -626,7 +444,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
@@ -637,7 +455,7 @@ const saveDatatoServer = (data) => {
                         <TextInput
                           placeholder="MegaOhm"
                           placeholderTextColor="#777"
-                          autoCapitalize="words"
+                          autoCapitalize="sentences"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
                           onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
@@ -646,12 +464,26 @@ const saveDatatoServer = (data) => {
             </View>
                       
           </View>
+
+          <View style={{flex:1, marginTop:10}}>
+            <Text style={styles.titrechamp}>Proposition</Text>
+            <TextInput
+                  placeholder="Notez ici vos propositions"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  numberOfLines={7}
+                  multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_Proposition(val)}
+
+              />              
+          </View>
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Température</Text>
               <TextInput
                 placeholder="°C"
                 placeholderTextColor="#777"
-                autoCapitalize="words"
+                autoCapitalize="sentences"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
                 onChangeText={(val) => handle_Temperature(val)}
@@ -673,7 +505,7 @@ const saveDatatoServer = (data) => {
                   <TouchableOpacity
                     onPress={()=> getImage_1()}
                   >
-                    <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                   </TouchableOpacity>
                   <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 1</Text>
                 </View>
@@ -692,12 +524,12 @@ const saveDatatoServer = (data) => {
                   <TouchableOpacity
                     onPress={()=> getImage_2()}
                   >
-                    <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                    <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                   </TouchableOpacity>
                   <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
                 </View>
             </View>
-        </View>
+          </View>
         <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
           <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
               {
@@ -713,7 +545,7 @@ const saveDatatoServer = (data) => {
                 <TouchableOpacity
                   onPress={()=> getImage_3()}
                 >
-                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                 </TouchableOpacity>
                 <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
               </View>
@@ -732,42 +564,24 @@ const saveDatatoServer = (data) => {
                 <TouchableOpacity
                   onPress={()=> getImage_4()}
                 >
-                  <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/icon_camera.png")}/>
+                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                 </TouchableOpacity>
                 <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
               </View>
           </View>
         </View>
 
-          
-          <View style={{flex:1, marginTop:10}}>
-            <Text style={styles.titrechamp}>Proposition</Text>
-            <TextInput
-                  placeholder="Notez ici vos propositions"
-                  placeholderTextColor="#777"
-                  autoCapitalize="words"
-                  numberOfLines={7}
-                  multiline={true}
-                  style={[styles.textinput,styles.textinputmulti]}
-                onChangeText={(val) => handle_Proposition(val)}
 
-              />              
-          </View>
-          
           <View style={{flexDirection: 'row', marginTop:25}}>
-            <TouchableOpacity 
-              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-              onPress={() => {resetAllTextInput()}}
-
-              >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+            <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
               onPress={() => {saveDatatoServer( data )}}
-              >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+            >
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>
@@ -833,6 +647,7 @@ const styles = StyleSheet.create({
     titrechamp:{
       fontSize: 20,
       color: '#000'
+
       // marginLeft:5,
     },
     textinput: {
@@ -860,4 +675,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default Form_Installation;
+export default Form_HorserviceScreen;
