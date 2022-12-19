@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 
-const HistoriqueHS = ({navigation}) => {
+const HistoriqueCurative = ({navigation}) => {
 
     const [preventivelist, setPreventive] = useState([])
     const [filtrerData, setFiltrerData] = useState([])
@@ -16,13 +16,13 @@ const HistoriqueHS = ({navigation}) => {
         >
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
         </View>
 
         <ScrollView 
             style={{ flex:9, marginLeft:10,marginRight:10,marginBottom: 5, paddingBottom:5}}
             contentContainerStyle={styles.scrollView}
-            // refreshC²²ontrol={
+            // refreshControl={
             //   <RefreshControl
             //     refreshing={refreshing}
             //     onRefresh={onRefresh}
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default HistoriqueHS;
+export default HistoriqueCurative;

@@ -3,14 +3,17 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import HistoriqueMenu from '../Screens/Historique/HistoriqueMenu';
+import HistoriqueHS from '../Screens/Historique/HistoriqueHS';
+import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen';
 
-import Form_Inter_Prev_Screen from '../Screens/Form_Inter_Prev_Screen'
-import HistoriqueMenu from '../Screens/HistoriqueMenu';
-import HistoriquePreventive from '../Screens/HistoriquePreventive';
-import HistoriqueCurative from '../Screens/HistoriqueCurative';
-import HistoriqueHS from '../Screens/HistoriqueHS';
-import HistoriqueInstallation from '../Screens/HistoriqueInstallation';
-import HistoriqueReparation from '../Screens/HistoriqueReparation';
+// import Form_Inter_Prev_Screen from '../Screens/Historique/Form_Inter_Prev_Screen'
+// import HistoriqueMenu from '../Screens/Historique/HistoriqueMenu';
+// import HistoriquePreventive from '../Screens/Historique/HistoriquePreventive';
+// import HistoriqueCurative from '../Screens/Historique/HistoriqueCurative';
+// import HistoriqueHS from '../Screens/Historique/HistoriqueHS';
+// import HistoriqueInstallation from '../Screens/Historique/HistoriqueInstallation';
+// import HistoriqueReparation from '../Screens/Historique/HistoriqueReparation';
 
 
 const Stack = createStackNavigator();
@@ -38,7 +41,7 @@ const HistoriqueNavigator = ({navigation}) => (
         <Stack.Screen name="His_hs" component={HistoriqueHS}/>
         <Stack.Screen name="His_install" component={HistoriqueInstallation}/>
         <Stack.Screen name="His_reparation" component={HistoriqueReparation}/>
-        <Stack.Screen name="Form_edit_prev" component={Form_Inter_Prev_Screen}/>
+        <Stack.Screen name="Form_edit_prev" component={Form_Inter_Prev_Screencreen}/>
       
     </Stack.Navigator>
 );

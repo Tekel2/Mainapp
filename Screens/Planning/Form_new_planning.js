@@ -182,7 +182,7 @@ const Form_new_planning = ({route, navigation}) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
@@ -265,14 +265,14 @@ const Form_new_planning = ({route, navigation}) => {
             </View>
             <View style={{flexDirection: 'row', marginTop:20}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
               onPress={() => {compareDate( dateIntDebut, dateIntFin )}}
             >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>

@@ -16,23 +16,98 @@ const  Form_Installation = ({navigation, route}) => {
   const couplage = ["Etoile", "Triangle"]
   const superviseur = [{"Etoile":12,"id":55,nom:"tekeu"}, {"Triangle":15, "id":56,nom:"april"}]
 
-  const [image_1, setImage_1] = useState('')
-  const [image_2, setImage_2] = useState('')
-  const [image_3, setImage_3] = useState('')
-  const [image_4, setImage_4] = useState('')
+  const [image_1_View, setImage_1_View] = useState('')
+  const [image_2_View, setImage_2_View] = useState('')
+  const [image_3_View, setImage_3_View] = useState('')
+  const [image_4_View, setImage_4_View] = useState('')
 
+  const [checkBoxSerage, setCheckBoxSerage] = useState(false)
+  const [checkBoxEquil, setCheckBoxEquil] = useState(false)
 
   const [dataAtalier, setDataAtalier] = useState([])
   const [dataSuperviseur, setDataSuperviseur] = useState([])
   const [dataTechnicien, setDataTechnicien] = useState([])
+  const [dataEqt, setDataEqt] = useState([])
+
+  const [data, setData] = React.useState({
+    obsevervation_gene: '',
+    ancienmoteur_item: '',
+    motifremplacement: '',
+    idAtelier:0,
+    idEquipement:0,
+    couplage: '',
+    continuite_U1_U2: 0.0,
+    continuite_V1_V2: 0.0,
+    continuite_W1_W2: 0.0,
+    isolementbobine_W2_U2: 0.0,
+    isolementbobine_W2_V2: 0.0,
+    isolementbobine_U1_V2: 0.0,
+    isolementbobinemasse_U1_M: 0.0,
+    isolementbobinemasse_V1_M: 0.0,
+    isolementbobinemasse_W1_M: 0.0,
+    proposition: '',
+    temperature: 0.0,
+    idTech: 0,
+    idsuperv:0,
+    photo_1:{},
+    photo_2:{},
+    photo_3:{},
+    photo_4:{},
+
+  });
 
 
   useEffect(() =>{
     getAtelier('atelier')
-    getSuperviseur('equipement')
+    getSuperviseur('superviceur_list')
+    getEquipement('equipement')
+    getTechnicien('technicien_list')
+
   },[])
 
 
+  const getEquipement = async ( route ) =>{
+
+    try {
+      setIsLoading(true)
+      const response = await axios.get(`${baseUrlApi}/${route}/`, 
+          {
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `token ${userToken}`
+            }
+          },
+        );
+        // navigation.navigate('Equipement')
+        const data = await response.data
+        setDataEqt(data)
+        // console.log("Equipement : ", data)
+        
+        setIsLoading(false)
+
+
+    } catch (error) {
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 500){
+        alert("Cet atelier ne dispose pas encore de d'équipent")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      console.log(error)
+      // setIsloading(false)
+      setIsLoading(false)
+
+
+    }    
+  }
+  
   const getAtelier = async ( route, ) =>{
 
     try {
@@ -48,7 +123,7 @@ const  Form_Installation = ({navigation, route}) => {
         // navigation.navigate('Equipement')
         const data = await response.data
         setDataAtalier(data)
-        console.log("atelier : ", data)
+        // console.log("atelier : ", data)
         
         setIsLoading(false)
 
@@ -92,7 +167,7 @@ const  Form_Installation = ({navigation, route}) => {
         const data = await response.data
         setDataSuperviseur(data)
         setIsLoading(false)
-        console.log("superviseur : ", data)
+        // console.log("superviseur : ", data)
 
     } catch (error) {
       if(!error.response){
@@ -117,6 +192,7 @@ const  Form_Installation = ({navigation, route}) => {
   const getTechnicien = async ( route, ) =>{
 
     try {
+      setIsLoading(true)
       const response = await axios.get(`${baseUrlApi}/${route}/`, 
           {
             headers: {
@@ -128,12 +204,14 @@ const  Form_Installation = ({navigation, route}) => {
         // navigation.navigate('Equipement')
         const data = await response.data
         setDataTechnicien(data)
+        // console.log('technicien  : ', data)
+        setIsLoading(false)
 
     } catch (error) {
       if(!error.response){
         alert("Aucune reponse du serveur");
       }
-      else if (error.response?.status === 400){
+      else if (error.response?.status === 500){
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
@@ -144,39 +222,66 @@ const  Form_Installation = ({navigation, route}) => {
       }
       // alert("An error has occurred");
       console.log(error)
-      // setIsloading(false)
+      setIsLoading(false)
 
     }    
   }
 
+ 
 
-  const [data, setData] = React.useState({
-    obsevervation_gene: '',
-    atelier: '',
-    equipement: '',
-    ancienmoteur_item: '',
-    motifremplacement: '',
-    couplage: '',
-    continuite_U1_U2: 0.0,
-    continuite_V1_V2: 0.0,
-    continuite_W1_W2: 0.0,
-    isolementbobine_W2_U2: 0.0,
-    isolementbobine_W2_V2: 0.0,
-    isolementbobine_U1_V2: 0.0,
-    isolementbobinemasse_U1_M: 0.0,
-    isolementbobinemasse_V1_M: 0.0,
-    isolementbobinemasse_W1_M: 0.0,
-    proposition: '',
-    temperature: 0.0,
+  const getImage_1_View = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      // console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_1_View(source)
 
 
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
 
-    // secureTextEntry: true,
-    // isValidUser: true,
-    // isValidPassword: true,
-});
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
 
-const getImage_1 = () =>{
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_1: { uri: localUri, name: filename, type }
+        
+      })
+      
+        // console.log(formData)
+      // console.log("URI ", response.assets[0].uri)
+      // console.log("Filename ", response.assets[0].uri.split('/').pop())
+      // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+      // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+      
+
+      }
+    })
+  };
+
+  const getImage_2_View = () =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -199,13 +304,27 @@ const getImage_1 = () =>{
       else {
       //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
       const source = { uri: response.assets[0].uri };
-      setImage_1(source)
+      setImage_2_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_2: { uri: localUri, name: filename, type }
+        
+      })
 
       }
     })
-  }
-
-  const getImage_2 = () =>{
+  };
+  const getImage_3_View = () =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -228,12 +347,27 @@ const getImage_1 = () =>{
       else {
       //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
       const source = { uri: response.assets[0].uri };
-      setImage_2(source)
+      setImage_3_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_3: { uri: localUri, name: filename, type }
+        
+      })
 
       }
     })
-  }
-  const getImage_3 = () =>{
+  };
+  const getImage_4_View = () =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -256,39 +390,26 @@ const getImage_1 = () =>{
       else {
       //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
       const source = { uri: response.assets[0].uri };
-      setImage_3(source)
+      setImage_4_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_4: { uri: localUri, name: filename, type }
+        
+      })
 
       }
     })
-  }
-  const getImage_4 = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
-
-    launchCamera(options, response =>{
-      console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_4(source)
-
-      }
-    })
-  }
+  };
 
 
 const handle_Obsevervation_gene = (val) => {
@@ -304,31 +425,23 @@ const handle_Obsevervation_gene = (val) => {
       });
   }
 }
+
 const handle_Atelier = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          atelier: val,
-      });
-  } else {
-      setData({
-          ...data,
-          atelier: val,
-      });
-  }
+  console.log(val)
+  
+    // getEquipement('equipement_by_atelier', val)
+    setData({
+      ...data,
+      idAtelier:val
+    })
+  
 }
+
 const handle_Equipement = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          equipement: val,
-      });
-  } else {
-      setData({
-          ...data,
-          equipement: val,
-      });
-  }
+  setData({
+    ...data,
+    idEquipement:val
+  })
 }
 const handle_Ancienmoteur_item = (val) => {
   if( val.trim().length >= 5 ) {
@@ -342,6 +455,35 @@ const handle_Ancienmoteur_item = (val) => {
           ancienmoteur_item: val,
       });
   }
+}
+
+const toggleSerage =() =>{
+  setCheckBoxSerage(!checkBoxSerage)
+}
+const iconeSerage =()=>{
+  return(
+    <View>
+      {checkBoxSerage ? 
+        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_true.png")}/>
+        :
+        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_false.png")}/>
+      }
+    </View>
+  )
+}
+const toggleEquilibrage =() =>{
+setCheckBoxEquil(!checkBoxEquil)
+}
+const iconeEquilibrage =()=>{
+  return(
+    <View>
+      {checkBoxEquil ? 
+        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_true.png")}/>
+        :
+        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_false.png")}/>
+      }
+    </View>
+  )
 }
 const handle_Motifremplacement = (val) => {
   if( val.trim().length >= 5 ) {
@@ -513,74 +655,119 @@ const handle_Temperature = (val) => {
   }
 }
 
-const resetAllTextInput = () => {
+const handle_superviseur = (val) => {
+  
+      setData({
+          ...data,
+          idsuperv: val,
+      });
+  
+}
+
+const handle_Technicien = (val) => {
+  
   setData({
       ...data,
-      obsevervation_gene: '',
-      atelier: '',
-      equipement: '',
-      ancienmoteur_item: '',
-      motifremplacement: '',
-      couplage: '',
-      continuite_U1_U2: 0.0,
-      continuite_V1_V2: 0.0,
-      continuite_W1_W2: 0.0,
-      isolementbobine_W2_U2: 0.0,
-      isolementbobine_W2_V2: 0.0,
-      isolementbobine_U1_V2: 0.0,
-      isolementbobinemasse_U1_M: 0.0,
-      isolementbobinemasse_V1_M: 0.0,
-      isolementbobinemasse_W1_M: 0.0,
-      proposition: '',
-      temperature: 0.0,
+      idTech: val,
   });
 
 }
 
-const fetchDataMoteur = async () => {
-  console.log(datatofetch())
+
+const datatofetch = () => {
+  return {
+    moteur : moteurItem.id,
+        create_by : userInfo.id,
+        atelier : data.idAtelier,
+        equipement : data.idEquipement,
+        temperature : data.temperature,
+        // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
+        observation_general : data.obsevervation_gene,
+        observation_avant : "data.observation_avant",
+        observation_apres : "data.observation_apres",
+        couplage : data.couplage,
+        motif_remplacement : data.motifremplacement,
+        continuite_u1_U2 : data.continuite_U1_U2,
+        continuite_v1_v2 : data.continuite_V1_V2,
+        continuite_w1_w2 : data.continuite_W1_W2,
+        isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+        isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+        isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+        isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+        isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+        isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+        serage : checkBoxSerage, 
+        equilibrage :checkBoxEquil,
+        photo_1 : data.photo_1,
+        photo_2 : data.photo_2,
+        photo_3 : data.photo_3,
+        photo_4 : data.photo_3,
+        photo_5 : data.photo_3,
+        photo_6 : data.photo_3,
+        photo_7 : data.photo_3,
+        photo_8 : data.photo_3,
+        photo_9 : data.photo_3,
+        photo_10 : data.photo_3,
+        technicien : data.idTech,
+        superviceur : data.idsuperv,
+  }
+}
+
+
+const fetchDataInstallationMoteur = async () => {
+  // console.log(datatofetch())
    
     try {
-      const response = await axios.post(`${baseUrlApi}/api/moteur/`, 
+      const response = await axios.post(`${baseUrlApi}/installation/`, 
       
       {
+        moteur : moteurItem.id,
         create_by : userInfo.id,
-        item_moteur : data.item,
-        reference : data.reference,
-        numeroserie : data.numeroserie,
-        marque : data.marque,
-        type_moteur : data.type_moteur,
-        phase : data.phase,      
-        frequence : data.frequence,      
-        cosfi : data.cosfi,      
-        rendement : data.rendement,      
-        puissance : data.puissance,      
-        tour_min : data.tour_min,      
-        temperature_ambiante_user : data.temperature_ambiante_user, 
-        tension_etoile : data.tension_etoile,
-        tension_triangle : data.tension_triangle,      
-        courant_triangle : data.courant_triangle,      
-        courant_etoile : data.courant_etoile,
-        poids : 30,
-        indice_protection : data.indice_protection,
-        install : false
-        // datatofetch
+        atelier : data.idAtelier,
+        equipement : data.idEquipement,
+        temperature : data.temperature,
+        // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
+        observation_general : data.obsevervation_gene,
+        observation_avant : "data.observation_avant",
+        observation_apres : "data.observation_apres",
+        couplage : data.couplage,
+        motif_remplacement : data.motifremplacement,
+        continuite_u1_U2 : data.continuite_U1_U2,
+        continuite_v1_v2 : data.continuite_V1_V2,
+        continuite_w1_w2 : data.continuite_W1_W2,
+        isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+        isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+        isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+        isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+        isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+        isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+        serage : checkBoxSerage, 
+        equilibrage :checkBoxEquil,
+        photo_1 : image_1_View,
+        photo_2 : data.photo_2,
+        photo_3 : data.photo_3,
+        photo_4 : data.photo_3,
+        // photo_5 : data.photo_3,
+        // photo_6 : data.photo_3,
+        // photo_7 : data.photo_3,
+        // photo_8 : data.photo_3,
+        // photo_9 : data.photo_3,
+        // photo_10 : data.photo_3,
+        technicien : data.idTech,
+        superviceur : data.idsuperv,
       },
       {
         headers: {
           // "Accept":" */*",
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          'Content-Type': 'multipart/form-data',
           'Authorization': `token ${userToken}`
         }
       },
       );
-      if (response.status === 201) {
-        alert(` You have created: ${JSON.stringify(response.data)}`);
-        
-      } else {
-        // throw new Error("An error has occurred");
-        console.log(response.request)
-      }
+
+      navigation.navigate('moteur_Home')
+      
     } catch (error) {
       alert("An error has occurred");
       // setIsLoading(false);
@@ -592,35 +779,19 @@ const fetchDataMoteur = async () => {
 }
 
 
+  const selectEqt =(item)=>{
+    if (data.idAtelier === item.atelier.id){
+      return item.nom_equipenent
+    }
+    
+  }
 
 
-
-const saveDatatoServer = (data) => {
-  console.log(data)
-}
-
-
-    return (
-        <SafeAreaView 
-            style={styles.MainContainer}
-        >
-        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{ flexDirection: 'column'}}>
-            <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
-            </View>
+  
+const contentForm = ()=>{
+  return(
+    <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
         
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
-            <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
-          </View>
-          
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INSTALLATION</Text>
-          </View>
-        </View>
-
-        <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Observation Général</Text>
             <TextInput
@@ -633,30 +804,65 @@ const saveDatatoServer = (data) => {
                             
                   style={[styles.textinput,styles.textinputmulti]}
               />              
-          </View>
+          </View>          
 
-          
-
-          <View style={{flex:1}}>
+          <View style={{flex:1, marginTop:20}}>
             <Text style={styles.titrechamp}>Atelier</Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_Atelier(val)}
-              />  
+
+            <SelectDropdown
+                data={dataAtalier}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    // console.log(selectedItem.id, index)
+                    handle_Atelier(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.nom_atelier
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item.nom_atelier
+                }}
+            />    
           </View>
-          <View style={{flex:1, marginTop: 20}}>
+
+          <View style={{flex:1, marginTop:20}}>
             <Text style={styles.titrechamp}>Equipement</Text>
-              <TextInput
-                placeholder="...."
-                placeholderTextColor="#777"
-                autoCapitalize="words"
-                style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_Equipement(val)}
-              />  
+
+            <SelectDropdown
+                data={dataEqt}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index)
+                    handle_Equipement(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.nom_equipenent
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    // return { dataAtalier == item.atelier.id ?  item.nom_equipenent : null}
+                    return selectEqt(item)
+                }}
+            />    
           </View>
+
           <View style={{flex:1, marginTop: 20}}>
             <Text style={styles.titrechamp}>Item Ancien Moteur</Text>
               <TextInput
@@ -667,6 +873,7 @@ const saveDatatoServer = (data) => {
                 onChangeText={(val) => handle_Ancienmoteur_item(val)}
               />  
           </View>
+
           <View style={{flex:1, marginTop: 20}}>
             <Text style={styles.titrechamp}>Motif de remplacement </Text>
               <TextInput
@@ -685,7 +892,7 @@ const saveDatatoServer = (data) => {
             <Text style={styles.titrechamp}>Couplage</Text>
 
             <SelectDropdown
-                data={dataAtalier}
+                data={couplage}
                 rowTextStyle={{textAlign:'left'}}
                 selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
                 buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
@@ -704,18 +911,9 @@ const saveDatatoServer = (data) => {
                 rowTextForSelection={(item, index) => {
                     // text represented for each item in dropdown
                     // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item.nom_atelier
+                    return item
                 }}
-            />     
-
-            {/* <View style={{}}>
-                <CheckBox
-                    disabled={false}
-                    value={toggleCheckBox}
-                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                />
-                <Text style={styles.label}>Do you like React Native?</Text>
-            </View>       */}
+            />    
           </View>
 
           <View style={{flex:1}}>
@@ -837,6 +1035,7 @@ const saveDatatoServer = (data) => {
             </View>
                       
           </View>
+
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Température</Text>
               <TextInput
@@ -849,12 +1048,26 @@ const saveDatatoServer = (data) => {
               />  
           </View>
 
+          <View style={{flex:1,  flexDirection: 'row', alignItems:'center', marginTop:10}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Sérage</Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleSerage()}}>
+                {iconeSerage()}
+            </TouchableOpacity> 
+         </View>
+
+         <View style={{flex:1,  flexDirection: 'row', alignItems:'center', marginTop:10}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Equilibrage Moteur </Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleEquilibrage()}}>
+                {iconeEquilibrage()}
+            </TouchableOpacity> 
+         </View>
+
           <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
             <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                 {
-                  image_1?
+                  image_1_View?
                   <View >
-                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
+                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1_View}/>
                   </View>                
                   :
                   null
@@ -862,7 +1075,7 @@ const saveDatatoServer = (data) => {
                 
                 <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                   <TouchableOpacity
-                    onPress={()=> getImage_1()}
+                    onPress={()=> getImage_1_View()}
                   >
                     <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                   </TouchableOpacity>
@@ -871,9 +1084,9 @@ const saveDatatoServer = (data) => {
             </View>
             <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                 {
-                  image_2?
+                  image_2_View?
                   <View >
-                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
+                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2_View}/>
                   </View>                
                   :
                   null
@@ -881,39 +1094,40 @@ const saveDatatoServer = (data) => {
                 
                 <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                   <TouchableOpacity
-                    onPress={()=> getImage_2()}
+                    onPress={()=> getImage_2_View()}
                   >
                     <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                   </TouchableOpacity>
                   <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 2</Text>
                 </View>
             </View>
-        </View>
-        <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
-          <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
-              {
-                image_3?
-                 <View >
-                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
-                </View>                
-                :
-                null
-              }
-              
-              <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
-                <TouchableOpacity
-                  onPress={()=> getImage_3()}
-                >
-                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
-                </TouchableOpacity>
-                <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
-              </View>
           </View>
+
+          <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
+                {
+                  image_3_View?
+                  <View >
+                      <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3_View}/>
+                  </View>                
+                  :
+                  null
+                }
+                
+                <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
+                  <TouchableOpacity
+                    onPress={()=> getImage_3_View()}
+                  >
+                    <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
+                  </TouchableOpacity>
+                  <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 3</Text>
+                </View>
+            </View>
           <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
               {
-                image_4?
+                image_4_View?
                  <View >
-                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
+                    <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4_View}/>
                 </View>                
                 :
                 null
@@ -921,16 +1135,15 @@ const saveDatatoServer = (data) => {
               
               <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                 <TouchableOpacity
-                  onPress={()=> getImage_4()}
+                  onPress={()=> getImage_4_View()}
                 >
                   <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                 </TouchableOpacity>
                 <Text style={[styles.titrechamp, {marginLeft:20}]} >Image 4</Text>
               </View>
           </View>
-        </View>
+          </View>      
 
-          
           <View style={{flex:1, marginTop:10}}>
             <Text style={styles.titrechamp}>Proposition</Text>
             <TextInput
@@ -944,6 +1157,64 @@ const saveDatatoServer = (data) => {
 
               />              
           </View>
+
+          <View style={{flex:1, marginTop:20}}>
+            <Text style={styles.titrechamp}>Technicien</Text>
+
+            <SelectDropdown
+                data={dataTechnicien}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index)
+                    handle_Technicien(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.username
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    // return { dataAtalier == item.atelier.id ?  item.nom_equipenent : null}
+                    return item.username
+                }}
+            />    
+          </View>
+
+          <View style={{flex:1, marginTop:20}}>
+            <Text style={styles.titrechamp}>superviseur</Text>
+
+            <SelectDropdown
+                data={dataSuperviseur}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index)
+                    handle_superviseur(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.username
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    // return { dataAtalier == item.atelier.id ?  item.nom_equipenent : null}
+                    return item.username
+                }}
+            />    
+          </View>
           
           <View style={{flexDirection: 'row', marginTop:25}}>
             <TouchableOpacity 
@@ -956,7 +1227,7 @@ const saveDatatoServer = (data) => {
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-              onPress={() => {saveDatatoServer( data )}}
+              onPress={() => {fetchDataInstallationMoteur()}}
               >
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
@@ -964,6 +1235,43 @@ const saveDatatoServer = (data) => {
           </View>
           
         </ScrollView>
+  )
+}
+
+const loading =()=>{
+  return(
+    <SafeAreaView style={{flex:1, justifyContent:'center',alignItems:'center'}}>
+      <ActivityIndicator size={'large'}/>
+    </SafeAreaView>
+  )
+}
+
+
+    return (
+        <SafeAreaView 
+            style={styles.MainContainer}
+        >
+        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
+        <View style={{ flexDirection: 'column'}}>
+            <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
+            </View>
+        
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
+            <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
+          </View>
+          
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
+            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INSTALLATION</Text>
+          </View>
+        </View>
+
+        {
+          isLoading ? loading(): contentForm()
+        }
+
+        
            
 
         </SafeAreaView>

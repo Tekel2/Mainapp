@@ -267,7 +267,7 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
@@ -304,7 +304,7 @@ const saveDatatoServer = (data) => {
                         onPress={() => navigateTo(direction, {item})}
                         >
                           <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
-                              <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
+                              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                           </View>
                           <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
                             <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>

@@ -59,17 +59,19 @@ const MenuMoteurScreen = ({navigation, route}) => {
                   <Text style={styles.btninfo}>Caractéristiques</Text>
                 </TouchableOpacity>
                 
-                <TouchableOpacity
+               { dataMoteur.install ?
+               <TouchableOpacity
                   onPress={() => navigation.navigate('moteur_installed_info', {moteurItem:dataMoteur})}
                 >
                   <Text style={styles.btninfo}>Détails Installation</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>: null}
 
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('bilanMoteur', {moteurItem:dataMoteur})}
-                >
-                  <Text style={styles.btninfo}>Bilan Moteur</Text>
-                </TouchableOpacity>
+                {dataMoteur.install ? 
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('bilanMoteur', {moteurItem:dataMoteur})}
+                  >
+                    <Text style={styles.btninfo}>Bilan Moteur</Text>
+                  </TouchableOpacity> : null}
 
 
             </View>
@@ -94,17 +96,28 @@ const MenuMoteurScreen = ({navigation, route}) => {
                   <Text style={styles.btninfo}>Installation</Text>
                 </TouchableOpacity> */}
 
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Form_Cur', {moteurItem:dataMoteur})}
-                >
-                  <Text style={styles.btninfo}>Curative</Text>
-                </TouchableOpacity>
+                { dataMoteur.install ?
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Form_Cur', {moteurItem:dataMoteur})}
+                  >
+                    <Text style={styles.btninfo}>Curative</Text>
+                  </TouchableOpacity> : null}
 
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
-                >
-                  <Text style={styles.btninfo}>Hors service</Text>
-                </TouchableOpacity>
+                { dataMoteur.install ?
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
+                  >
+                    <Text style={styles.btninfo}>Hors service</Text>
+                  </TouchableOpacity> : null}
+
+                  {
+                    !dataMoteur.install ?
+                    <View style={{flex:1, alignItems:'center', }}>
+                      <Text style={{color:'#555', fontSize:18}}>Le moteur n'étant pas installé, les Interventions sont indisponible</Text>
+                    </View>
+                    :
+                    null
+                  }
 
             </View>
           </View>

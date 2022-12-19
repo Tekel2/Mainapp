@@ -1,14 +1,27 @@
-import React, { Component, useState } from 'react';
+import axios from 'axios';
+import React, { Component, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
-// import CheckBox from 'expo-checkbox';
+import SelectDropdown from 'react-native-select-dropdown'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
-function Form_Inter_Cur_Screen (props) {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const [image_1, setImage_1] = useState('')
-  const [image_2, setImage_2] = useState('')
-  const [image_3, setImage_3] = useState('')
-  const [image_4, setImage_4] = useState('')
+const Form_Inter_Cur_Screen =  ({route, navigation})=> {
+
+  const {userInfo,userToken} = useContext(AuthContext)
+  const {moteurItem} = route.params
+  const [isLoading, setIsLoading] = useState(true)
+  const [checkBoxSerage, setCheckBoxSerage] = useState(false)
+  const [checkBoxEquil, setCheckBoxEquil] = useState(false)
+  const [dataAtalier, setDataAtalier] = useState([])
+  const [dataEqt, setDataEqt] = useState([])
+  const [dataSuperviseur, setDataSuperviseur] = useState([])
+  const [dataTechnicien, setDataTechnicien] = useState([])
+  const [image_1_View, setImage_1_View] = useState('')
+  const [image_2_View, setImage_2_View] = useState('')
+  const [image_3_View, setImage_3_View] = useState('')
+  const [image_4_View, setImage_4_View] = useState('')
+
 
   const [data, setData] = React.useState({
     obsevervation_gene_av: '',
@@ -25,121 +38,428 @@ function Form_Inter_Cur_Screen (props) {
     isolementbobinemasse_W1_M: 0.0,
     proposition: '',
     temperature: 0.0,
+    idTech: 0,
+    idsuperv:0,
+    photo_1:{},
+    photo_2:{},
+    photo_3:{},
+    photo_4:{},
 
+  });
+
+  useEffect(() =>{
+    getSuperviseur('superviceur_list')
+    getTechnicien('technicien_list')
+    console.log(userToken)
+
+  },[])
+
+  const loading =()=>{
+    return(
+      <SafeAreaView style={{flex:1, justifyContent:'center',alignItems:'center'}}>
+        <ActivityIndicator size={'large'}/>
+      </SafeAreaView>
+    )
+  }
+
+  const datatofetch = () => {
+    return {
+      moteur : moteurItem.id,
+          create_by : userInfo.id,
+          temperature : data.temperature,
+          // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
+          // observation_general : data.obsevervation_gene,
+          observation_avant : data.obsevervation_gene_av,
+          description_panne: data.descriptionpanne,
+          observation_apres : data.obsevervation_gene_ap,
+          continuite_u1_U2 : data.continuite_U1_U2,
+          continuite_v1_v2 : data.continuite_V1_V2,
+          continuite_w1_w2 : data.continuite_W1_W2,
+          isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+          isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+          isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+          isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+          isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+          isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+          serage : checkBoxSerage, 
+          equilibrage :checkBoxEquil,
+          photo_1 : data.photo_1,
+          photo_2 : data.photo_2,
+          photo_3 : data.photo_3,
+          photo_4 : data.photo_3,
+          technicien : data.idTech,
+          superviceur : data.idsuperv,
+    }
+  }
+
+
+  const fetchData_InrtCurative = async () => {
+    console.log(datatofetch())
+     
+      try {
+        setIsLoading(true)
+        const response = await axios.post(`${baseUrlApi}/curative/`, 
+        
+        {
+          moteur : moteurItem.id,
+          create_by : userInfo.id,
+          temperature : data.temperature,
+          // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
+          // observation_general : data.obsevervation_gene,
+          observation_avant : data.obsevervation_gene_av,
+          description_panne: data.descriptionpanne,
+          observation_apres : data.obsevervation_gene_ap,
+          continuite_u1_U2 : data.continuite_U1_U2,
+          continuite_v1_v2 : data.continuite_V1_V2,
+          continuite_w1_w2 : data.continuite_W1_W2,
+          isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+          isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+          isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+          isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+          isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+          isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+          serage : checkBoxSerage, 
+          equilibrage :checkBoxEquil,
+          photo_1 : data.photo_1,
+          photo_2 : data.photo_2,
+          photo_3 : data.photo_3,
+          photo_4 : data.photo_3,
+          technicien : data.idTech,
+          superviceur : data.idsuperv,
+        },
+        {
+          headers: {
+            // "Accept":" */*",
+            // "Content-Type": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `token ${userToken}`
+          }
+        },
+        );
+  
+        navigation.navigate('moteur_Home')
+        
+      } catch (error) {
+        alert("An error has occurred");
+        setIsLoading(false);
+        console.log(error)
+      }
+  
+  
+      
+  }
+
+
+ 
+
+
+  const getSuperviseur = async ( route, ) =>{
+
+    try {
+      setIsLoading(true)
+
+      const response = await axios.get(`${baseUrlApi}/${route}/`, 
+          {
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `token ${userToken}`
+            }
+          },
+        );
+        // navigation.navigate('Equipement')
+        const data = await response.data
+        setDataSuperviseur(data)
+        setIsLoading(false)
+        // console.log("superviseur : ", data)
+
+    } catch (error) {
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      console.log(error)
+      setIsLoading(false)
+
+    }    
+  }
+
+  const getTechnicien = async ( route, ) =>{
+
+    try {
+      setIsLoading(true)
+      const response = await axios.get(`${baseUrlApi}/${route}/`, 
+          {
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `token ${userToken}`
+            }
+          },
+        );
+        // navigation.navigate('Equipement')
+        const data = await response.data
+        setDataTechnicien(data)
+        // console.log('technicien  : ', data)
+        setIsLoading(false)
+
+    } catch (error) {
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 500){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      console.log(error)
+      setIsLoading(false)
+
+    }    
+  }
+
+  const getImage_1_View = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      // console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_1_View(source)
+
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_1: { uri: localUri, name: filename, type }
+        
+      })
+      
+        // console.log(formData)
+      // console.log("URI ", response.assets[0].uri)
+      // console.log("Filename ", response.assets[0].uri.split('/').pop())
+      // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+      // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+      
+
+      }
+    })
+  };
+  const getImage_2_View = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      // console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_2_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_2: { uri: localUri, name: filename, type }
+        
+      })
+
+      }
+    })
+  };
+  const getImage_3_View = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      // console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_3_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_3: { uri: localUri, name: filename, type }
+        
+      })
+
+      }
+    })
+  };
+  const getImage_4_View = () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    launchCamera(options, response =>{
+      // console.log('Response = ', response)
+      if (response.didCancel){
+        console.log('User conceeled Image Picker')
+      }
+      else if (response.error){
+        console.log('ImagePicker Error', response.error)
+      }
+      else if (response.customButton){
+        console.log('User tape custom button', response.customButton)
+      }
+      else {
+      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+      const source = { uri: response.assets[0].uri };
+      setImage_4_View(source)
+
+      let localUri = response.assets[0].uri;
+      // setPhotoShow(localUri);
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // let formData = new FormData();
+      //   formData.append('photo', { uri: localUri, name: filename, type });
+      setData({
+        ...data,
+        photo_4: { uri: localUri, name: filename, type }
+        
+      })
+
+      }
+    })
+  };
+
+
+
+  const toggleSerage =() =>{
+    setCheckBoxSerage(!checkBoxSerage)
+  }
+  const iconeSerage =()=>{
+    return(
+      <View>
+        {checkBoxSerage ? 
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_true.png")}/>
+          :
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_false.png")}/>
+        }
+      </View>
+    )
+  }
+  const toggleEquilibrage =() =>{
+  setCheckBoxEquil(!checkBoxEquil)
+  }
+  const iconeEquilibrage =()=>{
+    return(
+      <View>
+        {checkBoxEquil ? 
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_true.png")}/>
+          :
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_check_false.png")}/>
+        }
+      </View>
+    )
+  }
+
+
+const handle_superviseur = (val) => {
+  
+    setData({
+        ...data,
+        idsuperv: val,
+    });
+
+}
+
+const handle_Technicien = (val) => {
+
+setData({
+    ...data,
+    idTech: val,
 });
-  const getImage_1 = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
 
-    launchCamera(options, response =>{
-      console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_1(source)
-
-      }
-    })
-  }
-  const getImage_2 = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
-
-    launchCamera(options, response =>{
-      console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_2(source)
-
-      }
-    })
-  }
-  const getImage_3 = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
-
-    launchCamera(options, response =>{
-      console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_3(source)
-
-      }
-    })
-  }
-  const getImage_4 = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
-
-    launchCamera(options, response =>{
-      console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_4(source)
-
-      }
-    })
-  }
-
+}
 const handle_Obsevervation_gene_av = (val) => {
   if( val.trim().length >= 3 ) {
       setData({
@@ -323,36 +643,9 @@ const handle_Temperature = (val) => {
   }
 }
 
-const saveDatatoServer = (data) => {
-  console.log(data)
-}
-
-    return (
-        <SafeAreaView 
-            style={styles.MainContainer}
-        >
-        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{ flexDirection: 'column'}}>
-            <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
-            </View>
-        
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
-            <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
-          </View>
-          <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
-                       }}>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
-          </View>
-        
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
-            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INTERVENTION CURATIVE</Text>
-          </View>
-        </View>
-
-        <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
+const renderContent = () => {
+  return(
+    <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Observation Général avant</Text>
             <TextInput
@@ -513,6 +806,22 @@ const saveDatatoServer = (data) => {
               />  
           </View>
 
+          <View style={{flex:1,  flexDirection: 'row', alignItems:'center', marginTop:10}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Sérage</Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleSerage()}}>
+                {iconeSerage()}
+            </TouchableOpacity> 
+         </View>
+
+         <View style={{flex:1,  flexDirection: 'row', alignItems:'center', marginTop:10}}>
+            <Text style={[styles.titrechamp, {marginRight: 10}]}>Equilibrage Moteur </Text>
+            <TouchableOpacity style={{}} onPress={() =>{toggleEquilibrage()}}>
+                {iconeEquilibrage()}
+            </TouchableOpacity> 
+         </View>
+
+                       
+
           <View style={{flex:1,marginTop:20}}>
             <Text style={styles.titrechamp}>Observation général Après</Text>
             <TextInput
@@ -530,9 +839,9 @@ const saveDatatoServer = (data) => {
           <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
               <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                   {
-                    image_1?
+                    image_1_View?
                     <View >
-                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1}/>
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_1_View}/>
                     </View>                
                     :
                     null
@@ -540,7 +849,7 @@ const saveDatatoServer = (data) => {
                   
                   <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                     <TouchableOpacity
-                      onPress={()=> getImage_1()}
+                      onPress={()=> getImage_1_View()}
                     >
                       <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                     </TouchableOpacity>
@@ -549,9 +858,9 @@ const saveDatatoServer = (data) => {
               </View>
               <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                   {
-                    image_2?
+                    image_2_View?
                     <View >
-                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2}/>
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_2_View}/>
                     </View>                
                     :
                     null
@@ -559,7 +868,7 @@ const saveDatatoServer = (data) => {
                   
                   <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                     <TouchableOpacity
-                      onPress={()=> getImage_2()}
+                      onPress={()=> getImage_2_View()}
                     >
                       <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                     </TouchableOpacity>
@@ -570,9 +879,9 @@ const saveDatatoServer = (data) => {
             <View style={{flex:1, flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:10}}>
               <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                   {
-                    image_3?
+                    image_3_View?
                     <View >
-                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3}/>
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_3_View}/>
                     </View>                
                     :
                     null
@@ -580,7 +889,7 @@ const saveDatatoServer = (data) => {
                   
                   <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                     <TouchableOpacity
-                      onPress={()=> getImage_3()}
+                      onPress={()=> getImage_3_View()}
                     >
                       <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                     </TouchableOpacity>
@@ -589,9 +898,9 @@ const saveDatatoServer = (data) => {
               </View>
               <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:10}}>
                   {
-                    image_4?
+                    image_4_View?
                     <View >
-                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4}/>
+                        <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4_View}/>
                     </View>                
                     :
                     null
@@ -599,7 +908,7 @@ const saveDatatoServer = (data) => {
                   
                   <View style={{justifyContent: 'center', alignItems: 'center',margin: 10,flexDirection:'row'}}>
                     <TouchableOpacity
-                      onPress={()=> getImage_4()}
+                      onPress={()=> getImage_4_View()}
                     >
                       <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon_camera.png")}/>
                     </TouchableOpacity>
@@ -622,6 +931,64 @@ const saveDatatoServer = (data) => {
               />              
           </View>
 
+          <View style={{flex:1, marginTop:20}}>
+            <Text style={styles.titrechamp}>Technicien</Text>
+
+            <SelectDropdown
+                data={dataTechnicien}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index)
+                    handle_Technicien(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.username
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    // return { dataAtalier == item.atelier.id ?  item.nom_equipenent : null}
+                    return item.username
+                }}
+            />    
+          </View>
+
+          <View style={{flex:1, marginTop:20}}>
+            <Text style={styles.titrechamp}>superviseur</Text>
+
+            <SelectDropdown
+                data={dataSuperviseur}
+                rowTextStyle={{textAlign:'left'}}
+                selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
+                buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
+                // buttonTextStyle={{textAlign:'center', color:'#111'}}
+
+                onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index)
+                    handle_superviseur(selectedItem.id)
+                }}
+
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.username
+                }}
+                rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    // return { dataAtalier == item.atelier.id ?  item.nom_equipenent : null}
+                    return item.username
+                }}
+            />    
+          </View>
+
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
@@ -629,7 +996,7 @@ const saveDatatoServer = (data) => {
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}              
-              onPress={() => {saveDatatoServer( data )}}
+              onPress={() => {fetchData_InrtCurative()}}
               >
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
@@ -637,6 +1004,35 @@ const saveDatatoServer = (data) => {
           </View>
           
         </ScrollView>
+  )
+}
+
+    return (
+        <SafeAreaView 
+            style={styles.MainContainer}
+        >
+        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
+        <View style={{ flexDirection: 'column'}}>
+            <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
+            </View>
+        
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
+            <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+          </View>
+          <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
+                       }}>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
+          </View>
+        
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
+            <Text style={[styles.etatprovenance, {width: 250, marginLeft:15, color: '#000'}]}>INTERVENTION CURATIVE</Text>
+          </View>
+        </View>
+
+        {isLoading ? loading(): renderContent()}
            
 
         </SafeAreaView>

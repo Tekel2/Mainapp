@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 
-const HistoriqueCurative = ({navigation}) => {
+const HistoriqueHS = ({navigation}) => {
 
     const [preventivelist, setPreventive] = useState([])
     const [filtrerData, setFiltrerData] = useState([])
@@ -16,13 +16,13 @@ const HistoriqueCurative = ({navigation}) => {
         >
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
         </View>
 
         <ScrollView 
             style={{ flex:9, marginLeft:10,marginRight:10,marginBottom: 5, paddingBottom:5}}
             contentContainerStyle={styles.scrollView}
-            // refreshControl={
+            // refreshC²²ontrol={
             //   <RefreshControl
             //     refreshing={refreshing}
             //     onRefresh={onRefresh}
@@ -39,7 +39,7 @@ const HistoriqueCurative = ({navigation}) => {
                                 navigation.navigate('Form_edit_prev')}}
                             >
                               <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
-                                  <Image style={{alignSelf:'center',}} source={require("../Screens/sources/assets/images/icon-moteur.png")}/>
+                                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                               </View>
                               <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
                                 <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.continuite_V1_V2}</Text>
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default HistoriqueCurative;
+export default HistoriqueHS;

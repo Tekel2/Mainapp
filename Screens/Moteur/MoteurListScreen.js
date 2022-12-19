@@ -118,13 +118,11 @@ const MoteurListScreen = ({navigation}) => {
   const moteurinstaller =() =>{
     return(
       filtrermoteurInstalled.map((item, index) =>{
-        return(
-        
-        
+        return(      
 
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
              {
-                !item.install ?
+                item.install ?
                 <TouchableOpacity 
                     style={{flexDirection:'row', height:70, }}
                     onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
@@ -157,7 +155,7 @@ const MoteurListScreen = ({navigation}) => {
             
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
               {
-                item.install ?
+                !item.install ?
 
                 
 

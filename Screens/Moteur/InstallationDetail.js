@@ -32,6 +32,7 @@ const InstallationDetail = ({navigation,route}) => {
 
 
   useEffect(() =>{
+    console.log(moteurItem)
     fetchDataInstallation("http://192.168.227.30:8000/api/moteur_installed",moteurItem.id )
   }, [])
 
@@ -48,27 +49,31 @@ const InstallationDetail = ({navigation,route}) => {
     let lien = url +"/"+ id_installed
     // console.log(lien)
     setIsLoadingInstalled(true)
-    console.log(dataMoteur)
+    // console.log(dataMoteur)
     try{
       const response = await fetch(lien)
       if (response.status == 200){
         const json = await response.json()
         setDatainstall(json);
+        setIsLoadingInstalled(false)
+
+        console.log(json.atelier.nom_atelier)
         
-        fetchDataAtelier("http://192.168.227.30:8000/api/atelier",json.equipement.id )
+        // fetchDataAtelier("http://192.168.227.30:8000/api/atelier",json.equipement.id )
         
         console.log(json.technicien.username)
 
       }
       else if (response.status == 401){
         setDatainstall([]);
+        setIsLoadingInstalled(false);
 
       }
-      
       
       console.log(response.status)
     } catch (error){
       console.log(error)
+      setIsLoadingInstalled(false)
     }
   }
 
@@ -115,7 +120,7 @@ const InstallationDetail = ({navigation,route}) => {
         <View style={{justifyContent:'center', alignItems:'center'}}>
         <View >
             <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
-            Détail moteur en réparation</Text>
+            Détail moteur installé</Text>
         </View>
 
         <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
@@ -144,7 +149,7 @@ const InstallationDetail = ({navigation,route}) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
             </View>
            <View style={{flex:1}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataAteler.nom_atelier}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.atelier.nom_atelier}</Text>
             </View>
         </View>
         <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>

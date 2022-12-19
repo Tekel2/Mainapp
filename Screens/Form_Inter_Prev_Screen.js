@@ -115,9 +115,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
   //   // console.log(image)
   // })
 
-  const toggleSerage =() =>{
-    setCheckBoxSerage(!checkBoxSerage)
-  }
+  
 
 
 
@@ -235,6 +233,9 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
   }
 
 
+  const toggleSerage =() =>{
+    setCheckBoxSerage(!checkBoxSerage)
+  }
 
   const iconeSerage =()=>{
     return(

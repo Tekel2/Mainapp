@@ -151,9 +151,18 @@ const AtelierList = ({navigation}) => {
     return (
         <SafeAreaView style={styles.MainContainer} >
           <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
-        </View>
+          <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+            <TouchableOpacity
+              onPress={() => navigation.openDrawer()}
+              style={{marginLeft:10, marginTop:5}}
+            >
+            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
+
+            </TouchableOpacity>
+              <View style={{flex:1}}>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
+              </View>
+          </View>
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>

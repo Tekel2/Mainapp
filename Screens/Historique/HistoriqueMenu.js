@@ -16,8 +16,17 @@ const HistoriqueMenu = ({navigation}) => {
             style={styles.MainContainer}
         >
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-            <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+        <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+          <TouchableOpacity
+            onPress={() => navigation.openDrawer()}
+            style={{marginLeft:10, marginTop:5}}
+          >
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
+
+          </TouchableOpacity>
+            <View style={{flex:1}}>
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
+            </View>
         </View>
         <View style={{flex:1, justifyContent:'flex-start', alignItems:'center'}}>
             <View style={{marginTop:20, marginBottom:20}}>
@@ -30,7 +39,7 @@ const HistoriqueMenu = ({navigation}) => {
 
                 >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_preventive.png")}/>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_preventive.png")}/>
                     </View>
                 </TouchableOpacity>
                 
@@ -38,7 +47,7 @@ const HistoriqueMenu = ({navigation}) => {
                      onPress={()=> navigation.navigate('His_curative')}
                 >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_curative.png")}/>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_curative.png")}/>
                     </View>
                 </TouchableOpacity>
 
@@ -46,7 +55,7 @@ const HistoriqueMenu = ({navigation}) => {
                     onPress={()=> navigation.navigate('His_hs')}
                 >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_hs.png")}/>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_hs.png")}/>
                     </View>
                 </TouchableOpacity>
 
@@ -54,7 +63,7 @@ const HistoriqueMenu = ({navigation}) => {
                     onPress={()=> navigation.navigate('His_install')}
                 >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_install_2.png")}/>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_install_2.png")}/>
                     </View>
                 </TouchableOpacity>
 
@@ -62,7 +71,7 @@ const HistoriqueMenu = ({navigation}) => {
                      onPress={()=> navigation.navigate('His_reparation')}
                 >
                     <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                        <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_reparation.png")}/>
+                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_reparation.png")}/>
                     </View>
                 </TouchableOpacity>
 
