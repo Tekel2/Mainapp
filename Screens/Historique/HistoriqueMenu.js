@@ -16,7 +16,7 @@ const HistoriqueMenu = ({navigation}) => {
             style={styles.MainContainer}
         >
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-        <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+        <View style={{flexDirection: 'row', marginTop:5}}>
           <TouchableOpacity
             onPress={() => navigation.openDrawer()}
             style={{marginLeft:10, marginTop:5}}

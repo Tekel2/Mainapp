@@ -10,7 +10,7 @@ import { baseUrlApi } from '../../API/urlbase';
 
 const  Form_Installation = ({navigation, route}) => {
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
   const {moteurItem} = route.params
   const [isLoading, setIsLoading] = useState(true)
   const couplage = ["Etoile", "Triangle"]
@@ -74,7 +74,7 @@ const  Form_Installation = ({navigation, route}) => {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -116,7 +116,7 @@ const  Form_Installation = ({navigation, route}) => {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -159,7 +159,7 @@ const  Form_Installation = ({navigation, route}) => {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -197,7 +197,7 @@ const  Form_Installation = ({navigation, route}) => {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -728,8 +728,8 @@ const fetchDataInstallationMoteur = async () => {
         temperature : data.temperature,
         // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
         observation_general : data.obsevervation_gene,
-        observation_avant : "data.observation_avant",
-        observation_apres : "data.observation_apres",
+        // observation_avant : "",
+        // observation_apres : "data.observation_apres",
         couplage : data.couplage,
         motif_remplacement : data.motifremplacement,
         continuite_u1_U2 : data.continuite_U1_U2,
@@ -761,7 +761,7 @@ const fetchDataInstallationMoteur = async () => {
           // "Accept":" */*",
           // "Content-Type": "application/json",
           'Content-Type': 'multipart/form-data',
-          'Authorization': `token ${userToken}`
+          'Authorization': `JWT ${access_token}`
         }
       },
       );

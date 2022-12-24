@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/Authcontext';
 
 const rechercheatelier = ({navigation, route}) => {
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -28,7 +28,7 @@ const getDataAtelier = async () => {
     url: `${baseUrlApi}/atelier/`,
     headers: {
       "Content-Type": "application/json",
-      'Authorization': `token ${userToken}`
+      'Authorization': `JWT ${access_token}`
     }
   }
   try{

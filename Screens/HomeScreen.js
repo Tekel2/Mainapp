@@ -1,196 +1,20 @@
+import axios, { Axios } from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Modal, Pressable, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { RefreshControl, StyleSheet, View, Modal, Pressable, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import warnOnce from 'react-native/Libraries/Utilities/warnOnce';
+import { axiosInstanceAPI, baseUrlApi } from '../API/urlbase';
 import { AuthContext } from '../context/Authcontext';
 
 
-// const dataMoteurInstalled = [
-//   {
-//       "id": 6,
-//       "createdOn": "2022-10-27",
-//       "updatedOn": "2022-10-27",
-//       "temperature": 37.0,
-//       "observation_general": "RAS",
-//       "observation_avant": "RAS",
-//       "observation_apres": "RAS",
-//       "atelier": "SECHEUR",
-//       "equipement": "ONDULEUR",
-//       "couplage": "ETOILE",
-//       "motif_remplacement": "RAS",
-//       "continuite_u1_U2": 0.0,
-//       "continuite_v1_v2": 0.0,
-//       "continuite_w1_w2": 0.0,
-//       "isolement_bobine_w2_u2": 0.0,
-//       "isolement_bobine_w2_v2": 0.0,
-//       "isolement_bobine_u2_v2": 0.0,
-//       "isolement_bobine_masse_u1_m": 0.0,
-//       "isolement_bobine_masse_v1_m": 0.0,
-//       "isolement_bobine_masse_w1_m": 0.0,
-//       "serage": true,
-//       "equilibrage": true,
-//       "photo_1": null,
-//       "photo_2": null,
-//       "photo_3": null,
-//       "photo_4": null,
-//       "photo_5": null,
-//       "photo_6": null,
-//       "photo_7": null,
-//       "photo_8": null,
-//       "photo_9": null,
-//       "photo_10": null,
-//       "moteur": 3,
-//       "old_moteur": null,
-//       "technicien": 2,
-//       "superviceur": 3,
-//       "item_moteur": "12009386",
-//   },
-//   {
-//       "id": 7,
-//       "createdOn": "2022-10-27",
-//       "updatedOn": "2022-10-27",
-//       "temperature": 37.0,
-//       "observation_general": "RAS",
-//       "observation_avant": "RAS",
-//       "observation_apres": "RAS",
-//       "atelier": "SECHEUR",
-//       "equipement": "SAS",
-//       "couplage": "ETOILE",
-//       "motif_remplacement": "RAS",
-//       "continuite_u1_U2": 0.0,
-//       "continuite_v1_v2": 0.0,
-//       "continuite_w1_w2": 0.0,
-//       "isolement_bobine_w2_u2": 0.0,
-//       "isolement_bobine_w2_v2": 0.0,
-//       "isolement_bobine_u2_v2": 0.0,
-//       "isolement_bobine_masse_u1_m": 0.0,
-//       "isolement_bobine_masse_v1_m": 0.0,
-//       "isolement_bobine_masse_w1_m": 0.0,
-//       "serage": true,
-//       "equilibrage": true,
-//       "photo_1": null,
-//       "photo_2": null,
-//       "photo_3": null,
-//       "photo_4": null,
-//       "photo_5": null,
-//       "photo_6": null,
-//       "photo_7": null,
-//       "photo_8": null,
-//       "photo_9": null,
-//       "photo_10": null,
-//       "moteur": 4,
-//       "old_moteur": null,
-//       "technicien": 2,
-//       "superviceur": 3,
-//       "item_moteur": "12009387",
-//   },
-//   {
-//       "id": 8,
-//       "createdOn": "2022-10-27",
-//       "updatedOn": "2022-10-27",
-//       "temperature": 37.0,
-//       "observation_general": "RAS",
-//       "observation_avant": "RAS",
-//       "observation_apres": "RAS",
-//       "atelier": "SECHEUR",
-//       "equipement": "SUPPRESSUE",
-//       "item_moteur": "12009390",
 
-//   },
-//   {
-//     "id": 9,
-//     "createdOn": "2022-10-27",
-//     "updatedOn": "2022-10-27",
-//     "temperature": 37.0,
-//     "observation_general": "RAS",
-//     "observation_avant": "RAS",
-//     "observation_apres": "RAS",
-//     "atelier": "SECHEUR",
-//     "equipement": "SUPPRESSUE",
-//     "item_moteur": "12009392",
 
-// },
-// {
-//   "id": 10,
-//   "createdOn": "2022-10-27",
-//   "updatedOn": "2022-10-27",
-//   "temperature": 37.0,
-//   "observation_general": "RAS",
-//   "observation_avant": "RAS",
-//   "observation_apres": "RAS",
-//   "atelier": "SECHEUR",
-//   "equipement": "SUPPRESSUE",
-//   "item_moteur": "12009400",
-
-// },
-// {
-// "id": 11,
-// "createdOn": "2022-10-27",
-// "updatedOn": "2022-10-27",
-// "temperature": 37.0,
-// "observation_general": "RAS",
-// "observation_avant": "RAS",
-// "observation_apres": "RAS",
-// "atelier": "SECHEUR",
-// "equipement": "SUPPRESSUE",
-// "item_moteur": "12009410",
-// },
-// {
-// "id": 12,
-// "createdOn": "2022-10-27",
-// "updatedOn": "2022-10-27",
-// "temperature": 37.0,
-// "observation_general": "RAS",
-// "observation_avant": "RAS",
-// "observation_apres": "RAS",
-// "atelier": "SECHEUR",
-// "equipement": "SUPPRESSUE",
-// "item_moteur": "12009420",
-
-// },
-// {
-// "id": 13,
-// "createdOn": "2022-10-27",
-// "updatedOn": "2022-10-27",
-// "temperature": 37.0,
-// "observation_general": "RAS",
-// "observation_avant": "RAS",
-// "observation_apres": "RAS",
-// "atelier": "SECHEUR",
-// "equipement": "SUPPRESSUE",
-// "item_moteur": "12009421",
-
-// },
-// {
-// "id": 14,
-// "createdOn": "2022-10-27",
-// "updatedOn": "2022-10-27",
-// "temperature": 37.0,
-// "observation_general": "RAS",
-// "observation_avant": "RAS",
-// "observation_apres": "RAS",
-// "atelier": "SECHEUR",
-// "equipement": "SUPPRESSUE",
-// "item_moteur": "12009422",
-
-// },
-// {
-// "id": 15,
-// "createdOn": "2022-10-27",
-// "updatedOn": "2022-10-27",
-// "temperature": 37.0,
-// "observation_general": "RAS",
-// "observation_avant": "RAS",
-// "observation_apres": "RAS",
-// "atelier": "SECHEUR",
-// "equipement": "SUPPRESSUE",
-// "item_moteur": "12009425",
-
-// }
-// ]
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const HomeScreen = ({navigation}) => {
 
-  const {userInfo} = useContext(AuthContext)
+  const {access_token} = useContext(AuthContext)
 
     // const [data, setData] = React.useState({
       
@@ -201,6 +25,22 @@ const HomeScreen = ({navigation}) => {
   const [modalvisible, setmodalVisible] = useState(false)
   const [modalitem, setModalitem] = useState(false)
   const [selected, setSelected] = useState();
+  const [isloading, setIsloading] = useState(false);
+  
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    getPlanning()
+  }, []);
+
+  useEffect(() =>{
+    getPlanning()
+    // setRefresh_token(null)
+  }, [])
 
   const selectHandler = item => {
     setSelected(item);
@@ -209,6 +49,7 @@ const HomeScreen = ({navigation}) => {
   const togleMoteurPlanning = ( ) =>{
     setMoteurPlanning(!moteuPlanning)
   }
+
   const Stringtext =() =>{
     if (moteuPlanning){
       return(
@@ -237,13 +78,66 @@ const HomeScreen = ({navigation}) => {
     }
   }
 
+  const getPlanning = async () => {
+    setIsloading(true)
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/planning/False/`, // Lien des planninig non executé
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    try{
+
+      // const response = await axios(configGetMotor);
+      const response = await axios(configGetMotor);
+      const data = await response.data
+      // console.log("45654656  ",data)
+      setData(data);
+      setFiltrerData(data);
+
+         
+      // console.log(json)
+      // console.log(response.status)
+    } catch (error){
+      console.log(error)
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucun planning de disponible")
+      }
+      // alert("An error has occurred");
+      console.log(response?.status)
+      // setIsloading(false)
+    }
+
+    setIsloading(false)
+  }
+
+  const loading=()=>{
+    return(
+      <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
+        <ActivityIndicator size={'large'}/>
+      </View>
+    )
+  }
 function viewModal(val){
   return(
+    
     <View >
       <Modal
         // animationType="slide"
         transparent={true}
         visible={modalvisible}
+        
         // style={styles.MainContainerModal}
       >
         <View  style={{ flex: 1, justifyContent: 'center',
@@ -265,8 +159,8 @@ function viewModal(val){
                           }}>
               Périoe d'intervention</Text>
                 <View style= {{flexDirection:'row',alignItems:'flex-start'}}>
-                  <Text style={styles.testcontentmodal}>Début: 12/12/2022</Text>
-                  <Text style={styles.testcontentmodal}>Fin: 12/12/2022</Text>
+                  <Text style={styles.testcontentmodal}>Début: {val.date_int}</Text>
+                  <Text style={styles.testcontentmodal}>Fin: {val.date_end_int}</Text>
                   {/* <Text style={styles.testcontentmodal}>content</Text> */}
                 </View>
               </View>
@@ -278,15 +172,15 @@ function viewModal(val){
 
               <View style= {{ flexDirection:'row'}}>
                 <Text style={[styles.testcontentmodal,{width:'34%'}]}>Moteur:</Text>
-                <Text style={styles.testcontentmodal}>{val.item_moteur}</Text>
+                <Text style={styles.testcontentmodal}>{val.moteur.item_moteur}</Text>
               </View>
               <View style= {{marginTop:15, flexDirection:'row'}}>
                 <Text style={[styles.testcontentmodal,{width:'34%'}]}>Atelier:</Text>
-                <Text style={styles.testcontentmodal}>{val.atelier}</Text>
+                <Text style={styles.testcontentmodal}>{val.atelier.nom_atelier}</Text>
               </View>
               <View style= {{marginTop:15, flexDirection:'row'}}>
                 <Text style={[styles.testcontentmodal,{width:'34%'}]}>Equipment:</Text>
-                <Text style={styles.testcontentmodal}>{val.equipement}</Text>
+                <Text style={styles.testcontentmodal}>{val.equipement.nom_equipenent}</Text>
               </View>
               <View style= {{marginTop:15, flexDirection:'row'}}>
                 <Text style={[styles.testcontentmodal,{width:'34%'}]}>Tâche pévue:</Text>
@@ -297,11 +191,10 @@ function viewModal(val){
                             paddingRight: 8,
                             width:'65%'
                           
-                            }}>PickledObjectField is database-agnostic, and should work with any database backend you can throw at it. You can pass in any Python object and it will automagically be converted behind the scenes. You never have to manually pickle or unpickle anything. Also works fine when querying; supports exact, in, and isnull lookups. It should be noted, however, that calling QuerySet.</Text>
+                            }}>
+                            {val.tache}
+                            </Text>
               </View>
-
-
-
             </View>            
             <Pressable
                 style={{backgroundColor: '#fff', borderBottomRightRadius:8, borderBottomLeftRadius:8}}
@@ -316,6 +209,65 @@ function viewModal(val){
   )
 
   } 
+
+  function isEmpty(obj) {
+    for(var i in obj) { return false; }
+    return true;
+  }
+
+  const renderHome=()=>{
+    return(
+        filtrerData.map((item, index) =>{ 
+          key={index}
+          return(
+            <View 
+              style={{marginBottom:6, 
+                      flexDirection:'row',  
+                      justifyContent: 'flex-start', 
+                      flex:1}}>
+                <TouchableOpacity 
+                    style={{flexDirection:'row', flex:3, height:80, }}
+                    onPress={() => navigation.navigate('Form_Pre',{dataItem:item})}
+                    >
+                    
+                      <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: {item.item_planning} </Text>
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: {item.date_int}   |   Fin: {item.date_end_int}</Text>
+                        {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.moteur.item_moteur} </Text>
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier.nom_atelier} </Text>
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement.nom_equipenent} </Text>
+                      </View>
+
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={{flexDirection:'row', flex:1, height:80, }}
+                    onPress={() => {
+                        setModalitem(item)
+                        setmodalVisible(true)
+                    }}
+                    // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+
+                    >
+                  <View style={{flex: 5,
+                              paddingLeft: 10,
+                              borderTopRightRadius: 5,
+                              borderBottomRightRadius:5,
+                              justifyContent:'center',
+                              borderWidth:1 ,
+                              borderColor:'#316094',}}>
+                      <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Détails</Text>
+                  </View>
+                  { modalvisible ? viewModal(modalitem): null}
+
+                  </TouchableOpacity>
+            </View>
+        )
+        })
+      
+    )
+  }
+
     return (
         <SafeAreaView style={styles.MainContainer} >
           <StatusBar backgroundColor='#316094' barStyle='light-content'/>
@@ -344,13 +296,7 @@ function viewModal(val){
                         }}>
             Liste programmée d'Intervention</Text>
           </View>
-          {/* <View style={{}}>
-            <TouchableOpacity
-              onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
-            >
-              <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_new.png")}/>
-            </TouchableOpacity>
-          </View> */}
+         
         </View>
 
         <View style={styles.view_liste}>
@@ -380,59 +326,25 @@ function viewModal(val){
                               
                 </View>            
             </View>
-            <ScrollView>
-                {
-                  filtrerData.map((item, index) =>{
-                    return(
-                    <View 
-                      style={{marginBottom:6, 
-                              flexDirection:'row',  
-                              justifyContent: 'flex-start', 
-                              flex:1}}>
+            <ScrollView
+               refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                />}
+            >
+                { !isEmpty(filtrerData) ?
+                
+                  renderHome()              
+                  
+                :
+                  <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
+                    <Text style={{color:'#aaa', fontWeight:'900', fontSize:18}}>Aucune intervention programmée</Text>
+                    <Text style={{color:'#000', marginTop:40, flexWrap:'wrap', fontWeight:'400', fontSize:15}}>Tirer vers le bas pour Actualiser !</Text>
 
-                          <View> 
-                          </View>
-                        <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:80, }}
-                            onPress={() => navigation.navigate('Form_Pre',{moteurItem:item})}
-                            >
-                            
-                              <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: 12/12/2022   |   Fin: 12/12/2022</Text>
-                                {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.item_moteur} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement} </Text>
-                              </View>
-
-                          </TouchableOpacity>
-                          <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:80, }}
-                            onPress={() => {
-                                setModalitem(item)
-                                setmodalVisible(true)
-                            }}
-                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
-
-                            >
-                          <View style={{flex: 5,
-                                      paddingLeft: 10,
-                                      borderTopRightRadius: 5,
-                                      borderBottomRightRadius:5,
-                                      justifyContent:'center',
-                                      borderWidth:1 ,
-                                      borderColor:'#316094',}}>
-                              <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Détails</Text>
-                          </View>
-                          {viewModal(modalitem)}
-
-                          </TouchableOpacity>
-                    </View>
-
-                  )
-                  })
-              }
+                  </View>
+                }
+                
                  
             </ScrollView>         
           

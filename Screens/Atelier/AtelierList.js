@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Modal, ScrollView, RefreshControl } from 'react-native';
 import { baseUrlApi } from '../../API/urlbase';
+import useRefreshToken from '../../API/useRefreshToken';
 import { AuthContext } from '../../context/Authcontext';
 
 
@@ -12,7 +13,7 @@ const wait = (timeout) => {
 
 const AtelierList = ({navigation}) => {
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -67,7 +68,7 @@ const AtelierList = ({navigation}) => {
       url: `${baseUrlApi}/atelier/`,
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `token ${userToken}`
+        'Authorization': `JWT ${access_token}`
       }
     }
     try{
@@ -96,6 +97,10 @@ const AtelierList = ({navigation}) => {
       // console.log(response.status)
     } catch (error){
       console.log(error)
+      if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+        useRefreshToken()
+      }
     }
   }
 
@@ -108,7 +113,7 @@ const AtelierList = ({navigation}) => {
         const newData = data.filter(item => {
             console.log(item.equipement)
             console.log(text)
-              const itemData = item.item_moteur ;
+              const itemData = item.nom_atelier ;
               const textData = toString(text);
               return itemData.indexOf(text) > -1;
         })
@@ -189,7 +194,8 @@ const AtelierList = ({navigation}) => {
                             // onChangeText={(val) => besointextInputChange(val)}
                             clearButtonMode="while-editing"
                             // maxLength= {22}
-                            keyboardType='decimal-pad'
+                            keyboardType=''
+                            autoCapitalize="characters"
                             placeholder="rechercher atelier"
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
@@ -227,7 +233,7 @@ const AtelierList = ({navigation}) => {
                               <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
                                 <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Atelier: {item.nom_atelier} </Text>
                                 <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>ItemAtelier: {item.item_atelier} </Text>
-                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: {item.createdOn}</Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>{item.createdOn}</Text>
 
                                 {viewModal(modalitem)}
                                 {/* <viewModal val={modalitem}/> */}

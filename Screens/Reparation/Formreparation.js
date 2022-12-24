@@ -301,7 +301,7 @@ const saveDatatoServer = (data) => {
         <StatusBar backgroundColor='#316094' barStyle='light-content'/>
         <View style={{ flexDirection: 'column'}}>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
@@ -506,14 +506,14 @@ const saveDatatoServer = (data) => {
               onPress={() => {resetAllTextInput()}}
 
               >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
               onPress={() => {saveDatatoServer( data )}}
               >
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
           </View>

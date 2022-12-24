@@ -1,190 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import { RefreshControl, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { axiosInstanceAPI, baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
 
-const dataMoteurInstalled = [
-  {
-      "id": 6,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "ONDULEUR",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 3,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009386",
-  },
-  {
-      "id": 7,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SAS",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 4,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009387",
-  },
-  {
-      "id": 8,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SUPPRESSUE",
-      "item_moteur": "12009390",
-
-  },
-  {
-    "id": 9,
-    "createdOn": "2022-10-27",
-    "updatedOn": "2022-10-27",
-    "temperature": 37.0,
-    "observation_general": "RAS",
-    "observation_avant": "RAS",
-    "observation_apres": "RAS",
-    "atelier": "SECHEUR",
-    "equipement": "SUPPRESSUE",
-    "item_moteur": "12009392",
-
-},
-{
-  "id": 10,
-  "createdOn": "2022-10-27",
-  "updatedOn": "2022-10-27",
-  "temperature": 37.0,
-  "observation_general": "RAS",
-  "observation_avant": "RAS",
-  "observation_apres": "RAS",
-  "atelier": "SECHEUR",
-  "equipement": "SUPPRESSUE",
-  "item_moteur": "12009400",
-
-},
-{
-"id": 11,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009410",
-},
-{
-"id": 12,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009420",
-
-},
-{
-"id": 13,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009421",
-
-},
-{
-"id": 14,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009422",
-
-},
-{
-"id": 15,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009425",
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 }
-]
 
 const Planninglist_admin = ({navigation}) => {
 
@@ -192,64 +16,113 @@ const Planninglist_admin = ({navigation}) => {
   // const [data, setData] = React.useState({
     
   // });
-const [data , setData] = useState([])
-const [filtrerData, setFiltrerData] = useState([])
-const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const {access_token} = useContext(AuthContext)
 
-const [selected, setSelected] = useState();
+  const [data , setData] = useState([])
+  const [filtrerData, setFiltrerData] = useState([])
+  const [moteuPlanning, setMoteurPlanning] = useState(false)
 
-const selectHandler = item => {
-  setSelected(item);
-}
+  const [selected, setSelected] = useState();
 
-useEffect(() => {
-  setData(dataMoteurInstalled)
-  setFiltrerData(dataMoteurInstalled)
-}, []);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-const togleMoteurPlanning = ( ) =>{
-  setMoteurPlanning(!moteuPlanning)
-}
-const Stringtext =() =>{
-  if (moteuPlanning){
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
-    )
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    getPlanning()
+  }, []);
+
+  const togleMoteurPlanning = ( ) =>{
+    setMoteurPlanning(!moteuPlanning)
   }
-  else{
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
-    )
+  const Stringtext =() =>{
+    if (moteuPlanning){
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+      )
+    }
+    else{
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
+      )
+    }
   }
-}
-const searcheFilterFunction = (text) =>{
-  if(text){
-      const newData = data.filter(item => {
-          console.log(item.equipement)
-          console.log(text)
-            const itemData = item.item_moteur ;
-            const textData = toString(text);
-            return itemData.indexOf(text) > -1;
-      })
-      setFiltrerData(newData)
+
+  useEffect(() =>{
+    getPlanning()
+    // console.log(AsyncStorage.getItem('access_token'))
+  }, [])
+
+
+
+  const getPlanning = async () => {
+
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/planning/False/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    try{
+
+      const response = await axios(configGetMotor);
+      if (response.status == 200){
+        const data = await response.data
+        // console.log(data)
+        setData(data);
+        setFiltrerData(data);
+      }
+      else if (response.status == 401){
+        setData([]);
+        setFiltrerData([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+
+
+      }
+      else if (response.status == 404){
+        setData([]);
+        setFiltrerData([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+
+      }
+      
+      // console.log(json)
+      // console.log(response.status)
+    } catch (error){
+      console.log(error)
+    }
   }
-  else{
-      setFiltrerData(data)
+
+  const searcheFilterFunction = (text) =>{
+    if(text){
+        const newData = data.filter(item => {
+            console.log(item.equipement)
+            console.log(text)
+              const itemData = item.item_moteur ;
+              const textData = toString(text);
+              return itemData.indexOf(text) > -1;
+        })
+        setFiltrerData(newData)
+    }
+    else{
+        setFiltrerData(data)
+    }
   }
-}
 
  
     return (
         <SafeAreaView style={styles.MainContainer} >
           <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-          <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
-            {/* <TouchableOpacity
+          <View style={{flexDirection: 'row', marginTop:5}}>
+            <TouchableOpacity
               onPress={() => navigation.openDrawer()}
               style={{marginLeft:10, marginTop:5}}
             >
             <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
 
-            </TouchableOpacity> */}
+            </TouchableOpacity>
               <View style={{flex:1}}>
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
               </View>
@@ -295,7 +168,13 @@ const searcheFilterFunction = (text) =>{
                               
                 </View>            
             </View>
-            <ScrollView>
+            <ScrollView
+              refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />}
+            >
                 {
                   filtrerData.map((item, index) =>{
                     return(
@@ -313,19 +192,19 @@ const searcheFilterFunction = (text) =>{
                             >
                             
                               <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: 12/12/2022   |   Fin: 12/12/2022</Text>
+                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: {item.item_planning} </Text>
+                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: {item.date_int}   |   Fin: {item.date_end_int}</Text>
                                 {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.item_moteur} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier} </Text>
-                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement} </Text>
+                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.moteur.item_moteur} </Text>
+                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier.nom_atelier} </Text>
+                                <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Equipment: {item.equipement.nom_equipenent} </Text>
                               </View>
 
                           </TouchableOpacity>
                           <TouchableOpacity 
                             style={{flexDirection:'row', flex:1, height:80, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
 
                             >
                           <View style={{flex: 5,
@@ -340,7 +219,6 @@ const searcheFilterFunction = (text) =>{
 
                           </TouchableOpacity>
                     </View>
-
                   )
                   })
               }

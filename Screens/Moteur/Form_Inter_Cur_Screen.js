@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/Authcontext';
 
 const Form_Inter_Cur_Screen =  ({route, navigation})=> {
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
   const {moteurItem} = route.params
   const [isLoading, setIsLoading] = useState(true)
   const [checkBoxSerage, setCheckBoxSerage] = useState(false)
@@ -37,6 +37,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
     isolementbobinemasse_V1_M: 0.0,
     isolementbobinemasse_W1_M: 0.0,
     proposition: '',
+    solution: '',
     temperature: 0.0,
     idTech: 0,
     idsuperv:0,
@@ -50,7 +51,6 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   useEffect(() =>{
     getSuperviseur('superviceur_list')
     getTechnicien('technicien_list')
-    console.log(userToken)
 
   },[])
 
@@ -66,21 +66,21 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
     return {
       moteur : moteurItem.id,
           create_by : userInfo.id,
-          temperature : data.temperature,
+          temperature : parseFloat(data.temperature.replace(/,/g, '')),
           // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
           // observation_general : data.obsevervation_gene,
           observation_avant : data.obsevervation_gene_av,
           description_panne: data.descriptionpanne,
           observation_apres : data.obsevervation_gene_ap,
-          continuite_u1_U2 : data.continuite_U1_U2,
-          continuite_v1_v2 : data.continuite_V1_V2,
-          continuite_w1_w2 : data.continuite_W1_W2,
-          isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
-          isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
-          isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
-          isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
-          isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
-          isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+          continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
+          continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
+          continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
+          isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
+          isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
+          isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
+          isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
+          isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
+          isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
           serage : checkBoxSerage, 
           equilibrage :checkBoxEquil,
           photo_1 : data.photo_1,
@@ -92,6 +92,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
     }
   }
 
+//  Routine d'envoi des data au serveur
 
   const fetchData_InrtCurative = async () => {
     console.log(datatofetch())
@@ -103,21 +104,21 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
         {
           moteur : moteurItem.id,
           create_by : userInfo.id,
-          temperature : data.temperature,
-          // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
-          // observation_general : data.obsevervation_gene,
+          temperature : parseFloat(data.temperature.replace(/,/g, '')),
           observation_avant : data.obsevervation_gene_av,
           description_panne: data.descriptionpanne,
           observation_apres : data.obsevervation_gene_ap,
-          continuite_u1_U2 : data.continuite_U1_U2,
-          continuite_v1_v2 : data.continuite_V1_V2,
-          continuite_w1_w2 : data.continuite_W1_W2,
-          isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
-          isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
-          isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
-          isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
-          isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
-          isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+          solution :  data.solution,
+          recommendation : data.proposition,
+          continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
+          continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
+          continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
+          isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
+          isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
+          isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
+          isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
+          isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
+          isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
           serage : checkBoxSerage, 
           equilibrage :checkBoxEquil,
           photo_1 : data.photo_1,
@@ -132,7 +133,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
             // "Accept":" */*",
             // "Content-Type": "application/json",
             'Content-Type': 'multipart/form-data',
-            'Authorization': `token ${userToken}`
+            'Authorization': `JWT ${access_token}`
           }
         },
         );
@@ -150,9 +151,6 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   }
 
 
- 
-
-
   const getSuperviseur = async ( route, ) =>{
 
     try {
@@ -162,7 +160,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -200,7 +198,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );
@@ -443,6 +441,14 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   }
 
 
+  const handle_solution = (val) => {
+  
+    setData({
+        ...data,
+        solution: val,
+    });
+
+}
 const handle_superviseur = (val) => {
   
     setData({
@@ -673,6 +679,21 @@ const renderContent = () => {
 
               />              
           </View>
+
+          <View style={{flex:1}}>
+            <Text style={styles.titrechamp}>Solution apportée</Text>
+            <TextInput
+                  placeholder="Notez ici une description de la panne"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  numberOfLines={7}
+                  multiline={true}
+                  style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handle_solution(val)}
+
+              />              
+          </View>
+
 
           <View style={{flex:1}}>
             <Text style={styles.titrechamp}>Continuité des enroulements</Text>

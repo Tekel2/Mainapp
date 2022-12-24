@@ -1,12 +1,8 @@
 //This is an example code for NavigationDrawer//
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 //import react in our code.
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
-import {getProfileFromWithSearchedText} from '../API/PDBA'
-import { useDispatch, useSelector } from 'react-redux';
-import { setPreventive, setPreventiveID } from '../Reduxe/action';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -14,10 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MenuMoteurScreen = ({navigation, route}) => {
 
-
-  // const {preventive} = useSelector(state => state.preventiveReducer);
-  // const dispatch = useDispatch()
-  // const {moteurItem} = route.params
 
   const [dataMoteur, setDataMoteur] = useState([])
 
@@ -45,11 +37,8 @@ const MenuMoteurScreen = ({navigation, route}) => {
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{dataMoteur.item_moteur}</Text>
           </View>
-          <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10, 
-                       }}>
-            <Text style={{fontSize: 20, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
-            <Text style={{fontSize: 20, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
-          </View>
+         
+
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Informations</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
@@ -72,8 +61,6 @@ const MenuMoteurScreen = ({navigation, route}) => {
                   >
                     <Text style={styles.btninfo}>Bilan Moteur</Text>
                   </TouchableOpacity> : null}
-
-
             </View>
           </View>
 
@@ -81,21 +68,6 @@ const MenuMoteurScreen = ({navigation, route}) => {
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Interventions</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    // dispatch(setPreventiveID(preventive.length))                    
-                    navigation.navigate('Form_Pre')
-                    }}
-                >
-                  <Text style={styles.btninfo}>Préventive</Text>
-                </TouchableOpacity> */}
-
-                {/* <TouchableOpacity
-                  onPress={() => navigation.navigate('Form_Insatll')}
-                >
-                  <Text style={styles.btninfo}>Installation</Text>
-                </TouchableOpacity> */}
-
                 { dataMoteur.install ?
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Form_Cur', {moteurItem:dataMoteur})}
@@ -103,12 +75,12 @@ const MenuMoteurScreen = ({navigation, route}) => {
                     <Text style={styles.btninfo}>Curative</Text>
                   </TouchableOpacity> : null}
 
-                { dataMoteur.install ?
+                {/* { dataMoteur.install ?
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
                   >
                     <Text style={styles.btninfo}>Hors service</Text>
-                  </TouchableOpacity> : null}
+                  </TouchableOpacity> : null} */}
 
                   {
                     !dataMoteur.install ?

@@ -7,7 +7,7 @@ import { ActivityIndicator, View } from "react-native";
 
 function AppNav (){
 
-    const {isLoading, userToken}=useContext(AuthContext)
+    const {isLoading, access_token, refresh_token}=useContext(AuthContext)
 
     if (isLoading){
         return(
@@ -20,7 +20,7 @@ function AppNav (){
 
     return(
         <NavigationContainer>
-            { userToken !== null ? <Drawernavigation/> : <AuthNavigator/>}
+            { access_token !== null && refresh_token !== null  ? <Drawernavigation/> : <AuthNavigator/>}
             {/* <Drawernavigation/> */}
       </NavigationContainer>
     )

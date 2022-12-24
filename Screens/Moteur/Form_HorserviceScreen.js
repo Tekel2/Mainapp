@@ -155,7 +155,6 @@ const handle_Motifhorservice = (val) => {
   }
 }
 
-
 const handle_Continuite_U1_U2 = (val) => {
   if( val.trim().length >= 5 ) {
       setData({

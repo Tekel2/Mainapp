@@ -31,6 +31,8 @@ const HistoriqueHS = ({navigation}) => {
 
             {
                 preventivelist.map((item, index) =>{
+                  key={index}
+
                     return(
                         <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
                         <TouchableOpacity 

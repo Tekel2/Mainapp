@@ -1,11 +1,28 @@
-import React, { Component, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable } from 'react-native';
+import React, { Component, useState, useContext, useEffect} from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, Dimensions } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import * as Animatable from 'react-native-animatable';
+import { AuthContext } from '../../context/Authcontext';
+import { baseUrlApi } from '../../API/urlbase';
+import axios from 'axios';
+import { LineChart } from 'react-native-chart-kit';
 // import {LineChart} from 'react-native-charts-wrapper';
 
 
 function BilanMoteurScreen ({route, navigation}) {
+
+
+  const {userInfo,access_token} = useContext(AuthContext)
+  
+  
+  const [data, setData] = useState({
+
+  })
+
+  const [isloading, setIsloading] = useState(false)
+
+
+
 
   const [modalvisibleccb, setmodalVisibleccb] = useState(false)
   const [modalvisiblecbb, setmodalVisiblecbb] = useState(false)
@@ -18,32 +35,52 @@ function BilanMoteurScreen ({route, navigation}) {
 
   )
 
-  const [DataTable, setDataTable] = useState(
-    [ 
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-      ['1', '2', '3', '18/10/2018'],
-    ]
-  )
-
   const [HeadTableTemperature, setHeadTableTemperature] = useState(
     ['Température en °C',  'Date']
   )
 
-  const [Datatemperature, setDatatemperature] = useState(
-    [ 
-      ['38',  '18/10/2018'],
-      ['38',  '18/10/2018'],
-      ['38',  '18/10/2018'],
-      ['38',  '18/10/2018'],
-      ['38',  '18/10/2018'],
-    ]
-  )
+  const getBillanMoteur = async () => {
+    setIsloading(true)
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/billan/${moteurItem.id}/`, // Lien des planninig non executé
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    try{
 
+      const response = await axios(configGetMotor);
+      const data = await response.data
+      // console.log("45654656  ",data)
+      setData(data);
+      // setFiltrerData(data);
+
+         
+      // console.log(json)
+      console.log(response.status)
+    } catch (error){
+      console.log(error)
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucun planning de disponible")
+      }
+      // alert("An error has occurred");
+      console.log(error.status)
+      // setIsloading(false)
+    }
+
+    setIsloading(false)
+  }
 
   const toggleModalCCB = () => {
     setmodalVisibleccb(!modalvisibleccb)
@@ -65,6 +102,47 @@ function BilanMoteurScreen ({route, navigation}) {
   const {moteurItem} = route.params
 
 
+  useEffect(()=>{
+    getBillanMoteur()
+  },[])
+
+  // useEffect(()=>{
+  //   // console.log(data.continuite)
+    
+  // },[])
+
+  const chatContinuit=()=>{
+    const continuite_U = []
+    // const continuite_V = []
+    // const continuite_W = []
+    const dateList = []
+    for (let index_1=0; index_1 < data.continuite.length; index_1++){
+        continuite_U.push(data.continuite[index_1][0])
+        // continuite_V.push(data.continuite[index_1][1])
+        // continuite_W.push(data.continuite[index_1][2])
+        dateList.push(data.continuite[index_1][3])
+    }
+    const dataCHart = {
+      labels: dateList,
+      datasets: [
+        {
+          data: continuite_U,
+          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }
+      ],
+      legend: ["Rainy Days"] // optional
+    };
+
+    // alert(dataCHart)
+
+    return {
+      labels: dateList,
+      data: continuite_U,
+    }
+  }
+  
+
     return (
         <SafeAreaView 
             style={styles.MainContainer}
@@ -74,15 +152,18 @@ function BilanMoteurScreen ({route, navigation}) {
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
-        
+        </View>
+
+
+        <View style={{ flexDirection: 'column'}}>
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.id}</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                        }}>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier {data.atelier}</Text>
+            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment {data.equipement}</Text>
           </View>
           {/* <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
             <Text style={styles.etatprovenance}> NEUF</Text>
@@ -97,35 +178,35 @@ function BilanMoteurScreen ({route, navigation}) {
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Date Installation</Text>
-            <Text style={styles.txtdatachamp}>{moteurItem.createdOn}</Text>
+            <Text style={styles.txtdatachamp}>{data.dateInstall}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Nombre Inter. Préventiven</Text>
-            <Text style={styles.txtdatachamp}>5</Text>
+            <Text style={styles.txtdatachamp}>{data.nbrePrev}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Nombre Inter. Curative</Text>
-            <Text style={styles.txtdatachamp}>0</Text>
+            <Text style={styles.txtdatachamp}>{data.nbreCur}</Text>
          </View>
-         <View style={{flex:1, flexDirection: 'row'}}>
+         {/* <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Temps de marche</Text>
-            <Text style={styles.txtdatachamp}>8000H</Text>
-         </View>
+            <Text style={styles.txtdatachamp}>---H</Text>
+         </View> */}
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Couplage</Text>
-            <Text style={styles.txtdatachamp}>{moteurItem.couplage}</Text>
+            <Text style={styles.txtdatachamp}>{data.couplage}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Dernière Inter. Curative</Text>
-            <Text style={styles.txtdatachamp}>- - </Text>
+            <Text style={styles.txtdatachamp}>{data.dateLastCur}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Dernière Inter. Préventive</Text>
-            <Text style={styles.txtdatachamp}>15/09/2022</Text>
+            <Text style={styles.txtdatachamp}>{data.dateLastPrev}</Text>
          </View>
          <View style={{flex:1, flexDirection: 'row'}}>
             <Text style={styles.txtnomchamp}>Prochaine Intervention</Text>
-            <Text style={styles.txtdatachamp}>12/12/2022</Text>
+            <Text style={styles.txtdatachamp}>{data.prochainInt}</Text>
          </View>
 
          <View style= {[styles.etatprovenance, {justifyContent: 'center', alignSelf: 'center',width: 250, marginLeft:15, color: '#000'}]}/>
@@ -142,23 +223,61 @@ function BilanMoteurScreen ({route, navigation}) {
               <ScrollView style={[styles.container, styles.container__]}>
                 <Table borderStyle={{borderWidth: 1, borderColor: '#ED7524'}}>
                   <Row data={HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                  <Rows data={DataTable} textStyle={styles.TableText}/>
+                  <Rows data={data.continuite} textStyle={styles.TableText}/>
                 </Table>
               </ScrollView>
           </View>
-          <View style={styles.MainContainerModal}>
 
+
+          <View style={styles.MainContainerModal}>
+              
               <Modal
-                animationType="slide"
+                animationType="fade"
                 transparent={true}
                 visible={modalvisibleccb}
+                style={{backgroundColor:'#fff'}}
               >
               <View  style={{ flex: 1, justifyContent: 'center' }}>
-                <Text style={styles.titremodal}>Courbe
+                <Text style={styles.titremodal}>Courbe Continuité 
                 </Text>
-                <Text style={styles.testcontentmodal}>
-                    Continuité des bobinages en Ω
-                </Text>
+                {/* <LineChart
+                      data={{
+                        // labels: chatContinuit.labels,
+                        labels: ['tekeu', 'February', 'March', 'April'],
+                        datasets: [
+                          {
+                            data: 
+                             [
+                              data.continuite[0][0],
+                              data.continuite[1][0],
+                              data.continuite[2][0],
+                            ],
+                          },
+                        ],
+                      }}
+                      // data={{chatContinuit}}
+                      width={Dimensions.get('window').width} // from react-native
+                      height={220}
+                      yAxisLabel={'U'}
+                      chartConfig={{
+                        backgroundColor: '#fff',
+                        backgroundGradientFrom: '#fff',
+                        backgroundGradientTo: '#fff',
+                        decimalPlaces: 2, // optional, defaults to 2dp
+                        color: (opacity = 0) => `rgba(0, 0, 0, ${opacity})`,
+                        style: {
+                          borderRadius: 4,
+                          marginLeft:10,
+                          backgroundColor:'#fff'
+                        },
+                      }}
+                      bezier
+                      style={{
+                        marginVertical: 8,
+                          // backgroundColor:'#fff',
+                        borderRadius: 16,
+                      }}
+                    /> */}
                 
                 <Pressable
                     style={{backgroundColor: '#fff'}}
@@ -184,7 +303,7 @@ function BilanMoteurScreen ({route, navigation}) {
               <ScrollView style={[styles.container, styles.container__]}>
                 <Table borderStyle={{borderWidth: 1, borderColor: '#ED7524'}}>
                   <Row data={HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                  <Rows data={DataTable} textStyle={styles.TableText}/>
+                  <Rows data={data.bobine_isol} textStyle={styles.TableText}/>
                 </Table>
               </ScrollView>
           </View>
@@ -224,7 +343,7 @@ function BilanMoteurScreen ({route, navigation}) {
               <ScrollView style={[styles.container, styles.container__]}>
                 <Table borderStyle={{borderWidth: 1, borderColor: '#ED7524'}}>
                   <Row data={HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                  <Rows data={DataTable} textStyle={styles.TableText}/>
+                  <Rows data={data.bobine_isol_m} textStyle={styles.TableText}/>
                 </Table>
               </ScrollView>
           </View>
@@ -263,7 +382,7 @@ function BilanMoteurScreen ({route, navigation}) {
               <ScrollView style={[styles.container, styles.container__]}>
                 <Table borderStyle={{borderWidth: 1, borderColor: '#ED7524'}}>
                   <Row data={HeadTableTemperature} style={styles.HeadStyle} textStyle={styles.TableText}/>
-                  <Rows data={Datatemperature} textStyle={styles.TableText}/>
+                  <Rows data={data.temperature} textStyle={styles.TableText}/>
                 </Table>
               </ScrollView>
           </View>

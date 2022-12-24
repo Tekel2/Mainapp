@@ -4,13 +4,13 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ReparationList from '../Screens/Reparation/ReparationList';
-import Recherche_moteur from '../Screens/Planning/Recherche_moteur';
+// import Recherche_moteur from '../Screens/Planning/Recherche_moteur';
 
 
 // import ReparationList from '../Screens/Reparation/ReparationList';
-// import ReparationDetail from '../Screens/Reparation/ReparationDetail';
-// import Formreparation from '../Screens/Reparation/Formreparation';
-// import Recherche_moteur from '../Screens/Reparation/Recherche_moteur';
+import ReparationDetail from '../Screens/Reparation/ReparationDetail';
+import Formreparation from '../Screens/Reparation/Formreparation';
+import Recherche_moteur from '../Screens/Reparation/Recherche_moteur';
 
 
 const Stack = createStackNavigator();
@@ -33,7 +33,7 @@ const PlanningNavigator = ({navigation}) => (
         <Stack.Screen name="Repartion" component={ReparationList}/>
         <Stack.Screen name="Repartion_detail" component={ReparationDetail}/>
         <Stack.Screen name="Repartion_form" component={Formreparation}/>
-        <Stack.Screen name="Repartion_find" component={Recherche_moteurur}/>
+        {/* <Stack.Screen name="Repartion_find" component={Recherche_moteurur}/> */}
         
       
     </Stack.Navigator>

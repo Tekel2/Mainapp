@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/Authcontext';
 const  Form_new_eqt =({navigation, route}) =>{
 
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
 
   const [nomeqt, setNomeqt] = useState('')
   const [itemeqt, setItemeqt] = useState('')
@@ -47,7 +47,7 @@ const  Form_new_eqt =({navigation, route}) =>{
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );

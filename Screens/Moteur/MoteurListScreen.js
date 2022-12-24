@@ -4,7 +4,8 @@ import React, { useEffect, useState, useContext } from 'react';
 //import react in our code.
 import { RefreshControl, StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView,ScrollView, StatusBar, ActivityIndicator } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
-import { baseUrlApi } from '../../API/urlbase';
+import { axiosInstanceAPI, baseUrlApi } from '../../API/urlbase';
+import useRefreshToken from '../../API/useRefreshToken';
 import { AuthContext } from '../../context/Authcontext';
 
 
@@ -13,8 +14,6 @@ import { AuthContext } from '../../context/Authcontext';
     
       alert('c\'est bon');
       return;
-
-    
   };
 
   const wait = (timeout) => {
@@ -33,7 +32,7 @@ const MoteurListScreen = ({navigation}) => {
   newRequet = false
   isValidProfie = true
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
 
 
   const [moteurInstalled , setMoteurInstalled] = useState([])
@@ -51,10 +50,10 @@ const MoteurListScreen = ({navigation}) => {
 
   useEffect(() =>{
     fetchmoteurInstalled()
+    // console.log(access_token)
   }, [])
 
   
-
   const fetchmoteurInstalled = async () => {
 
     const configGetMotor = {
@@ -62,35 +61,35 @@ const MoteurListScreen = ({navigation}) => {
       url: `${baseUrlApi}/moteur/`,
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `token ${userToken}`
+        'Authorization': `JWT ${access_token}`
       }
     }
     try{
 
       const response = await axios(configGetMotor);
-      if (response.status == 200){
-        const data = await response.data
-        setMoteurInstalled(data);
-        setFiltrermoteurInstalled(data);
-      }
-      else if (response.status == 401){
-        setMoteurInstalled([]);
-        setFiltrermoteurInstalled([]);
-        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+      // let response = await axiosInstanceAPI.get('/moteur/');
+      const data = await response.data
+      setMoteurInstalled(data);
+      setFiltrermoteurInstalled(data);
 
-
-      }
-      else if (response.status == 404){
-        setMoteurInstalled([]);
-        setFiltrermoteurInstalled([]);
-        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
-
-      }
-      
-      // console.log(json)
-      // console.log(response.status)
     } catch (error){
       console.log(error)
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+        useRefreshToken()
+        // fetchmoteurInstalled()
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      // setIsloading(false)
     }
   }
 
@@ -117,7 +116,7 @@ const MoteurListScreen = ({navigation}) => {
 
   const moteurinstaller =() =>{
     return(
-      filtrermoteurInstalled.map((item, index) =>{
+      filtrermoteurInstalled.map((item, index) =>{ key={index}
         return(      
 
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
@@ -150,7 +149,7 @@ const MoteurListScreen = ({navigation}) => {
   const moteurNONinstaller =() =>{
     return(
       
-      filtrermoteurInstalled.map((item, index) =>{
+      filtrermoteurInstalled.map((item, index) =>{ key={index}
         return(
             
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
@@ -166,7 +165,7 @@ const MoteurListScreen = ({navigation}) => {
                     <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
                         <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                     </View>
-                    <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
+                    <View style={{flex: 5, backgroundColor:'#ccc', borderColor:'#316094', borderWidth:1.5, paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
                       <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
                       <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
                       <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
@@ -207,11 +206,14 @@ const MoteurListScreen = ({navigation}) => {
             Moteur Installé</Text>
           </View>
           <View style={{}}>
+           { 
+            userInfo.fonction < 3?
             <TouchableOpacity
               onPress={() =>navigation.navigate('moteur_new_moteur')}
             >
               <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
+            : null}
           </View>
         </View>
 
@@ -248,7 +250,7 @@ const MoteurListScreen = ({navigation}) => {
                 
                :
                 <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#000'}}>messageErr</Text>
+                  <Text style={{color:'#000',fontSize:15, marginVertical:10}}>Aucun Moteur en Attente d'Installation</Text>
 
                 </View>
               }
@@ -259,7 +261,8 @@ const MoteurListScreen = ({navigation}) => {
                 moteurinstaller()
                :
                 <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#000'}}>messageErr</Text>
+                  <Text style={{color:'#000', fontSize:15,  marginVertical:10}}>Aucun Moteur installé</Text>
+                  <Text style={{color:'#000', fontSize:15,  marginVertical:20}}>TIRER VERS LE BAS POUR ACTUALISER LA LISTE !</Text>
 
                 </View>
               }

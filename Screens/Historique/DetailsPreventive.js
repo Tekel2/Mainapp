@@ -8,14 +8,14 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const InstallationDetail = ({navigation,route}) => {
+const DetailsPreventive = ({navigation,route}) => {
 
   const {userInfo,access_token} = useContext(AuthContext)
 
 
-  const {moteurItem} = route.params
-  const [dataInstal , setDatainstall] = useState([])
-  const [dataAteler , setDataAtelier] = useState([])
+  const {dataIntevention} = route.params
+  const [data , setData] = useState([])
+//   const [dataAteler , setDataAtelier] = useState([])
   const [isLoadingInstalled, setIsLoadingInstalled] = useState(true)
       
   const [dataMoteur, setDataMoteur] = useState([])
@@ -24,21 +24,22 @@ const InstallationDetail = ({navigation,route}) => {
 //     return route.params.moteurItem
 //   }
 
-//   useEffect(()=>{
+  useEffect(()=>{
 //    setDataMoteur(getData)
-//   }, [])
+console.log(dataIntevention)
+  }, [])
   
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    fetchDataInstallation("moteur_installed",moteurItem.id )
+    getatelier_eqt("atelier-eqt",dataIntevention.id )
   }, []);
 
 
   useEffect(() =>{
-    fetchDataInstallation("moteur_installed",moteurItem.id )
+    // getatelier_eqt("atelier-eqt",dataIntevention.id )
   }, [])
 
 //   useEffect(() =>{
@@ -49,7 +50,7 @@ const InstallationDetail = ({navigation,route}) => {
 
 
 
-const fetchDataInstallation = async (route, id) => {
+const getatelier_eqt = async (route, id) => {
 
     const configGetMotor = {
       method: 'get',
@@ -63,7 +64,7 @@ const fetchDataInstallation = async (route, id) => {
 
       const response = await axios(configGetMotor);
       const data = await response.data
-      setDatainstall(data);
+      setData(data);
     //   setFiltrermoteurInstalled(data);
     setIsLoadingInstalled(false)
 
@@ -114,7 +115,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Installation</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.item_installation}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.item_installation}</Text>
             </View>
         </View>
 
@@ -123,7 +124,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Moteur</Text>
             </View>
            <View style={{flex:1,}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.moteur.item_moteur}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.moteur.item_moteur}</Text>
             </View>
         </View>
 
@@ -135,7 +136,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
             </View>
            <View style={{flex:1}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.atelier.nom_atelier}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_atelier}</Text>
             </View>
         </View>
         <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
@@ -143,7 +144,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sur l'Equipement</Text>
             </View>
            <View style={{flex:1}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.equipement.item_equipenent}</Text>
+                {/* <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.equipement.item_equipenent}</Text> */}
             </View>
         </View>
 
@@ -153,7 +154,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Superviseur Par </Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.superviceur.username}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.superviceur.username}</Text>
             </View>
         </View>
 
@@ -162,7 +163,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Intallé par :</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.technicien.username}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.technicien.username}</Text>
             </View>
         </View>
 
@@ -171,52 +172,52 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date Installation</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataInstal.createdOn}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.motif_remplacement}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation generale</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.observation_general}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.createdOn}</Text>
             </View>
         </View>
 
         {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation Après</Text>
+                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.observation_apres}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.motif_remplacement}</Text>
             </View>
         </View> */}
 
         <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Avant</Text>
+            </View>
+           <View style={{flex:1, marginLeft:10}}> 
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_avant}</Text>
+            </View>
+        </View>
+
+        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Après</Text>
+            </View>
+           <View style={{flex:1, marginLeft:10}}> 
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_apres}</Text>
+            </View>
+        </View>
+
+        {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Couplage</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.couplage}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.couplage}</Text>
             </View>
-        </View>
+        </View> */}
 
         <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite u1 U2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.continuite_u1_U2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_u1_U2}</Text>
             </View>
         </View>
 
@@ -225,7 +226,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite v1 v2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.continuite_v1_v2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_v1_v2}</Text>
             </View>
         </View>
 
@@ -234,7 +235,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite w1 w2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.continuite_w1_w2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_w1_w2}</Text>
             </View>
         </View>
 
@@ -243,7 +244,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 u2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_w2_u2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_u2}</Text>
             </View>
         </View>
 
@@ -252,7 +253,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 v2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_w2_v2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_v2}</Text>
             </View>
         </View>
 
@@ -261,7 +262,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement u2 v2</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_u2_v2}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_u2_v2}</Text>
             </View>
         </View>
 
@@ -270,7 +271,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse u1</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_masse_u1_m}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_u1_m}</Text>
             </View>
         </View>
 
@@ -279,7 +280,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolementmasse v1</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_masse_v1_m}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_v1_m}</Text>
             </View>
         </View>
 
@@ -288,7 +289,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse w1 </Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.isolement_bobine_masse_w1_m}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_w1_m}</Text>
             </View>
         </View>
 
@@ -297,7 +298,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sérage </Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.serage?'Parfait':'Nom'}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.serage?'Parfait':'Nom'}</Text>
             </View>
         </View>
 
@@ -306,7 +307,7 @@ const fetchDataInstallation = async (route, id) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Equilibrage </Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataInstal.equilibrage?'Parfait':'Nom'}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.equilibrage?'Parfait':'Nom'}</Text>
             </View>
         </View>
         
@@ -342,7 +343,7 @@ const fetchDataInstallation = async (route, id) => {
               />}
             
         >
-            { isLoadingInstalled ? loading() : renderContentView()}
+            { !isLoadingInstalled ? loading() : renderContentView()}
         </ScrollView>
         
 
@@ -364,4 +365,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default InstallationDetail;
+export default DetailsPreventive;

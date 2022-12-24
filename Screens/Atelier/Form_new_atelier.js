@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Component, useState, useContext } from 'react';
+import React, { Component, useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
 // import CheckBox from 'expo-checkbox';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/Authcontext';
 
 const  Form_new_atelier =({navigation, route}) => {
 
-  const {userToken, userInfo} = useContext(AuthContext)
+  const {access_token, userInfo} = useContext(AuthContext)
   const {isLoading, setIsloading } = useState(true)
   const [nomAtelier, setNomAtelier] = useState('')
   const [itemAtelier, setItemAtelier] = useState('')
@@ -28,6 +28,10 @@ const handleatelierItem = (val) => {
   }
   
 }
+
+useEffect(()=>{
+  console.log(userInfo.id)
+})
 
 
 
@@ -59,7 +63,7 @@ const postData = async (data, route, ) =>{
           {
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `token ${userToken}`
+              'Authorization': `JWT ${access_token}`
             }
           },
         );

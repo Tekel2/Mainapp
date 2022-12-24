@@ -5,11 +5,12 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { AuthContext } from '../../context/Authcontext';
 // import axios from "axios";
 import axios from '../../API/config-axiox';
+import { baseUrlApi } from '../../API/urlbase';
 
 // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 // axios.defaults.xsrfCookieName = "csrftoken";
 
-const baseUrl = "http://192.168.227.30:8000";
+// const baseUrl = "http://192.168.203.30:8000";
 
 function Form_New_Moteur (props) {
   const {userInfo,userToken} = useContext(AuthContext)
@@ -280,7 +281,7 @@ const fetchDataMoteur = async () => {
   console.log(datatofetch())
    
     try {
-      const response = await axios.post(`${baseUrl}/api/moteur/`, 
+      const response = await axios.post(`${baseUrlApi}/api/moteur/`, 
       
       {
         create_by : userInfo.id,
@@ -313,16 +314,24 @@ const fetchDataMoteur = async () => {
         }
       },
       );
-      if (response.status === 201) {
-        alert(` You have created: ${JSON.stringify(response.data)}`);
-        
-      } else {
-        // throw new Error("An error has occurred");
-        console.log(response.request)
-      }
+      navigation.navigate('moteur_Home')
+
     } catch (error) {
-      alert("An error has occurred");
-      // setIsLoading(false);
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      console.log(error.status)
+      // setIsloading(false
       console.log(error)
     }
 

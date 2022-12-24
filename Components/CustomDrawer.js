@@ -12,8 +12,16 @@ import { Row } from 'react-native-table-component';
 import { AuthContext } from '../context/Authcontext';
 
 
+
+
 export function CustomDrawer (props){
     const {logout, userInfo,userToken} = useContext(AuthContext)
+
+    function defFOonction(level){
+        if (level == 1){return "Direction"}
+        else if (level == 2){return "Superviseur"}
+        else if (level == 3){return "Technicien"}
+    }
    
 
     return(
@@ -24,8 +32,9 @@ export function CustomDrawer (props){
             <View style={{padding:10, paddingBottom:30, justifyContent:'center', alignContent:'center', borderBottomRightRadius:8}}>
                 <Text style={{textAlign:'center', fontSize:22, fontWeight:'bold', color:'#ED7524'}}>CIMAF | CAMEROUN </Text>
                 <View style={{marginTop:20, marginLeft:10}}>
-                    <Text style={{fontSize:20, fontWeight:'bold', color:'#E4E4E4'}}>{userInfo.username}</Text>
-                    <Text style={{fontSize:15, fontWeight:'bold', color:'#E4E4E4'}}>Superviseur</Text>
+                    <Text style={{fontSize:22, fontWeight:'bold', color:'#E4E4E4'}}>{userInfo.username}</Text>
+                    <Text style={{fontSize:15, fontWeight:'800', color:'#E4E4E4'}}>{defFOonction(userInfo.fonction)}</Text>
+                    <Text style={{fontSize:15, fontWeight:'800', color:'#E4E4E4'}}>{userInfo.email}</Text>
                 </View>
             </View>
             <View style={{backgroundColor:'#fff', }}>

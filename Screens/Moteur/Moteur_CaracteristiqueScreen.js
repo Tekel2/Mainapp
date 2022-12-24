@@ -7,9 +7,9 @@ const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
 
     const {moteurItem} = route.params
    
-    useEffect(()=>{
-        console.log(moteurItem)
-    },[])
+    // useEffect(()=>{
+    //     console.log(moteurItem)
+    // },[])
 
 
  

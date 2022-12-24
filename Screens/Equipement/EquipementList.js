@@ -12,7 +12,7 @@ const wait = (timeout) => {
 
 const EquipementList = ({navigation}) => {
 
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -67,7 +67,7 @@ const EquipementList = ({navigation}) => {
       url: `${baseUrlApi}/equipement/`,
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `token ${userToken}`
+        'Authorization': `JWT ${access_token}`
       }
     }
     try{
@@ -109,7 +109,7 @@ const EquipementList = ({navigation}) => {
         const newData = data.filter(item => {
             console.log(item.equipement)
             console.log(text)
-              const itemData = item.item_moteur ;
+              const itemData = item.nom_equipenent ;
               const textData = toString(text);
               return itemData.indexOf(text) > -1;
         })
@@ -192,8 +192,9 @@ const EquipementList = ({navigation}) => {
                             // onChangeText={(val) => besointextInputChange(val)}
                             clearButtonMode="while-editing"
                             // maxLength= {22}
-                            keyboardType='decimal-pad'
+                            keyboardType='default'
                             placeholder="rechercher nom equipement"
+                            // autoCapitalize="characters"
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
                         /> 
@@ -231,7 +232,7 @@ const EquipementList = ({navigation}) => {
                                 <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Eqt. : {item.nom_equipenent} </Text>
                                 <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'800'}}>Eqt. Item : {item.item_equipenent} </Text>
                                 <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Atelier : {item.atelier.nom_atelier} | {item.atelier.item_atelier} </Text>
-                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Début création: {item.createdOn}</Text>
+                                <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>{item.createdOn}</Text>
 
                                 {viewModal(modalitem)}
                                 {/* <viewModal val={modalitem}/> */}

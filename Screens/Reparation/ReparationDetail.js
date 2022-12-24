@@ -17,7 +17,7 @@ const ReparationDetail = ({navigation}) => {
         >
             <StatusBar backgroundColor='#316094' barStyle='light-content'/>
             <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
-                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/logo-entete.png")}/>
+                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
             </View>
             <ScrollView style={{flex:1, flexDirection:'column'}}>
                 <View style={{justifyContent:'center', alignItems:'center'}}>
