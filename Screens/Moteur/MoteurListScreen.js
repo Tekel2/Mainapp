@@ -36,6 +36,7 @@ const MoteurListScreen = ({navigation}) => {
 
 
   const [moteurInstalled , setMoteurInstalled] = useState([])
+  const [moteurNonInstalled , setMoteurNonInstalled] = useState([])
   const [messageErr , setMessageErr] = useState('')
   const [filtrermoteurInstalled, setFiltrermoteurInstalled] = useState([])
       
@@ -50,12 +51,52 @@ const MoteurListScreen = ({navigation}) => {
 
   useEffect(() =>{
     fetchmoteurInstalled()
+    fetchmoteurNonInstalled()
     // console.log(access_token)
   }, [])
 
   
   const fetchmoteurInstalled = async () => {
 
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/moteur_installed/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    try{
+
+      const response = await axios(configGetMotor);
+      // let response = await axiosInstanceAPI.get('/moteur/');
+      const data = await response.data
+      setMoteurInstalled(data);
+      setFiltrermoteurInstalled(data);
+
+    } catch (error){
+      console.log(error)
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+        useRefreshToken()
+        // fetchmoteurInstalled()
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      // setIsloading(false)
+    }
+  }
+  
+  const fetchmoteurNonInstalled = async () => {
+    
     const configGetMotor = {
       method: 'get',
       url: `${baseUrlApi}/moteur/`,
@@ -69,8 +110,7 @@ const MoteurListScreen = ({navigation}) => {
       const response = await axios(configGetMotor);
       // let response = await axiosInstanceAPI.get('/moteur/');
       const data = await response.data
-      setMoteurInstalled(data);
-      setFiltrermoteurInstalled(data);
+      setMoteurNonInstalled(data);
 
     } catch (error){
       console.log(error)
@@ -149,7 +189,7 @@ const MoteurListScreen = ({navigation}) => {
   const moteurNONinstaller =() =>{
     return(
       
-      filtrermoteurInstalled.map((item, index) =>{ key={index}
+      moteurNonInstalled.map((item, index) =>{  key={index}
         return(
             
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
@@ -244,7 +284,7 @@ const MoteurListScreen = ({navigation}) => {
               />}
             >
               
-              { !isEmpty(filtrermoteurInstalled) ?
+              { !isEmpty(moteurNonInstalled) ?
                 
                 moteurNONinstaller()              
                 

@@ -40,6 +40,7 @@ const HistoriqueCurative = ({navigation}) => {
   useEffect(() => {
     getDataAtelier()
     console.log(userInfo.fonction)
+    console.log(access_token)
   }, []);
 
   const togleMoteurPlanning = ( ) =>{
@@ -72,6 +73,7 @@ const HistoriqueCurative = ({navigation}) => {
 
       const response = await axios(configGetMotor);
       const data = await response.data
+      console.log(data)
       setData(data);
       setFiltrerData(data);
     

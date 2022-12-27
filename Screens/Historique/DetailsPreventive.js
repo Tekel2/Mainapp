@@ -92,236 +92,255 @@ const getatelier_eqt = async (route, id) => {
   
 
   const loading =()=>{
-    if (!isLoadingInstalled){
+    // if (!isLoadingInstalled){
         return(
             <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
                 <ActivityIndicator color='#000' size={'large'}/>
             </View>
         )
-    }
+    // }
   }
 
 
   const renderContentView=()=>{
     return(
-        <View style={{justifyContent:'center', alignItems:'center'}}>
-        <View >
-            <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
-            Détail moteur installé</Text>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Installation</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.item_installation}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Moteur</Text>
-            </View>
-           <View style={{flex:1,}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.moteur.item_moteur}</Text>
-            </View>
-        </View>
-
-        {/* <View style={{flex:1}}>
-            <Text style={{flexWrap:'wrap', fontWeight: '400', fontSize:18, color:'#000'}}>Démonter à :</Text>
-        </View> */}
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
-            </View>
-           <View style={{flex:1}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_atelier}</Text>
-            </View>
-        </View>
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sur l'Equipement</Text>
-            </View>
-           <View style={{flex:1}}> 
-                {/* <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.equipement.item_equipenent}</Text> */}
-            </View>
-        </View>
-
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Superviseur Par </Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.superviceur.username}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Intallé par :</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.technicien.username}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date Installation</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.createdOn}</Text>
-            </View>
-        </View>
-
-        {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.motif_remplacement}</Text>
-            </View>
-        </View> */}
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Avant</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_avant}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Après</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_apres}</Text>
-            </View>
-        </View>
-
-        {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Couplage</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.couplage}</Text>
-            </View>
-        </View> */}
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite u1 U2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_u1_U2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite v1 v2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_v1_v2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite w1 w2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_w1_w2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 u2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_u2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 v2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_v2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement u2 v2</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_u2_v2}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse u1</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_u1_m}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolementmasse v1</Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_v1_m}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse w1 </Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_w1_m}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sérage </Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.serage?'Parfait':'Nom'}</Text>
-            </View>
-        </View>
-
-        <View style={{flexDirection:'row', flex:1, marginTop:10, borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Equilibrage </Text>
-            </View>
-           <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.equilibrage?'Parfait':'Nom'}</Text>
-            </View>
-        </View>
+        <ScrollView style={{flex:1, flexDirection:'column', paddingBottom:50, marginBottom:10,borderRadius:8, borderWidth:1}}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />}
         
-        {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-           <View style={{flex:1, marginLeft:10}}> 
+    >
+        <View style={{justifyContent:'center', alignItems:'center'}}>
+
+            <View style>
+                <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
+                Détails intervention Préstataire</Text>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Preventive</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.item_preventive}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Moteur</Text>
+                </View>
+            <View style={{flex:1,}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.moteur.item_moteur}</Text>
+                </View>
+            </View>
+
+            {/* <View style={{flex:1}}>
+                <Text style={{flexWrap:'wrap', fontWeight: '400', fontSize:18, color:'#000'}}>Démonter à :</Text>
+            </View> */}
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
+                </View>
+            <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_atelier}</Text>
+                </View>
+            </View>
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sur l'Equipement</Text>
+                </View>
+            <View style={{flex:1}}> 
+                    {/* <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.equipement.item_equipenent}</Text> */}
+                </View>
+            </View>
+
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Superviser Par </Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.superviceur.username}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Technicien</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.technicien.username}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataIntevention.createdOn}</Text>
+                </View>
+            </View>
+
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.motif_remplacement}</Text>
+                </View>
+            </View> */}
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Avant</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_avant}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Après</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.observation_apres}</Text>
+                </View>
+            </View>
+
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Couplage</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.couplage}</Text>
+                </View>
+            </View> */}
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite u1 U2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_u1_U2} Ohm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite v1 v2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_v1_v2} Ohm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite w1 w2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.continuite_w1_w2} Ohm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 u2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_u2} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 v2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_w2_v2} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement u2 v2</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_u2_v2} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse u1</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_u1_m} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolementmasse v1</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_v1_m} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse w1 </Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.isolement_bobine_masse_w1_m} MOhm</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sérage </Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.serage?'Parfait':'Nom'}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10, borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Equilibrage </Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataIntevention.equilibrage?'Parfait':'Nom'}</Text>
+                </View>
+            </View>
+
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10}}> 
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date modification</Text>
             </View>
-           <View style={{flex:1}}> 
+            <View style={{flex:1}}> 
                 <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>454545</Text>
             </View>
-        </View> */}
-        
-        
-    </View>       
+            </View> */}
+
+
+        </View>     
+
+
+
+
+
+       
+
+
+
+    </ScrollView>
     )
   }
 
@@ -335,17 +354,8 @@ const getatelier_eqt = async (route, id) => {
         <View style={{justifyContent: 'center', alignContent: 'center',margin: 10}}>
             <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
         </View>
-        <ScrollView style={{flex:1, flexDirection:'column', paddingBottom:50, marginBottom:10,borderRadius:8, borderWidth:1}}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />}
-            
-        >
-            { !isLoadingInstalled ? loading() : renderContentView()}
-        </ScrollView>
         
+         { !isLoadingInstalled ? loading() : renderContentView()}
 
     </SafeAreaView>
            

@@ -1,190 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import { RefreshControl,StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { baseUrlApi } from '../../API/urlbase';
+import { AuthContext } from '../../context/Authcontext';
 
 
-const dataMoteurInstalled = [
-  {
-      "id": 6,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "ONDULEUR",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 3,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009386",
-  },
-  {
-      "id": 7,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SAS",
-      "couplage": "ETOILE",
-      "motif_remplacement": "RAS",
-      "continuite_u1_U2": 0.0,
-      "continuite_v1_v2": 0.0,
-      "continuite_w1_w2": 0.0,
-      "isolement_bobine_w2_u2": 0.0,
-      "isolement_bobine_w2_v2": 0.0,
-      "isolement_bobine_u2_v2": 0.0,
-      "isolement_bobine_masse_u1_m": 0.0,
-      "isolement_bobine_masse_v1_m": 0.0,
-      "isolement_bobine_masse_w1_m": 0.0,
-      "serage": true,
-      "equilibrage": true,
-      "photo_1": null,
-      "photo_2": null,
-      "photo_3": null,
-      "photo_4": null,
-      "photo_5": null,
-      "photo_6": null,
-      "photo_7": null,
-      "photo_8": null,
-      "photo_9": null,
-      "photo_10": null,
-      "moteur": 4,
-      "old_moteur": null,
-      "technicien": 2,
-      "superviceur": 3,
-      "item_moteur": "12009387",
-  },
-  {
-      "id": 8,
-      "createdOn": "2022-10-27",
-      "updatedOn": "2022-10-27",
-      "temperature": 37.0,
-      "observation_general": "RAS",
-      "observation_avant": "RAS",
-      "observation_apres": "RAS",
-      "atelier": "SECHEUR",
-      "equipement": "SUPPRESSUE",
-      "item_moteur": "12009390",
-
-  },
-  {
-    "id": 9,
-    "createdOn": "2022-10-27",
-    "updatedOn": "2022-10-27",
-    "temperature": 37.0,
-    "observation_general": "RAS",
-    "observation_avant": "RAS",
-    "observation_apres": "RAS",
-    "atelier": "SECHEUR",
-    "equipement": "SUPPRESSUE",
-    "item_moteur": "12009392",
-
-},
-{
-  "id": 10,
-  "createdOn": "2022-10-27",
-  "updatedOn": "2022-10-27",
-  "temperature": 37.0,
-  "observation_general": "RAS",
-  "observation_avant": "RAS",
-  "observation_apres": "RAS",
-  "atelier": "SECHEUR",
-  "equipement": "SUPPRESSUE",
-  "item_moteur": "12009400",
-
-},
-{
-"id": 11,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009410",
-},
-{
-"id": 12,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009420",
-
-},
-{
-"id": 13,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009421",
-
-},
-{
-"id": 14,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009422",
-
-},
-{
-"id": 15,
-"createdOn": "2022-10-27",
-"updatedOn": "2022-10-27",
-"temperature": 37.0,
-"observation_general": "RAS",
-"observation_avant": "RAS",
-"observation_apres": "RAS",
-"atelier": "SECHEUR",
-"equipement": "SUPPRESSUE",
-"item_moteur": "12009425",
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 }
-]
 
 const ReparationList = ({navigation}) => {
 
@@ -192,168 +15,279 @@ const ReparationList = ({navigation}) => {
   // const [data, setData] = React.useState({
     
   // });
-const [data , setData] = useState([])
-const [filtrerData, setFiltrerData] = useState([])
-const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const {userInfo,access_token} = useContext(AuthContext)
 
-const [selected, setSelected] = useState();
+  const [data , setData] = useState([])
+  const [filtrerData, setFiltrerData] = useState([])
+  const [moteuPlanning, setMoteurPlanning] = useState(false)
 
-const selectHandler = item => {
-  setSelected(item);
-}
+  const [selected, setSelected] = useState();
 
-useEffect(() => {
-  setData(dataMoteurInstalled)
-  setFiltrerData(dataMoteurInstalled)
-}, []);
-
-const togleMoteurPlanning = ( ) =>{
-  setMoteurPlanning(!moteuPlanning)
-}
-const Stringtext =() =>{
-  if (moteuPlanning){
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
-    )
+  const selectHandler = item => {
+    setSelected(item);
   }
-  else{
-    return(
-      <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
-    )
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    fetchmoteurInstalled()
+  }, []);
+
+
+  useEffect(() => {
+    getmoteurEnReparation()
+    console.log(access_token)
+  }, []);
+
+  const getmoteurEnReparation = async () => {
+
+    const configGetMotor = {
+      method: 'get',
+      url: `${baseUrlApi}/reparations/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    try{
+
+      const response = await axios(configGetMotor);
+      // let response = await axiosInstanceAPI.get('/moteur/');
+      const data = await response.data
+      setData(data);
+      setFiltrerData(data);
+
+    } catch (error){
+      console.log(error)
+      if(!error.response){
+        alert("Aucune reponse du serveur");
+      }
+      else if (error.response?.status === 400){
+        alert("Certains informations ne sont pas renseignées")
+      }
+      else if (error.response?.status === 401){
+        alert("Vous n'est pas authorisé")
+        useRefreshToken()
+        // fetchmoteurInstalled()
+      }
+      else if (error.response?.status === 404){
+        alert("Aucune corespondance a votre demande")
+      }
+      // alert("An error has occurred");
+      // setIsloading(false)
+    }
   }
-}
-const searcheFilterFunction = (text) =>{
-  if(text){
-      const newData = data.filter(item => {
-          console.log(item.equipement)
-          console.log(text)
-            const itemData = item.item_moteur ;
-            const textData = toString(text);
-            return itemData.indexOf(text) > -1;
+
+  const togleMoteurPlanning = ( ) =>{
+    setMoteurPlanning(!moteuPlanning)
+  }
+  const Stringtext =() =>{
+    if (moteuPlanning){
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+      )
+    }
+    else{
+      return(
+        <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
+      )
+    }
+  }
+  const searcheFilterFunction = (text) =>{
+    if(text){
+        const newData = data.filter(item => {
+              const itemData = item.moteur_hs.moteur.item_moteur ;
+              const textData = toString(text);
+              return itemData.indexOf(text) > -1;
+        })
+        setFiltrerData(newData)
+    }
+    else{
+        setFiltrerData(data)
+    }
+  }
+
+  function isEmpty(obj) {
+    for(var i in obj) { return false; }
+    return true;
+  }
+
+  const renderContent=()=>{
+    return(
+      <ScrollView
+          refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />}         
+      >
+    
+
+      {
+        filtrerData.map((item, index) =>{
+          return(
+         
+           <View 
+            style={{marginBottom:6, 
+                    flexDirection:'row',  
+                    justifyContent: 'flex-start', 
+                    flex:1}}>
+
+              { item.reparation_encour ?
+
+                <View>                 
+                  <TouchableOpacity 
+                    style={{flexDirection:'row', flex:2, height:70, }}
+                    onPress={() => navigation.navigate('Repartion_detail',{dataItem:item})}
+                    >
+                    
+                      <View style={{flex: 5, 
+                                    backgroundColor:'#316094',
+                                    borderTopLeftRadius:5,
+                                    borderBottomLeftRadius:5,
+                                      paddingLeft: 10, 
+                                      justifyContent:'center',}}>
+                        <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>
+                        Item Moteur: {item.moteur_hs.moteur.item_moteur} </Text>
+                        <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>
+                        Préstataire: {item.prestatire} </Text>
+                        <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>
+                        Ctt Préstataire: {item.contact_prestatire} </Text>
+                        
+                      </View>
+
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={{flexDirection:'row', flex:1, height:70, }}
+                  //   onPress={() => navigation.navigate('moteur_detail')}
+                    // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
+
+                    >
+                  <View style={{flex: 5,
+                              paddingLeft: 10,
+                              // borderTopRightRadius: 5,
+                              // borderBottomRightRadius:5,
+                              justifyContent:'center',
+                              borderWidth:1 ,
+                              borderColor:'#316094',}}>
+                      <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Modifier</Text>
+                  </View>
+
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={{flexDirection:'row', flex:0.985, height:70, }}
+                  //   onPress={() => navigation.navigate('moteur_detail')}
+                    onPress={() => navigation.navigate('Repartion_form_retout',{dataItem:item})}
+
+                    >
+                  <View style={{flex: 5,
+                              paddingLeft: 10,
+                              borderTopRightRadius: 5,
+                              borderBottomRightRadius:5,
+                              justifyContent:'center',
+                              borderWidth:1 ,
+                              borderColor:'#316094',}}>
+                      <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Retour</Text>
+                  </View>
+
+                  </TouchableOpacity>
+                </View> 
+
+                : 
+                <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
+                  <Text style={{color:'#aaa', fontWeight:'900', fontSize:18}}>Aucun moteur en réparation</Text>
+                  <Text style={{color:'#000', marginTop:40, flexWrap:'wrap', fontWeight:'400', fontSize:15}}>Tirer vers le bas pour Actualiser !</Text>
+                </View> 
+              }
+          </View>
+          
+          
+        )
       })
-      setFiltrerData(newData)
+    }
+        
+  </ScrollView>  
+    )
   }
-  else{
-      setFiltrerData(data)
-  }
-}
 
  
-    return (
-        <SafeAreaView style={styles.MainContainer} >
-          <StatusBar backgroundColor='#316094' barStyle='light-content'/>
-          <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+  return (
+      <SafeAreaView style={styles.MainContainer} >
+        <StatusBar backgroundColor='#316094' barStyle='light-content'/>
+        <View style={{marginLeft: 10,flexDirection: 'row', marginTop:5}}>
+          <TouchableOpacity
+            onPress={() => navigation.openDrawer()}
+            style={{marginLeft:10, marginTop:5}}
+          >
+          <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
+
+          </TouchableOpacity>
+            <View style={{flex:1}}>
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
+            </View>
+        </View>
+        <View style={{ flexDirection:'row',}}>
+          <View style={{flex:1, alignContent:'flex-end'}}>
+            <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
+            Réparation de Moteur</Text>
+          </View>
+          <View style={{}}>
             <TouchableOpacity
-              onPress={() => navigation.openDrawer()}
-              style={{marginLeft:10, marginTop:5}}
+              onPress={() =>navigation.navigate('Repartion_find', {option:"repar"} )}
             >
-            <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/menu.png")}/>
-
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
-              <View style={{flex:1}}>
-                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/logo-entete.png")}/>
-              </View>
           </View>
-          <View style={{ flexDirection:'row',}}>
-            <View style={{flex:1, alignContent:'flex-end'}}>
-              <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-              Réparation de Moteur</Text>
-            </View>
-            <View style={{}}>
-              <TouchableOpacity
-                onPress={() =>navigation.navigate('Repartion_find', {option:"repar"} )}
-              >
-                <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
-              </TouchableOpacity>
-            </View>
-          </View>
+        </View>
 
-        <View style={styles.view_liste}>
-            <View style={styles.inputzone }>
-                <View style={{flexDirection: 'row',}}>
-                    <View style={{flex:9, }}>
-                        <TextInput
-                            style={styles.rechercheinput}
-                            // onChangeText={(val) => besointextInputChange(val)}
-                            clearButtonMode="while-editing"
-                            // maxLength= {22}
-                            keyboardType='decimal-pad'
-                            placeholder="rechercher item moteur"
-                            placeholderTextColor = "#A4A5A4"
-                            onChangeText={(val) => searcheFilterFunction(val)}
-                        /> 
-                    </View>
-                    <View style={{flex:3, justifyContent:'center', alignContent:'center' }}>
-                      <TouchableOpacity
-                        onPress={() => {togleMoteurPlanning()}}
-                      >
-                       
-                          {moteuPlanning ? Stringtext() : Stringtext()}
-                      </TouchableOpacity>
+      <View style={styles.view_liste}>
+          <View style={styles.inputzone }>
+              <View style={{flexDirection: 'row',}}>
+                  <View style={{flex:1, }}>
+                      <TextInput
+                          style={styles.rechercheinput}
+                          // onChangeText={(val) => besointextInputChange(val)}
+                          clearButtonMode="while-editing"
+                          // maxLength= {22}
+                          keyboardType='decimal-pad'
+                          placeholder="rechercher item moteur"
+                          placeholderTextColor = "#A4A5A4"
+                          onChangeText={(val) => searcheFilterFunction(val)}
+                      /> 
+                  </View>
+                  {/* <View style={{flex:3, justifyContent:'center', alignContent:'center' }}>
+                    <TouchableOpacity
+                      onPress={() => {togleMoteurPlanning()}}
+                    >
                       
-                    </View>
-                              
-                </View>            
-            </View>
-            <ScrollView>
-                {
-                  filtrerData.map((item, index) =>{
-                    return(
-                    <View 
-                      style={{marginBottom:6, 
-                              flexDirection:'row',  
-                              justifyContent: 'flex-start', 
-                              flex:1}}>
-
-                          <View> 
-                          </View>
-                        <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:60, }}
-                            onPress={() => navigation.navigate('Repartion_detail')}
-                            >
+                        {moteuPlanning ? Stringtext() : Stringtext()}
+                    </TouchableOpacity>
+                    
+                  </View> */}
                             
-                              <View style={{flex: 5, 
-                                            backgroundColor:'#316094',
-                                            borderTopLeftRadius:5,
-                                            borderBottomLeftRadius:5,
-                                             paddingLeft: 10, 
-                                             justifyContent:'center',}}>
-                                <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'500'}}>ItemReparation: </Text>
-                                <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'500'}}>Préstataire: IDE </Text>
-                                
-                              </View>
+              </View>            
+          </View>
 
-                          </TouchableOpacity>
-                          <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:60, }}
-                          //   onPress={() => navigation.navigate('moteur_detail')}
-                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item})}
 
-                            >
-                          <View style={{flex: 5,
-                                      paddingLeft: 10,
-                                      borderTopRightRadius: 5,
-                                      borderBottomRightRadius:5,
-                                      justifyContent:'center',
-                                      borderWidth:1 ,
-                                      borderColor:'#316094',}}>
-                              <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Modifier</Text>
-                          </View>
+          {
+            !isEmpty(filtrerData) 
+            ? 
+            renderContent() 
+            : 
+            <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
+              <Text style={{color:'#aaa', fontWeight:'900', fontSize:18}}>Aucun moteur en réparation</Text>
+              <Text style={{color:'#000', marginTop:40, flexWrap:'wrap', fontWeight:'400', fontSize:15}}>Tirer vers le bas pour Actualiser !</Text>
+            </View>  
+          }
 
-                          </TouchableOpacity>
-                    </View>
-
-                  )
-                  })
-              }
-                 
-            </ScrollView>         
+        
+        </View>
           
-         </View>
-           
 
-        </SafeAreaView>
-    );
+      </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -24,7 +24,7 @@ export default function Drawernavigation() {
           <Drawer.Screen name='Home' component={HomeNavigator}/>
           <Drawer.Screen name="Moteur" component={MoteurNavigator }/>
           <Drawer.Screen name="Planning" component={PlannindNavigator}/>
-          {/* <Drawer.Screen name="Reparation" component={ReparationNavigator}/> */}
+          <Drawer.Screen name="Reparation" component={ReparationNavigator}/>
           <Drawer.Screen name="Historique" component={HistoriqueNavigator}/>
           <Drawer.Screen name="Atelier" component={AtelierNavigation}/>
           <Drawer.Screen name="Equipement" component={EquipementNavigation}/>

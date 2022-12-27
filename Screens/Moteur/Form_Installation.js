@@ -716,63 +716,57 @@ const datatofetch = () => {
 
 const fetchDataInstallationMoteur = async () => {
   // console.log(datatofetch())
-   
-    try {
-      const response = await axios.post(`${baseUrlApi}/installation/`, 
-      
-      {
-        moteur : moteurItem.id,
-        create_by : userInfo.id,
-        atelier : data.idAtelier,
-        equipement : data.idEquipement,
-        temperature : data.temperature,
-        // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
-        observation_general : data.obsevervation_gene,
-        // observation_avant : "",
-        // observation_apres : "data.observation_apres",
-        couplage : data.couplage,
-        motif_remplacement : data.motifremplacement,
-        continuite_u1_U2 : data.continuite_U1_U2,
-        continuite_v1_v2 : data.continuite_V1_V2,
-        continuite_w1_w2 : data.continuite_W1_W2,
-        isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
-        isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
-        isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
-        isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
-        isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
-        isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
-        serage : checkBoxSerage, 
-        equilibrage :checkBoxEquil,
-        photo_1 : image_1_View,
-        photo_2 : data.photo_2,
-        photo_3 : data.photo_3,
-        photo_4 : data.photo_3,
-        // photo_5 : data.photo_3,
-        // photo_6 : data.photo_3,
-        // photo_7 : data.photo_3,
-        // photo_8 : data.photo_3,
-        // photo_9 : data.photo_3,
-        // photo_10 : data.photo_3,
-        technicien : data.idTech,
-        superviceur : data.idsuperv,
-      },
-      {
-        headers: {
-          // "Accept":" */*",
-          // "Content-Type": "application/json",
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `JWT ${access_token}`
-        }
-      },
-      );
 
-      navigation.navigate('moteur_Home')
-      
-    } catch (error) {
-      alert("An error has occurred");
-      // setIsLoading(false);
-      console.log(error)
-    }
+  const datatofetch=new FormData();
+  datatofetch.append('moteur',moteurItem.id)
+  datatofetch.append('create_by',userInfo.id)
+
+  datatofetch.append('atelier',data.idAtelier)
+  datatofetch.append('equipement',data.idEquipement)
+
+  datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
+  datatofetch.append('observation_general',data.obsevervation_gene)
+  datatofetch.append('description_panne',data.descriptionpanne)
+  datatofetch.append('observation_apres',data.obsevervation_gene_ap)
+  datatofetch.append('couplage',data.couplage)
+  datatofetch.append('recommendation',data.proposition)
+  datatofetch.append('continuite_u1_U2',parseFloat(data.continuite_U1_U2.replace(/,/g, '')))
+  datatofetch.append('continuite_v1_v2', parseFloat(data.continuite_V1_V2.replace(/,/g, '')))
+  datatofetch.append('continuite_w1_w2', parseFloat(data.continuite_W1_W2.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_w2_u2', parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_w2_v2', parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_u2_v2',parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_masse_u1_m',parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_masse_v1_m',parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')))
+  datatofetch.append('isolement_bobine_masse_w1_m',parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')))
+  datatofetch.append('serage',checkBoxSerage)
+  datatofetch.append('equilibrage',checkBoxEquil)
+  datatofetch.append('photo_1',data.photo_1)
+  datatofetch.append('photo_2',data.photo_2)
+  datatofetch.append('photo_3',data.photo_3)
+  datatofetch.append('photo_4',data.photo_4)
+  datatofetch.append('technicien',data.idTech)
+  datatofetch.append('superviceur',data.idsuperv)
+  
+  try {
+    const response = await axios.post(`${baseUrlApi}/installation/`,datatofetch, 
+    {
+      headers: {
+        // "Accept":" */*",
+        // "Content-Type": "application/json",
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `JWT ${access_token}`
+      }
+    },
+    );
+
+    navigation.navigate('moteur_Home')
+    
+  } catch (error) {
+    alert("An error has occurred");
+    // setIsLoading(false);
+    console.log(error)
+  }
 
 
     

@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, { Component, useContext, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, PermissionsAndroid } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { baseUrlApi } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
+// import { PermissionsAndroid } from 'react-native';
 
 const Form_Inter_Cur_Screen =  ({route, navigation})=> {
 
@@ -49,6 +50,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   });
 
   useEffect(() =>{
+    console.log(access_token)
     getSuperviseur('superviceur_list')
     getTechnicien('technicien_list')
 
@@ -62,95 +64,64 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
     )
   }
 
-  const datatofetch = () => {
-    return {
-      moteur : moteurItem.id,
-          create_by : userInfo.id,
-          temperature : parseFloat(data.temperature.replace(/,/g, '')),
-          // old_moteur = models.ForeignKey('Hors_service',null=True, blank=True, on_delete=models.CASCADE)
-          // observation_general : data.obsevervation_gene,
-          observation_avant : data.obsevervation_gene_av,
-          description_panne: data.descriptionpanne,
-          observation_apres : data.obsevervation_gene_ap,
-          continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
-          continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
-          continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
-          isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
-          isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
-          isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
-          isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
-          isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
-          isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
-          serage : checkBoxSerage, 
-          equilibrage :checkBoxEquil,
-          photo_1 : data.photo_1,
-          photo_2 : data.photo_2,
-          photo_3 : data.photo_3,
-          photo_4 : data.photo_3,
-          technicien : data.idTech,
-          superviceur : data.idsuperv,
-    }
-  }
+ 
 
 //  Routine d'envoi des data au serveur
 
   const fetchData_InrtCurative = async () => {
-    console.log(datatofetch())
+
+    const datatofetch=new FormData();
+    datatofetch.append('moteur',moteurItem.id)
+    datatofetch.append('create_by',userInfo.id)
+    datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
+    datatofetch.append('observation_avant',data.obsevervation_gene_av)
+    datatofetch.append('description_panne',data.descriptionpanne)
+    datatofetch.append('observation_apres',data.obsevervation_gene_ap)
+    datatofetch.append('solution',data.solution)
+    datatofetch.append('recommendation',data.proposition)
+    datatofetch.append('continuite_u1_U2',parseFloat(data.continuite_U1_U2.replace(/,/g, '')))
+    datatofetch.append('continuite_v1_v2', parseFloat(data.continuite_V1_V2.replace(/,/g, '')))
+    datatofetch.append('continuite_w1_w2', parseFloat(data.continuite_W1_W2.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_w2_u2', parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_w2_v2', parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_u2_v2',parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_masse_u1_m',parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_masse_v1_m',parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')))
+    datatofetch.append('isolement_bobine_masse_w1_m',parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')))
+    datatofetch.append('serage',checkBoxSerage)
+    datatofetch.append('equilibrage',checkBoxEquil)
+    datatofetch.append('photo_1',data.photo_1)
+    datatofetch.append('photo_2',data.photo_2)
+    datatofetch.append('photo_3',data.photo_3)
+    datatofetch.append('photo_4',data.photo_4)
+    datatofetch.append('technicien',data.idTech)
+    datatofetch.append('superviceur',data.idsuperv)
      
-      try {
-        setIsLoading(true)
-        const response = await axios.post(`${baseUrlApi}/curative/`, 
-        
-        {
-          moteur : moteurItem.id,
-          create_by : userInfo.id,
-          temperature : parseFloat(data.temperature.replace(/,/g, '')),
-          observation_avant : data.obsevervation_gene_av,
-          description_panne: data.descriptionpanne,
-          observation_apres : data.obsevervation_gene_ap,
-          solution :  data.solution,
-          recommendation : data.proposition,
-          continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
-          continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
-          continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
-          isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
-          isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
-          isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
-          isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
-          isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
-          isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
-          serage : checkBoxSerage, 
-          equilibrage :checkBoxEquil,
-          photo_1 : data.photo_1,
-          photo_2 : data.photo_2,
-          photo_3 : data.photo_3,
-          photo_4 : data.photo_3,
-          technicien : data.idTech,
-          superviceur : data.idsuperv,
-        },
-        {
-          headers: {
-            // "Accept":" */*",
-            // "Content-Type": "application/json",
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `JWT ${access_token}`
-          }
-        },
-        );
-  
-        navigation.navigate('moteur_Home')
-        
-      } catch (error) {
-        alert("An error has occurred");
-        setIsLoading(false);
-        console.log(error)
-      }
+    try {
+      setIsLoading(true)
+      const response = await axios.post(`${baseUrlApi}/curative/`,datatofetch, 
+      
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `JWT ${access_token}`
+        }
+      },
+      );
+
+      navigation.navigate('moteur_Home')
+      
+    } catch (error) {
+      alert("An error has occurred");
+      setIsLoading(false);
+      console.log(error)
+    }
   
   
       
   }
 
-
+// liste de tous les supervisseurs de la plateforme
   const getSuperviseur = async ( route, ) =>{
 
     try {
@@ -189,7 +160,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
 
     }    
   }
-
+  // liste de tous les techniciens de la plateforme
   const getTechnicien = async ( route, ) =>{
 
     try {
@@ -228,58 +199,183 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
     }    
   }
 
-  const getImage_1_View = () =>{
+  const getImage_1_View = async  () =>{
     const options = {
       storageOption : {
         path: 'images',
         mediaType: 'photo',
       },
+      mediaType: 'photo',
       includeBase64: true
     };
 
-    launchCamera(options, response =>{
-      // console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_1_View(source)
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-
-      let localUri = response.assets[0].uri;
-      // setPhotoShow(localUri);
-      let filename = localUri.split('/').pop();
-
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      // let formData = new FormData();
-      //   formData.append('photo', { uri: localUri, name: filename, type });
-      setData({
-        ...data,
-        photo_1: { uri: localUri, name: filename, type }
-        
-      })
+        launchCamera(options, response =>{
       
-        // console.log(formData)
-      // console.log("URI ", response.assets[0].uri)
-      // console.log("Filename ", response.assets[0].uri.split('/').pop())
-      // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-      // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_1_View(source)
+    
+    
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+    
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+    
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_1: { uri: localUri, name: filename, type }
+            
+          })
+          
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          
+    
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    } 
+
+
+  };
+  const getImage_2_View = async () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        
+        launchCamera(options, response =>{
       
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_2_View(source)
 
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_2: { uri: localUri, name: filename, type }
+            
+          })
+          
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
       }
-    })
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // launchCamera(options, response =>{
+    //   // console.log('Response = ', response)
+    //   if (response.didCancel){
+    //     console.log('User conceeled Image Picker')
+    //   }
+    //   else if (response.error){
+    //     console.log('ImagePicker Error', response.error)
+    //   }
+    //   else if (response.customButton){
+    //     console.log('User tape custom button', response.customButton)
+    //   }
+    //   else {
+    //   //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+    //   const source = { uri: response.assets[0].uri };
+    //   setImage_2_View(source)
+
+    //   let localUri = response.assets[0].uri;
+    //   // setPhotoShow(localUri);
+    //   let filename = localUri.split('/').pop();
+
+    //   let match = /\.(\w+)$/.exec(filename);
+    //   let type = match ? `image/${match[1]}` : `image`;
+
+    //   // let formData = new FormData();
+    //   //   formData.append('photo', { uri: localUri, name: filename, type });
+    //   setData({
+    //     ...data,
+    //     photo_2: { uri: localUri, name: filename, type }
+        
+    //   })
+
+    //   }
+    // })
   };
-  const getImage_2_View = () =>{
+  const getImage_3_View = async () =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -288,41 +384,101 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
       includeBase64: true
     };
 
-    launchCamera(options, response =>{
-      // console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_2_View(source)
-
-      let localUri = response.assets[0].uri;
-      // setPhotoShow(localUri);
-      let filename = localUri.split('/').pop();
-
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      // let formData = new FormData();
-      //   formData.append('photo', { uri: localUri, name: filename, type });
-      setData({
-        ...data,
-        photo_2: { uri: localUri, name: filename, type }
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         
-      })
+        launchCamera(options, response =>{
+      
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_3_View(source)
 
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_3: { uri: localUri, name: filename, type }
+            
+          })
+          
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
       }
-    })
+    } catch (err) {
+      console.warn(err);
+    }
+
+
+    // launchCamera(options, response =>{
+    //   // console.log('Response = ', response)
+    //   if (response.didCancel){
+    //     console.log('User conceeled Image Picker')
+    //   }
+    //   else if (response.error){
+    //     console.log('ImagePicker Error', response.error)
+    //   }
+    //   else if (response.customButton){
+    //     console.log('User tape custom button', response.customButton)
+    //   }
+    //   else {
+    //   //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+    //   const source = { uri: response.assets[0].uri };
+    //   setImage_3_View(source)
+
+    //   let localUri = response.assets[0].uri;
+    //   // setPhotoShow(localUri);
+    //   let filename = localUri.split('/').pop();
+
+    //   let match = /\.(\w+)$/.exec(filename);
+    //   let type = match ? `image/${match[1]}` : `image`;
+
+    //   // let formData = new FormData();
+    //   //   formData.append('photo', { uri: localUri, name: filename, type });
+    //   setData({
+    //     ...data,
+    //     photo_3: { uri: localUri, name: filename, type }
+        
+    //   })
+
+    //   }
+    // })
   };
-  const getImage_3_View = () =>{
+  const getImage_4_View = async() =>{
     const options = {
       storageOption : {
         path: 'images',
@@ -331,84 +487,95 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
       includeBase64: true
     };
 
-    launchCamera(options, response =>{
-      // console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_3_View(source)
-
-      let localUri = response.assets[0].uri;
-      // setPhotoShow(localUri);
-      let filename = localUri.split('/').pop();
-
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      // let formData = new FormData();
-      //   formData.append('photo', { uri: localUri, name: filename, type });
-      setData({
-        ...data,
-        photo_3: { uri: localUri, name: filename, type }
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         
-      })
+        launchCamera(options, response =>{
+      
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_4_View(source)
 
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_4: { uri: localUri, name: filename, type:type }
+            
+          })
+          
+         
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
       }
-    })
-  };
-  const getImage_4_View = () =>{
-    const options = {
-      storageOption : {
-        path: 'images',
-        mediaType: 'photo',
-      },
-      includeBase64: true
-    };
+    } catch (err) {
+      console.warn(err);
+    }
 
-    launchCamera(options, response =>{
-      // console.log('Response = ', response)
-      if (response.didCancel){
-        console.log('User conceeled Image Picker')
-      }
-      else if (response.error){
-        console.log('ImagePicker Error', response.error)
-      }
-      else if (response.customButton){
-        console.log('User tape custom button', response.customButton)
-      }
-      else {
-      //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-      const source = { uri: response.assets[0].uri };
-      setImage_4_View(source)
+    // launchCamera(options, response =>{
+    //   // console.log('Response = ', response)
+    //   if (response.didCancel){
+    //     console.log('User conceeled Image Picker')
+    //   }
+    //   else if (response.error){
+    //     console.log('ImagePicker Error', response.error)
+    //   }
+    //   else if (response.customButton){
+    //     console.log('User tape custom button', response.customButton)
+    //   }
+    //   else {
+    //   //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+    //   const source = { uri: response.assets[0].uri };
+    //   setImage_4_View(source)
 
-      let localUri = response.assets[0].uri;
-      // setPhotoShow(localUri);
-      let filename = localUri.split('/').pop();
+    //   let localUri = response.assets[0].uri;
+    //   // setPhotoShow(localUri);
+    //   let filename = localUri.split('/').pop();
 
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
+    //   let match = /\.(\w+)$/.exec(filename);
+    //   let type = match ? `image/${match[1]}` : `image`;
 
-      // let formData = new FormData();
-      //   formData.append('photo', { uri: localUri, name: filename, type });
-      setData({
-        ...data,
-        photo_4: { uri: localUri, name: filename, type }
+    //   // let formData = new FormData();
+    //   //   formData.append('photo', { uri: localUri, name: filename, type });
+    //   setData({
+    //     ...data,
+    //     photo_4: { uri: localUri, name: filename, type }
         
-      })
+    //   })
 
-      }
-    })
+    //   }
+    // })
   };
-
 
 
   const toggleSerage =() =>{
@@ -439,8 +606,6 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
       </View>
     )
   }
-
-
   const handle_solution = (val) => {
   
     setData({
@@ -448,206 +613,205 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
         solution: val,
     });
 
-}
-const handle_superviseur = (val) => {
-  
-    setData({
-        ...data,
-        idsuperv: val,
-    });
+  }
+  const handle_superviseur = (val) => {
+    
+      setData({
+          ...data,
+          idsuperv: val,
+      });
 
-}
+  }
+  const handle_Technicien = (val) => {
 
-const handle_Technicien = (val) => {
+  setData({
+      ...data,
+      idTech: val,
+  });
 
-setData({
-    ...data,
-    idTech: val,
-});
-
-}
-const handle_Obsevervation_gene_av = (val) => {
-  if( val.trim().length >= 3 ) {
-      setData({
-          ...data,
-          obsevervation_gene_av: val,
-      });
-  } else {
-      setData({
-          ...data,
-          obsevervation_gene_av: val,
-      });
   }
-}
-const handle_Obsevervation_gene_ap = (val) => {
-  if( val.trim().length >= 3 ) {
-      setData({
-          ...data,
-          obsevervation_gene_ap: val,
-      });
-  } else {
-      setData({
-          ...data,
-          obsevervation_gene_ap: val,
-      });
+  const handle_Obsevervation_gene_av = (val) => {
+    if( val.trim().length >= 3 ) {
+        setData({
+            ...data,
+            obsevervation_gene_av: val,
+        });
+    } else {
+        setData({
+            ...data,
+            obsevervation_gene_av: val,
+        });
+    }
   }
-}
-const handle_Descriptionpanne = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          descriptionpanne: val,
-      });
-  } else {
-      setData({
-          ...data,
-          descriptionpanne: val,
-      });
+  const handle_Obsevervation_gene_ap = (val) => {
+    if( val.trim().length >= 3 ) {
+        setData({
+            ...data,
+            obsevervation_gene_ap: val,
+        });
+    } else {
+        setData({
+            ...data,
+            obsevervation_gene_ap: val,
+        });
+    }
   }
-}
-const handle_Continuite_U1_U2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          continuite_U1_U2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          continuite_U1_U2: val,
-      });
+  const handle_Descriptionpanne = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            descriptionpanne: val,
+        });
+    } else {
+        setData({
+            ...data,
+            descriptionpanne: val,
+        });
+    }
   }
-}
-const handle_Continuite_V1_V2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          continuite_V1_V2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          continuite_V1_V2: val,
-      });
+  const handle_Continuite_U1_U2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            continuite_U1_U2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            continuite_U1_U2: val,
+        });
+    }
   }
-}
-const handle_Continuite_W1_W2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          continuite_W1_W2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          continuite_W1_W2: val,
-      });
+  const handle_Continuite_V1_V2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            continuite_V1_V2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            continuite_V1_V2: val,
+        });
+    }
   }
-}
-const handle_Isolementbobine_W2_U2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobine_W2_U2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobine_W2_U2: val,
-      });
+  const handle_Continuite_W1_W2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            continuite_W1_W2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            continuite_W1_W2: val,
+        });
+    }
   }
-}
-const handle_Isolementbobine_W2_V2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobine_W2_V2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobine_W2_V2: val,
-      });
+  const handle_Isolementbobine_W2_U2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobine_W2_U2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobine_W2_U2: val,
+        });
+    }
   }
-}
-const handle_Isolementbobine_U1_V2 = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobine_U1_V2: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobine_U1_V2: val,
-      });
+  const handle_Isolementbobine_W2_V2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobine_W2_V2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobine_W2_V2: val,
+        });
+    }
   }
-}
-const handle_Isolementbobinemasse_U1_M = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobinemasse_U1_M: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobinemasse_U1_M: val,
-      });
+  const handle_Isolementbobine_U1_V2 = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobine_U1_V2: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobine_U1_V2: val,
+        });
+    }
   }
-}
-const handle_Isolementbobinemasse_V1_M = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobinemasse_V1_M: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobinemasse_V1_M: val,
-      });
+  const handle_Isolementbobinemasse_U1_M = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobinemasse_U1_M: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobinemasse_U1_M: val,
+        });
+    }
   }
-}
-const handle_Isolementbobinemasse_W1_M = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          isolementbobinemasse_W1_M: val,
-      });
-  } else {
-      setData({
-          ...data,
-          isolementbobinemasse_W1_M: val,
-      });
+  const handle_Isolementbobinemasse_V1_M = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobinemasse_V1_M: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobinemasse_V1_M: val,
+        });
+    }
   }
-}
-const handle_Proposition = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          proposition: val,
-      });
-  } else {
-      setData({
-          ...data,
-          proposition: val,
-      });
+  const handle_Isolementbobinemasse_W1_M = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            isolementbobinemasse_W1_M: val,
+        });
+    } else {
+        setData({
+            ...data,
+            isolementbobinemasse_W1_M: val,
+        });
+    }
   }
-}
-const handle_Temperature = (val) => {
-  if( val.trim().length >= 5 ) {
-      setData({
-          ...data,
-          temperature: val,
-      });
-  } else {
-      setData({
-          ...data,
-          temperature: val,
-      });
+  const handle_Proposition = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            proposition: val,
+        });
+    } else {
+        setData({
+            ...data,
+            proposition: val,
+        });
+    }
   }
-}
+  const handle_Temperature = (val) => {
+    if( val.trim().length >= 5 ) {
+        setData({
+            ...data,
+            temperature: val,
+        });
+    } else {
+        setData({
+            ...data,
+            temperature: val,
+        });
+    }
+  }
 
 const renderContent = () => {
   return(

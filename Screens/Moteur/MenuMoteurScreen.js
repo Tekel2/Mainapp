@@ -75,12 +75,12 @@ const MenuMoteurScreen = ({navigation, route}) => {
                     <Text style={styles.btninfo}>Curative</Text>
                   </TouchableOpacity> : null}
 
-                {/* { dataMoteur.install ?
+                { dataMoteur.install ?
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
                   >
                     <Text style={styles.btninfo}>Hors service</Text>
-                  </TouchableOpacity> : null} */}
+                  </TouchableOpacity> : null}
 
                   {
                     !dataMoteur.install ?

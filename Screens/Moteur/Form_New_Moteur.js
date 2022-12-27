@@ -13,7 +13,7 @@ import { baseUrlApi } from '../../API/urlbase';
 // const baseUrl = "http://192.168.203.30:8000";
 
 function Form_New_Moteur (props) {
-  const {userInfo,userToken} = useContext(AuthContext)
+  const {userInfo,access_token} = useContext(AuthContext)
   const [csrfToken, setCsrfToken] = useState(null)
 
   const couplage = ["Etoile", "Triangle"]
@@ -36,7 +36,24 @@ function Form_New_Moteur (props) {
     courant_triangle : 0,      
     courant_etoile : 0, 
     indice_protection : 0,
+    poids : 0,
 });
+
+
+const handle_poids = (val) => {
+  if( val.trim().length >= 5 ) {
+      setData({
+          ...data,
+          poids: val,
+      });
+  } else {
+      setData({
+          ...data,
+          poids: val,
+      });
+  }
+}
+
 
 const handle_ItemMoteur = (val) => {
   if( val.trim().length >= 5 ) {
@@ -274,43 +291,46 @@ const handle_indice_protection = (val) => {
 
 useEffect(()=>{
   // const csrfToken = Cookies.get('csrftoken')
-  console.log(userToken)
+  // console.log(access_token)
 })
 
 const fetchDataMoteur = async () => {
-  console.log(datatofetch())
+
+  const datatofetch = new FormData();
+    datatofetch.append('item_moteur',data.item)
+    datatofetch.append('create_by',userInfo.id)
+    datatofetch.append('reference',data.reference)
+    datatofetch.append('numeroserie',data.numeroserie)
+    datatofetch.append('marque',data.marque)
+    datatofetch.append('type_moteur',data.type_moteur)
+    datatofetch.append('phase',data.phase)
+    datatofetch.append('frequence',data.frequence)
+    datatofetch.append('cosfi',data.cosfi)
+    datatofetch.append('rendement',data.rendement)
+    datatofetch.append('puissance',data.puissance)
+    datatofetch.append('tour_min',data.tour_min)
+    datatofetch.append('temperature_ambiante_user',parseFloat(data.temperature_ambiante_user.replace(/,/g, '')))
+    datatofetch.append('tension_etoile',data.tension_etoile)
+    datatofetch.append('tension_triangle',data.tension_triangle)
+    datatofetch.append('courant_triangle',data.courant_triangle)
+    datatofetch.append('courant_etoile',data.indice_protection)
+    datatofetch.append('poids',data.poids)
+    datatofetch.append('indice_protection',data.courant_etoile)
+    datatofetch.append('poids',parseFloat(data.poids.replace(/,/g, '')))
+    datatofetch.append('install',false)
+    datatofetch.append('hors_service',false)
+    datatofetch.append('planning',false)
+
+    // console.log(datatofetch)
    
     try {
-      const response = await axios.post(`${baseUrlApi}/api/moteur/`, 
-      
-      {
-        create_by : userInfo.id,
-        item_moteur : data.item,
-        reference : data.reference,
-        numeroserie : data.numeroserie,
-        marque : data.marque,
-        type_moteur : data.type_moteur,
-        phase : data.phase,      
-        frequence : data.frequence,      
-        cosfi : data.cosfi,      
-        rendement : data.rendement,      
-        puissance : data.puissance,      
-        tour_min : data.tour_min,      
-        temperature_ambiante_user : data.temperature_ambiante_user, 
-        tension_etoile : data.tension_etoile,
-        tension_triangle : data.tension_triangle,      
-        courant_triangle : data.courant_triangle,      
-        courant_etoile : data.courant_etoile,
-        poids : 30,
-        indice_protection : data.indice_protection,
-        install : false
-        // datatofetch
-      },
+      const response = await axios.post(`${baseUrlApi}/moteur/`, datatofetch,     
       {
         headers: {
-          // "Accept":" */*",
-          "Content-Type": "application/json",
-          'Authorization': `token ${userToken}`
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
+
+          'Authorization': `JWT ${access_token}`
         }
       },
       );
@@ -330,7 +350,7 @@ const fetchDataMoteur = async () => {
         alert("Aucune corespondance a votre demande")
       }
       // alert("An error has occurred");
-      console.log(error.status)
+      // console.log(error.status)
       // setIsloading(false
       console.log(error)
     }
@@ -338,34 +358,6 @@ const fetchDataMoteur = async () => {
 
     
 }
-
-const datatofetch = () =>{
-  return {
-    create_by : userInfo.id,
-    item_moteur : data.item,
-    reference : data.reference,
-    numeroserie : data.numeroserie,
-    marque : data.marque,
-    type_moteur : data.type_moteur,
-    phase : data.phase,      
-    frequence : data.frequence,      
-    cosfi : data.cosfi,      
-    rendement : data.rendement,      
-    puissance : data.puissance,      
-    tour_min : data.tour_min,      
-    temperature_ambiante_user : data.temperature_ambiante_user, 
-    tension_etoile : data.tension_etoile,
-    tension_triangle : data.tension_triangle,      
-    courant_triangle : data.courant_triangle,      
-    courant_etoile : data.courant_etoile,
-    poids : 10,
-    indice_protection : data.indice_protection,
-    install : false
-  }
-}
-
-
-
 
     return (
         <SafeAreaView 
@@ -520,6 +512,18 @@ const datatofetch = () =>{
                 onChangeText={(val) => handle_indice_protection(val)}
               />  
           </View>
+
+          <View style={{flex:1, marginTop: 10}}>
+            <Text style={styles.titrechamp}>Poids (Kg)</Text>
+              <TextInput
+                placeholder="...."
+                placeholderTextColor="#777"
+                keyboardType='decimal-pad'
+                style={[styles.textinput,styles.textinputmulti]}
+                onChangeText={(val) => handle_poids(val)}
+              />  
+          </View>
+
           <View style={{flex:1, marginTop: 10}}>
             <Text style={styles.titrechamp}>Etoile</Text>
               <View style={{flexDirection:'row'}}>

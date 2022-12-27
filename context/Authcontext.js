@@ -33,9 +33,9 @@ export const AuthProvider = ({children}) =>{
                 password: password
             });
             // axiosInstanceAuth.defaults.headers['Authorization'] = "JWT " + response.data.access;
-            console.log("acces : ", response.data.access)
-            console.log("refresh : ", response.data.refresh)
-            console.log(jwt_decode(response.data.access))
+            // console.log("acces : ", response.data.access)
+            // console.log("refresh : ", response.data.refresh)
+            // console.log(jwt_decode(response.data.access))
 
             setAccess_token(response.data.access)
             setRefresh_token(response.data.refresh)
@@ -153,7 +153,7 @@ export const AuthProvider = ({children}) =>{
         setIsloading(true);
         
         let refresh_token = await AsyncStorage.getItem('refresh_token');
-        console.log("refresh_token ",refresh_token)
+        // console.log("refresh_token ",refresh_token)
         try{
             const response = await axiosInstanceAuth.post('/blacklist/', {
                 "refresh_token": refresh_token
@@ -185,7 +185,7 @@ export const AuthProvider = ({children}) =>{
         // })
         }
         catch(e)  {
-            console.log(`login error ${e}`);
+            // console.log(`login error ${e}`);
             if(!err?.response){
                 setErrMgs('No server Response')
             }

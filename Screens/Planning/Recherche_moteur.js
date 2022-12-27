@@ -38,7 +38,7 @@ const Recherche_moteur = ({navigation, route}) => {
 
   useEffect(() => {
     getMoteur()
-    // console.log(access_token)
+    console.log(access_token)
   }, []);
 
 
@@ -103,7 +103,7 @@ const Recherche_moteur = ({navigation, route}) => {
 
   const moteurinstaller =() =>{
     return(
-      filtrerData.map((item, index) =>{
+      filtrerData.map((item, index) =>{ key={index}
         return(      
 
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
