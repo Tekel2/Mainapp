@@ -542,7 +542,7 @@ useEffect(() =>{
 
     const datatofetch=new FormData();
 
-    datatofetch.append('moteur',moteurItem.id)
+    datatofetch.append('moteur',moteurItem.moteur.id)
     datatofetch.append('create_by',userInfo.id)
     datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
     datatofetch.append('motifhorservice',data.motifhorservice)
@@ -959,14 +959,17 @@ useEffect(() =>{
       
         <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
           <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-          <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
+          <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.moteur.item_moteur}</Text>
         </View>
         <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                       }}>
           <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
-           Dans l'atelier {dataInstallation.atelier !== undefined ?dataInstallation.atelier.nom_atelier : null}</Text>
+           Dans l'atelier {moteurItem.atelier.nom_atelier}
+           </Text>
           <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
-           Sur l'équiment {dataInstallation.equipement !== undefined ? dataInstallation.equipement.nom_equipenent : null}</Text>
+          Sur l'équiment {moteurItem.equipement.nom_equipenent}
+
+           </Text>
         </View>
       
         <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>

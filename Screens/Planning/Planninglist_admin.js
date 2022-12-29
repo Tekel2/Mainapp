@@ -207,7 +207,7 @@ const Planninglist_admin = ({navigation}) => {
                           <TouchableOpacity 
                             style={{flexDirection:'row', flex:1, height:80, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
+                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
 
                             >
                           <View style={{flex: 5,

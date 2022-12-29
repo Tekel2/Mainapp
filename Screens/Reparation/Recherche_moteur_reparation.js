@@ -12,7 +12,7 @@ const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const Recherche_moteur = ({navigation, route}) => {
+const Recherche_moteur_reparation = ({navigation, route}) => {
   
   const {userInfo,access_token} = useContext(AuthContext)
 
@@ -46,7 +46,7 @@ const Recherche_moteur = ({navigation, route}) => {
 
     const configGetMotor = {
       method: 'get',
-      url: `${baseUrlApi}/hors_service/`,
+      url: `${baseUrlApi}/findmoteurhs/`,
       headers: {
         "Content-Type": "application/json",
         'Authorization': `JWT ${access_token}`
@@ -326,4 +326,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default Recherche_moteur;
+export default Recherche_moteur_reparation;

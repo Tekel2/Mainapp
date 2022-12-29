@@ -51,7 +51,7 @@ const MoteurListScreen = ({navigation}) => {
 
   useEffect(() =>{
     fetchmoteurInstalled()
-    fetchmoteurNonInstalled()
+    // fetchmoteurNonInstalled()
     console.log(access_token)
   }, [])
 
@@ -160,24 +160,26 @@ const MoteurListScreen = ({navigation}) => {
         return(      
 
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
-              {
-                item.install ? 
+              
+               { 
+                !item.moteur.planning ?
+                
                 <TouchableOpacity 
                     style={{flexDirection:'row', height:70, }}
-                    onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                    onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:"post"})}
                     >
                       <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
                           <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                       </View>
                       <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                        <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
-                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                        <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>moteur : {item.moteur.item_moteur}</Text>
+                          <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier.nom_atelier}</Text>
+                          <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement.nom_equipenent} </Text>
                       </View>
                 </TouchableOpacity>
-               : 
-                null
-              }
+                : null
+                }
+              
             </View>
         
       )
@@ -185,39 +187,6 @@ const MoteurListScreen = ({navigation}) => {
     )
   }
 
-
-  const moteurNONinstaller =() =>{
-    return(
-      
-      moteurNonInstalled.map((item, index) =>{  key={index}
-        return(
-            
-            <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
-              {
-                !item.install ?
-                
-                <TouchableOpacity 
-                  style={{flexDirection:'row', height:70, }}
-                  onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
-                  >
-                    <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
-                        <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
-                    </View>
-                    <View style={{flex: 5, backgroundColor:'#ccc', borderColor:'#316094', borderWidth:1.5, paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                      <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
-                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
-                    </View>
-                </TouchableOpacity>
-
-                : null
-
-                }
-            </View>
-          )
-    }) 
-    )
-  }
 
  
     return (
@@ -281,19 +250,7 @@ const MoteurListScreen = ({navigation}) => {
                 onRefresh={onRefresh}
               />}
             >
-              
-              { !isEmpty(moteurNonInstalled) ?
-                
-                moteurNONinstaller()              
-                
-               :
-                <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#aaa', fontWeight:'900', fontSize:18}}>Aucun Moteur en Attente d'Installation</Text>
-
-                </View>
-              }
-
-
+            
               { !isEmpty(filtrermoteurInstalled) ?
                 
                 moteurinstaller()

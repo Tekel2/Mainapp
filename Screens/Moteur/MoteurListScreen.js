@@ -2,11 +2,13 @@
 import axios from 'axios';
 import React, { useEffect, useState, useContext } from 'react';
 //import react in our code.
-import { RefreshControl, StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView,ScrollView, StatusBar, ActivityIndicator } from 'react-native';
+import { Pressable, Modal, RefreshControl, StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView,ScrollView, StatusBar, ActivityIndicator } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { axiosInstanceAPI, baseUrlApi } from '../../API/urlbase';
 import useRefreshToken from '../../API/useRefreshToken';
 import { AuthContext } from '../../context/Authcontext';
+import CaracteristiqueScreen from './CaracteristiqueScreen';
+import Moteur_CaracteristiqueScreen from './Moteur_CaracteristiqueScreen';
 
 
   const triggerAlerte = () => {
@@ -39,19 +41,23 @@ const MoteurListScreen = ({navigation}) => {
   const [moteurNonInstalled , setMoteurNonInstalled] = useState([])
   const [messageErr , setMessageErr] = useState('')
   const [filtrermoteurInstalled, setFiltrermoteurInstalled] = useState([])
+
+  const [modalvisible, setmodalVisible] = useState(false)
+  const [modalitem, setModalitem] = useState(false)
       
     
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(1000).then(() => setRefreshing(false));
     fetchmoteurInstalled()
   }, []);
 
   useEffect(() =>{
     fetchmoteurInstalled()
-    fetchmoteurNonInstalled()
+    wait(2000).then(()=>fetchmoteurNonInstalled())
+    
     // console.log(access_token)
   }, [])
 
@@ -112,7 +118,7 @@ const MoteurListScreen = ({navigation}) => {
       // let response = await axiosInstanceAPI.get('/moteur/');
       const data = await response.data
       setMoteurNonInstalled(data);
-      // console.log(data)
+      // console.log("Moteur  ",data)
 
     } catch (error){
       console.log(error)
@@ -151,6 +157,107 @@ const MoteurListScreen = ({navigation}) => {
     }
   }
 
+
+  function viewModal(val){
+    return(
+      <View >
+        <Modal
+          // animationType="slide"
+          transparent={true}
+          visible={modalvisible}
+          // style={styles.MainContainerModal}
+        >
+         
+              <ScrollView >
+                <View style={{ flex: 1, justifyContent: 'center',
+                           backgroundColor: 'rgba(49, 96, 148, 0.15)',  }}>
+  
+                <View style={styles.MainContainerModal}>
+  
+                
+                <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
+         <View style={{flexDirection:'column'}}>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> {val.marque}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> marque</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> {val.type_moteur}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> type de moteur</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> {val.numeroserie}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> Numéro de Série</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> V {val.tension_triangle} | A {val.courant_triangle}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage triange</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> V {val.tension_etoile} | A {val.courant_etoile}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage étoile</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.puissance} KW</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> puissance</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.tour_min} Tr/min</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> fréquence de rotation</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}> {val.frequence} Hz</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}>fréquence</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.cosfi}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> facteur de puissance</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.temperature_ambiante_user}°C</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}> température ambiante max</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.rendement} %</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}>rendement</Text>
+            </View>
+            <View style={styles.cat}>
+                <Text style={styles.txtcat}>{val.phase}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}>{ val.phase > 1 ? "Phases" : "Phase"}</Text>
+            </View>
+            
+         </View>
+         <View style={{justifyContent: 'center', alignContent: 'center',marginTop: 10,}}>
+           
+                <TouchableOpacity
+                    onPress={() =>{setmodalVisible(false),navigation.navigate('moteur_install',{moteurItem:val})}}
+                >
+                    <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_install.png")}/>
+                </TouchableOpacity>
+                
+            </View>
+                   
+        </ScrollView>
+                
+                  <Pressable
+                      style={{backgroundColor: '#fff',
+                             borderBottomRightRadius:8, 
+                             borderBottomLeftRadius:8}}
+                      onPress={()=>{setmodalVisible(false)}}
+                  >
+                      <Text style={styles.txtbtnmodal}>Fermer</Text>
+                  </Pressable>
+                  </View>
+                </View>
+              </ScrollView>
+          
+        </Modal>
+      </View>
+    )
+  
+  } 
+
+
   function isEmpty(obj) {
     for(var i in obj) { return false; }
     return true;
@@ -165,7 +272,7 @@ const MoteurListScreen = ({navigation}) => {
              
                 <TouchableOpacity 
                     style={{flexDirection:'row', height:70, }}
-                    onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                    onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item, statusmoteur:"NONinstaller"})}
                     >
                       <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
                           <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
@@ -176,6 +283,8 @@ const MoteurListScreen = ({navigation}) => {
                         <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>Eqt : {item.equipement.item_equipenent} </Text>
                       </View>
                 </TouchableOpacity>
+
+                
                
             </View>
         
@@ -199,21 +308,26 @@ const MoteurListScreen = ({navigation}) => {
 
                 <TouchableOpacity 
                   style={{flexDirection:'row', height:70, }}
-                  onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
+                  onPress={() => {
+                            setModalitem(item)
+                            setmodalVisible(true)
+                        }}
                   >
                     <View style={{flex:1,borderTopLeftRadius: 5, borderBottomLeftRadius:5,borderWidth:1, borderColor:'#316094', justifyContent: 'center', alignContent: 'center'}}>
                         <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                     </View>
                     <View style={{flex: 5, backgroundColor:'#ccc', borderColor:'#316094', borderWidth:1.5, paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
                       <Text style={{fontSize: 20, color:'#000', fontWeight:'900'}}>Moteur : {item.item_moteur}</Text>
-                      <Text style={{fontSize: 16, color:'#000', fontWeight:'900'}}>Date création : {item.item_moteur}</Text>
+                      {/* <Text style={{fontSize: 16, color:'#000', fontWeight:'900'}}>Date création : {item.item_moteur}</Text> */}
                     </View>
                 </TouchableOpacity>
 
                 : null
 
                 }
+                {viewModal(modalitem)}
             </View>
+            
           )
     }) 
     )
@@ -508,7 +622,79 @@ const styles = StyleSheet.create({
       width: 28,
       height: 28,
       marginRight: 5
-    }
+    },
+    MainContainerModal:{
+      flex: 1,
+      justifyContent: "center",
+      // alignItems: "center",
+      marginTop: '5%',
+      // margin:20,
+      // width:400,
+      backgroundColor: '#fff',
+      paddingTop: 10,
+      paddingLeft: 10, 
+      paddingRight: 10,
+      justifyContent: 'center',
+      alignContent:'center',
+      marginHorizontal: 25,
+      borderRadius:8
+      // width:'80%'
+
+    },
+    txtbtnmodal:{
+      // height: 30,
+      color:'#316094',
+      fontSize:20,
+      fontWeight: '900' ,
+      textAlign: 'right',
+      marginBottom: 20,
+      paddingRight:20,
+      marginRight:10,
+
+      borderBottomLeftRadius:4,
+      borderBottomLeftRadius:4,
+      marginVertical: 10
+    },
+    MainContainer: {
+      flex: 1,
+      backgroundColor: '#E4E4E4',
+      paddingTop: 10,
+      paddingLeft: 10, 
+      paddingRight: 10,
+      justifyContent: 'center',
+      alignContent:'center'
+    },
+    etatprovenance:{
+        fontSize: 20, 
+        color: '#111', 
+        fontWeight: 'bold',
+        borderWidth: 1.2,
+        borderRadius: 6,
+        borderColor:'#ED7524',
+        width: 88,
+        textAlign: 'center',
+        padding: 6,
+        backgroundColor: '#ED7524',
+        color: '#fff'
+
+    },
+    cat:{
+        justifyContent: 'center', 
+        alignSelf: 'center',
+        width:300,
+        backgroundColor: 'rgba(49, 96, 148, 0.37)',
+        borderRadius:4,
+        marginTop: 5
+
+    },
+    txtcat:{
+        fontSize: 25, 
+        color:'#111', 
+        textAlign:'center',
+        fontWeight: '900',
+        
+    },
+    txtcat_designa:{fontWeight:'500', color:'rgba(49, 96, 148, 1)'}
   });
 
 

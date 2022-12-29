@@ -32,7 +32,7 @@ const ReparationList = ({navigation}) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    fetchmoteurInstalled()
+    getmoteurEnReparation()
   }, []);
 
 

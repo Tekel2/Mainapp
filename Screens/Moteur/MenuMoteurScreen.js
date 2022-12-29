@@ -75,14 +75,14 @@ const MenuMoteurScreen = ({navigation, route}) => {
             <View style={{paddingLeft:20, marginTop:15}}>
                 { moteurItem.moteur.install ?
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Form_Cur', {moteurItem:dataMoteur})}
+                    onPress={() => navigation.navigate('Form_Cur', {moteurItem:moteurItem})}
                   >
                     <Text style={styles.btninfo}>Curative</Text>
                   </TouchableOpacity> : null}
 
                 { moteurItem.moteur.install &&  userInfo.fonction < 3 ?
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
+                    onPress={() => navigation.navigate('Form_HorService', {moteurItem:moteurItem})}
                   >
                     <Text style={styles.btninfo}>Hors service</Text>
                   </TouchableOpacity> : null}

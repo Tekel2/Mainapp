@@ -25,6 +25,7 @@ const PlanningNavigator = ({navigation}) => (
         }}
         headerMode='none'
         
+        
         >
         <Stack.Screen name="Planning" component={Planninglist_admin}/>
         <Stack.Screen name="Planning_new" component={Form_new_planning}/>

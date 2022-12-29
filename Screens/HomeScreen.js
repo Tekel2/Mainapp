@@ -82,7 +82,7 @@ const HomeScreen = ({navigation}) => {
     setIsloading(true)
     const configGetMotor = {
       method: 'get',
-      url: `${baseUrlApi}/planning/False/`, // Lien des planninig non executé
+      url: `${baseUrlApi}/listPlanning/`, // Lien des planninig non executé
       headers: {
         "Content-Type": "application/json",
         'Authorization': `JWT ${access_token}`

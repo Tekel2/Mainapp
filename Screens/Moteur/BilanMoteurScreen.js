@@ -158,7 +158,7 @@ function BilanMoteurScreen ({route, navigation}) {
         <View style={{ flexDirection: 'column'}}>
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.moteur.item_moteur}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                        }}>

@@ -23,6 +23,10 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   const [image_3_View, setImage_3_View] = useState('')
   const [image_4_View, setImage_4_View] = useState('')
 
+  useEffect(()=>{
+    console.log(moteurItem)
+  })
+
 
   const [data, setData] = React.useState({
     obsevervation_gene_av: '',
@@ -1204,12 +1208,17 @@ const renderContent = () => {
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>5JM11-65468</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.moteur.item_moteur}</Text>
           </View>
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                        }}>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
-            <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
+             <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
+           Dans l'atelier {moteurItem.atelier.nom_atelier}
+           </Text>
+          <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
+          Sur l'équiment {moteurItem.equipement.nom_equipenent}
+
+           </Text>
           </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
