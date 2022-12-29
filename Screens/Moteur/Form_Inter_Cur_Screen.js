@@ -71,7 +71,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
   const fetchData_InrtCurative = async () => {
 
     const datatofetch=new FormData();
-    datatofetch.append('moteur',moteurItem.id)
+    datatofetch.append('moteur',moteurItem.moteur.id)
     datatofetch.append('create_by',userInfo.id)
     datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
     datatofetch.append('observation_avant',data.obsevervation_gene_av)

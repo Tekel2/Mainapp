@@ -40,7 +40,7 @@ const HistoriqueNavigator = ({navigation}) => (
         <Stack.Screen name="His_hs" component={HistoriqueHS}/>
         <Stack.Screen name="His_install" component={HistoriqueInstallation}/>
         <Stack.Screen name="His_reparation" component={HistoriqueReparation}/>
-        <Stack.Screen name="His_reparation_dtl" component={DetailsPreventive}/>
+        <Stack.Screen name="His_preventive_dtl" component={DetailsPreventive}/>
       
     </Stack.Navigator>
 );

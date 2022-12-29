@@ -43,7 +43,7 @@ function BilanMoteurScreen ({route, navigation}) {
     setIsloading(true)
     const configGetMotor = {
       method: 'get',
-      url: `${baseUrlApi}/billan/${moteurItem.id}/`, // Lien des planninig non executé
+      url: `${baseUrlApi}/billan/${moteurItem.moteur.id}/`, // Lien des planninig non executé
       headers: {
         "Content-Type": "application/json",
         'Authorization': `JWT ${access_token}`

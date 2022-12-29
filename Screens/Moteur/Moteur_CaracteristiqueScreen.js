@@ -28,7 +28,7 @@ const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
           </View>
 
-         { ! moteurItem.install ?
+         { ! moteurItem.moteur.install ?
             <View style={{justifyContent: 'center', alignContent: 'center',marginTop: 10,}}>
            
                 <TouchableOpacity
@@ -46,52 +46,52 @@ const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
         <ScrollView style={{ flex:9, marginTop:10,marginBottom: 5, paddingBottom:5}}>
          <View style={{flexDirection:'column'}}>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> {moteurItem.marque}</Text>
+                <Text style={styles.txtcat}> {moteurItem.moteur.marque}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> marque</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> {moteurItem.type_moteur}</Text>
+                <Text style={styles.txtcat}> {moteurItem.moteur.type_moteur}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> type de moteur</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> {moteurItem.numeroserie}</Text>
+                <Text style={styles.txtcat}> {moteurItem.moteur.numeroserie}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> Numéro de Série</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> V {moteurItem.tension_triangle} | A {moteurItem.courant_triangle}</Text>
+                <Text style={styles.txtcat}> V {moteurItem.moteur.tension_triangle} | A {moteurItem.moteur.courant_triangle}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage triange</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> V {moteurItem.tension_etoile} | A {moteurItem.courant_etoile}</Text>
+                <Text style={styles.txtcat}> V {moteurItem.moteur.tension_etoile} | A {moteurItem.moteur.courant_etoile}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> couplage étoile</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.puissance} KW</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.puissance} KW</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> puissance</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.tour_min} Tr/min</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.tour_min} Tr/min</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> fréquence de rotation</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}> {moteurItem.frequence} Hz</Text>
+                <Text style={styles.txtcat}> {moteurItem.moteur.frequence} Hz</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}>fréquence</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.cosfi}</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.cosfi}</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> facteur de puissance</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.temperature_ambiante_user}°C</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.temperature_ambiante_user}°C</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}> température ambiante max</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.rendement} %</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.rendement} %</Text>
                 <Text style={[styles.txtcat,styles.txtcat_designa]}>rendement</Text>
             </View>
             <View style={styles.cat}>
-                <Text style={styles.txtcat}>{moteurItem.phase}</Text>
-                <Text style={[styles.txtcat,styles.txtcat_designa]}>phase</Text>
+                <Text style={styles.txtcat}>{moteurItem.moteur.phase}</Text>
+                <Text style={[styles.txtcat,styles.txtcat_designa]}>{ moteurItem.moteur.phase > 1 ? "Phases" : "Phase"}</Text>
             </View>
             
          </View>

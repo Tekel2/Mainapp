@@ -20,7 +20,7 @@ export const AuthProvider = ({children}) =>{
 
 
     const [userInfo, setUserInfo] = useState(null);
-    const [errMgs, setErrMgs] = useState("null");
+    const [errMgs, setErrMgs] = useState(null);
 
 
 

@@ -73,6 +73,7 @@ const MoteurListScreen = ({navigation}) => {
       const data = await response.data
       setMoteurInstalled(data);
       setFiltrermoteurInstalled(data);
+      // console.log(data)
 
     } catch (error){
       console.log(error)
@@ -111,6 +112,7 @@ const MoteurListScreen = ({navigation}) => {
       // let response = await axiosInstanceAPI.get('/moteur/');
       const data = await response.data
       setMoteurNonInstalled(data);
+      // console.log(data)
 
     } catch (error){
       console.log(error)
@@ -160,8 +162,7 @@ const MoteurListScreen = ({navigation}) => {
         return(      
 
             <View style={{marginBottom:6, flexDirection:'column',  justifyContent: 'flex-start', flex:1}}>
-             {
-                item.install ?
+             
                 <TouchableOpacity 
                     style={{flexDirection:'row', height:70, }}
                     onPress={() => navigation.navigate('MenuMoteur',{moteurItem:item})}
@@ -170,14 +171,12 @@ const MoteurListScreen = ({navigation}) => {
                           <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                       </View>
                       <View style={{flex: 5, backgroundColor:'#316094', paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                        <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
-                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                        <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>Moteur : {item.moteur.item_moteur}</Text>
+                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>Atelier : {item.atelier.item_atelier}</Text>
+                        <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>Eqt : {item.equipement.item_equipenent} </Text>
                       </View>
                 </TouchableOpacity>
-                : 
-                null
-              }
+               
             </View>
         
       )
@@ -206,9 +205,8 @@ const MoteurListScreen = ({navigation}) => {
                         <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/icon-moteur.png")}/>
                     </View>
                     <View style={{flex: 5, backgroundColor:'#ccc', borderColor:'#316094', borderWidth:1.5, paddingLeft: 10,borderTopRightRadius: 5, borderBottomRightRadius:5 }}>
-                      <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'900'}}>{item.item_moteur}</Text>
-                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.atelier}</Text>
-                      <Text style={{fontSize: 16, color:'#E4E4E4', fontWeight:'900'}}>{item.equipement} </Text>
+                      <Text style={{fontSize: 20, color:'#000', fontWeight:'900'}}>Moteur : {item.item_moteur}</Text>
+                      <Text style={{fontSize: 16, color:'#000', fontWeight:'900'}}>Date création : {item.item_moteur}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -290,7 +288,7 @@ const MoteurListScreen = ({navigation}) => {
                 
                :
                 <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#000',fontSize:15, marginVertical:10}}>Aucun Moteur en Attente d'Installation</Text>
+                  <Text style={{color:'#aaa', fontWeight:'900', fontSize:18, marginVertical:10}}>Aucun Moteur en Attente d'Installation</Text>
 
                 </View>
               }
@@ -301,7 +299,7 @@ const MoteurListScreen = ({navigation}) => {
                 moteurinstaller()
                :
                 <View style={{flex:5,justifyContent:'center', alignItems:'center'}}>
-                  <Text style={{color:'#000', fontSize:15,  marginVertical:10}}>Aucun Moteur installé</Text>
+                  <Text style={{color:'#aaa', fontWeight:'900', fontSize:18, marginVertical:10}}>Aucun Moteur installé</Text>
                   <Text style={{color:'#000', fontSize:15,  marginVertical:20}}>TIRER VERS LE BAS POUR ACTUALISER LA LISTE !</Text>
 
                 </View>

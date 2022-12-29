@@ -34,11 +34,11 @@ const HistoriquePreventive = ({navigation}) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    getDataAtelier()
+    getDataPreventive()
   }, []);
 
   useEffect(() => {
-    getDataAtelier()
+    getDataPreventive()
     console.log(userInfo.fonction)
   }, []);
 
@@ -58,7 +58,7 @@ const HistoriquePreventive = ({navigation}) => {
     }
   }
 
-  const getDataAtelier = async () => {
+  const getDataPreventive = async () => {
 
     const configGetMotor = {
       method: 'get',
@@ -146,7 +146,7 @@ const HistoriquePreventive = ({navigation}) => {
                 onPress ={()=> {
                     setModalitem(item)
                     // setmodalVisible(true)
-                    navigation.navigate('His_reparation_dtl',{dataIntevention:item})
+                    navigation.navigate('His_preventive_dtl',{dataIntevention:item})
                   }}
                 >
                 

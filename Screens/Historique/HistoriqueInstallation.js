@@ -62,7 +62,7 @@ const HistoriqueInstallation = ({navigation}) => {
 
     const configGetMotor = {
       method: 'get',
-      url: `${baseUrlApi}/installation/`,
+      url: `${baseUrlApi}/hist_Install/`,
       headers: {
         "Content-Type": "application/json",
         'Authorization': `JWT ${access_token}`

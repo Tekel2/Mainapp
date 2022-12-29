@@ -16,7 +16,7 @@ const Planninglist_admin = ({navigation}) => {
   // const [data, setData] = React.useState({
     
   // });
-  const {access_token} = useContext(AuthContext)
+  const {access_token,userInfo} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -132,13 +132,16 @@ const Planninglist_admin = ({navigation}) => {
             <Text style={{paddingLeft: 20,textAlign:'left',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
             Planning d'Intervention</Text>
           </View>
-          <View style={{}}>
+          {
+            userInfo.fonction < 3 ?
+            <View style={{}}>
             <TouchableOpacity
               onPress={() =>navigation.navigate('Planning_find', {option:'planning'})}
             >
               <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_new.png")}/>
             </TouchableOpacity>
           </View>
+          : null}
         </View>
 
         <View style={styles.view_liste}>

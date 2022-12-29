@@ -1,8 +1,9 @@
 //This is an example code for NavigationDrawer//
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 //import react in our code.
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { AuthContext } from '../../context/Authcontext';
 
 
 
@@ -11,16 +12,20 @@ import { FlatList, TextInput } from 'react-native-gesture-handler';
 const MenuMoteurScreen = ({navigation, route}) => {
 
 
+  const {userInfo,access_token} = useContext(AuthContext)
+
   const [dataMoteur, setDataMoteur] = useState([])
+  
 
-
+  const {moteurItem} = route.params
 
   function getData(){
-    return route.params.moteurItem
+    return moteurItem
   }
 
   useEffect(()=>{
-   setDataMoteur(getData)
+  //  setDataMoteur(getData)
+  console.log(userInfo.fonction)
   }, [])
   
     return (
@@ -35,7 +40,7 @@ const MenuMoteurScreen = ({navigation, route}) => {
         <ScrollView>
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center'}}>
             <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{dataMoteur.item_moteur}</Text>
+            <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.moteur.item_moteur}</Text>
           </View>
          
 
@@ -43,21 +48,21 @@ const MenuMoteurScreen = ({navigation, route}) => {
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Informations</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('caracteristique', {moteurItem:dataMoteur})}
+                  onPress={() => navigation.navigate('caracteristique', {moteurItem:moteurItem})}
                 >
                   <Text style={styles.btninfo}>Caractéristiques</Text>
                 </TouchableOpacity>
                 
-               { dataMoteur.install ?
+               { moteurItem.moteur.install ?
                <TouchableOpacity
-                  onPress={() => navigation.navigate('moteur_installed_info', {moteurItem:dataMoteur})}
+                  onPress={() => navigation.navigate('moteur_installed_info', {moteurItem:moteurItem})}
                 >
                   <Text style={styles.btninfo}>Détails Installation</Text>
                 </TouchableOpacity>: null}
 
-                {dataMoteur.install ? 
+                {moteurItem.moteur.install ? 
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('bilanMoteur', {moteurItem:dataMoteur})}
+                    onPress={() => navigation.navigate('bilanMoteur', {moteurItem:moteurItem})}
                   >
                     <Text style={styles.btninfo}>Bilan Moteur</Text>
                   </TouchableOpacity> : null}
@@ -68,14 +73,14 @@ const MenuMoteurScreen = ({navigation, route}) => {
           <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:15,}}>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold'}}>Interventions</Text>
             <View style={{paddingLeft:20, marginTop:15}}>
-                { dataMoteur.install ?
+                { moteurItem.moteur.install ?
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Form_Cur', {moteurItem:dataMoteur})}
                   >
                     <Text style={styles.btninfo}>Curative</Text>
                   </TouchableOpacity> : null}
 
-                { dataMoteur.install ?
+                { moteurItem.moteur.install &&  userInfo.fonction < 3 ?
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Form_HorService', {moteurItem:dataMoteur})}
                   >
@@ -83,7 +88,7 @@ const MenuMoteurScreen = ({navigation, route}) => {
                   </TouchableOpacity> : null}
 
                   {
-                    !dataMoteur.install ?
+                    !moteurItem.moteur.install  ?
                     <View style={{flex:1, alignItems:'center', }}>
                       <Text style={{color:'#555', fontSize:18}}>Le moteur n'étant pas installé, les Interventions sont indisponible</Text>
                     </View>
