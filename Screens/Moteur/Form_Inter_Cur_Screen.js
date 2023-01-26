@@ -9,7 +9,7 @@ import { AuthContext } from '../../context/Authcontext';
 
 const Form_Inter_Cur_Screen =  ({route, navigation})=> {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
   const {moteurItem} = route.params
   const [isLoading, setIsLoading] = useState(true)
   const [checkBoxSerage, setCheckBoxSerage] = useState(false)
@@ -153,7 +153,8 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -191,7 +192,8 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -256,15 +258,7 @@ const Form_Inter_Cur_Screen =  ({route, navigation})=> {
           setData({
             ...data,
             photo_1: { uri: localUri, name: filename, type }
-            
           })
-          
-          //   console.log(formData)
-          // console.log("URI ", response.assets[0].uri)
-          // console.log("Filename ", response.assets[0].uri.split('/').pop())
-          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
-          
     
           }
         })

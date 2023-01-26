@@ -14,14 +14,14 @@ const wait = (timeout) => {
 
 const HomeScreen = ({navigation}) => {
 
-  const {access_token} = useContext(AuthContext)
+  const {access_token, logout} = useContext(AuthContext)
 
     // const [data, setData] = React.useState({
       
     // });
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
-  const [moteuPlanning, setMoteurPlanning] = useState(false)
+  const [moteurPlanning, setMoteurPlanning] = useState(false)
   const [modalvisible, setmodalVisible] = useState(false)
   const [modalitem, setModalitem] = useState(false)
   const [selected, setSelected] = useState();
@@ -47,27 +47,32 @@ const HomeScreen = ({navigation}) => {
   }
 
   const togleMoteurPlanning = ( ) =>{
-    setMoteurPlanning(!moteuPlanning)
+    setMoteurPlanning(!moteurPlanning)
+    
+    
   }
 
   const Stringtext =() =>{
-    if (moteuPlanning){
+    if (moteurPlanning){
       return(
-        <Text style={{fontSize:18, color:'#000' }}>/Planning</Text>
+        <Text style={{fontSize:18, fontWeight: 'bold', color:'#000' }}>/ Planning</Text>
       )
     }
     else{
       return(
-        <Text style={{fontSize:18, color:'#000' }}>/moteur</Text>
+        <Text style={{fontSize:18,  fontWeight: 'bold', color:'#000' }}>/ Moteur</Text>
       )
     }
   }
   const searcheFilterFunction = (text) =>{
     if(text){
         const newData = data.filter(item => {
-            console.log(item.equipement)
-            console.log(text)
-              const itemData = item.item_moteur ;
+            // console.log(item.equipement)
+            // console.log(text)
+              const moteur = item.moteur.item_moteur;
+              const planningItem = item.item_planning;
+
+              const itemData = (moteurPlanning ? planningItem : moteur) 
               const textData = toString(text);
               return itemData.indexOf(text) > -1;
         })
@@ -110,6 +115,7 @@ const HomeScreen = ({navigation}) => {
       }
       else if (error.response?.status === 401){
         alert("Vous n'est pas authorisé")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucun planning de disponible")
@@ -308,8 +314,8 @@ function viewModal(val){
                             // onChangeText={(val) => besointextInputChange(val)}
                             clearButtonMode="while-editing"
                             // maxLength= {22}
-                            keyboardType='decimal-pad'
-                            placeholder="rechercher item moteur"
+                            // keyboardType='ascii-capable'
+                            placeholder=  {moteurPlanning ? "rechercher item planning" : "rechercher item moteur"} //
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}
                         /> 
@@ -319,7 +325,7 @@ function viewModal(val){
                         onPress={() => {togleMoteurPlanning()}}
                       >
                        
-                          {moteuPlanning ? Stringtext() : Stringtext()}
+                          {moteurPlanning ? Stringtext() : Stringtext()}
                       </TouchableOpacity>
                       
                     </View>

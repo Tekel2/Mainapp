@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
 
@@ -8,7 +8,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const DetailsPreventive = ({navigation,route}) => {
+const DetailsCurative = ({navigation,route}) => {
 
   const {logout,access_token} = useContext(AuthContext)
 
@@ -26,7 +26,6 @@ const DetailsPreventive = ({navigation,route}) => {
 
   useEffect(()=>{
 //    setDataMoteur(getData)
-console.log(dataItem)
   }, [])
   
   const [refreshing, setRefreshing] = React.useState(false);
@@ -40,6 +39,7 @@ console.log(dataItem)
 
   useEffect(() =>{
     getatelier_eqt("atelier-eqt",dataItem.id )
+    console.log(dataItem)
   }, [])
 
 //   useEffect(() =>{
@@ -119,15 +119,15 @@ const getatelier_eqt = async (route, id) => {
 
             <View style>
                 <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
-                Détails intervention Préventive</Text>
+                Détails intervention Curative</Text>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Preventive</Text>
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Curative</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.item_preventive}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.item_curative}</Text>
                 </View>
             </View>
 
@@ -185,6 +185,15 @@ const getatelier_eqt = async (route, id) => {
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date modification</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.updatedOn}</Text>
                 </View>
             </View>
 
@@ -323,6 +332,15 @@ const getatelier_eqt = async (route, id) => {
                 </View>
             </View>
 
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Proposition</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.recommendation}</Text>
+                </View>
+            </View>
+
             {
                 dataItem.photo_1 !== null || dataItem.photo_2 !== null ||dataItem.photo_3 !== null ?
 
@@ -389,6 +407,8 @@ const getatelier_eqt = async (route, id) => {
                 : null
             }
 
+            
+
 
         </View>     
 
@@ -435,4 +455,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default DetailsPreventive;
+export default DetailsCurative;

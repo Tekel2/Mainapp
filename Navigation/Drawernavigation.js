@@ -13,6 +13,7 @@ import ReparationNavigator from './ReparationNavigator';
 import MoteurNavigator from './MoteurNavigator';
 import AtelierNavigation from './AtelierNavigation';
 import EquipementNavigation from './EquipementNavigation';
+import UserNavigation from './UserNavigation';
 
 
 const Drawer = createDrawerNavigator();
@@ -28,6 +29,7 @@ export default function Drawernavigation() {
           <Drawer.Screen name="Historique" component={HistoriqueNavigator}/>
           <Drawer.Screen name="Atelier" component={AtelierNavigation}/>
           <Drawer.Screen name="Equipement" component={EquipementNavigation}/>
+          <Drawer.Screen name="Compte" component={UserNavigation}/>
       </Drawer.Navigator>
     );
   }

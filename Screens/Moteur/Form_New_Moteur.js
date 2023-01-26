@@ -13,7 +13,7 @@ import { baseUrlApi } from '../../API/urlbase';
 // const baseUrl = "http://192.168.203.30:8000";
 
 function Form_New_Moteur (props) {
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
   const [csrfToken, setCsrfToken] = useState(null)
 
   const couplage = ["Etoile", "Triangle"]
@@ -52,6 +52,20 @@ const handle_poids = (val) => {
           poids: val,
       });
   }
+}
+
+const handle_input = (input, val, )=>{
+  if( val.trim().length >= 5 ) {
+    setData({
+        ...data,
+        [input]: val,
+    });
+} else {
+    setData({
+        ...data,
+        [input]: val,
+    });
+}
 }
 
 
@@ -344,7 +358,8 @@ const fetchDataMoteur = async () => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -353,10 +368,7 @@ const fetchDataMoteur = async () => {
       // console.log(error.status)
       // setIsloading(false
       console.log(error)
-    }
-
-
-    
+    }    
 }
 
     return (
@@ -383,7 +395,8 @@ const fetchDataMoteur = async () => {
                 placeholderTextColor="#777"
                 autoCapitalize="words"
                 style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_ItemMoteur(val)}
+                // onChangeText={(val) => handle_ItemMoteur(val)}
+                onChangeText={(val) => handle_input(data.item, val)}
               />  
               <Text style={{fontStyle:'italic', fontSize:15, color:'#000'}}>(Doit être un numero article de SAP)</Text>
           </View>
@@ -394,7 +407,9 @@ const fetchDataMoteur = async () => {
                 placeholderTextColor="#777"
                 autoCapitalize="characters"
                 style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_reference(val)}
+                // onChangeText={(val) => handle_reference(val)}
+                onChangeText={(val) => handle_input(data.reference, val)}
+
               />  
           </View>
           <View style={{flex:1, marginTop: 10}}>
@@ -404,7 +419,9 @@ const fetchDataMoteur = async () => {
                 placeholderTextColor="#777"
                 autoCapitalize="characters"
                 style={[styles.textinput, {}]}
-                onChangeText={(val) => handle_numeroserie(val)}
+                // onChangeText={(val) => handle_numeroserie(val)}
+                onChangeText={(val) => handle_input(data.numeroserie, val)}
+
               />  
           </View>
           <View style={{flex:1, marginTop: 10}}>
@@ -414,7 +431,9 @@ const fetchDataMoteur = async () => {
                 placeholderTextColor="#777"
                 autoCapitalize="characters"
                 style={[styles.textinput,styles.textinputmulti]}
-                onChangeText={(val) => handle_marque(val)}
+                // onChangeText={(val) => handle_marque(val)}
+                onChangeText={(val) => handle_input(data.marque, val)}
+
               />  
           </View>
           <View style={{flex:1, marginTop: 10}}>
@@ -424,7 +443,7 @@ const fetchDataMoteur = async () => {
                 placeholderTextColor="#777"
                 autoCapitalize="characters"
                 style={[styles.textinput,styles.textinputmulti]}
-                onChangeText={(val) => handle_type_moteur(val)}
+                // onChangeText={(val) => handle_type_moteur(val)}
               />  
           </View>
 

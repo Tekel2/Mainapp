@@ -12,7 +12,7 @@ const wait = (timeout) => {
 
 const HistoriquePreventive = ({navigation}) => {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -39,7 +39,6 @@ const HistoriquePreventive = ({navigation}) => {
 
   useEffect(() => {
     getDataPreventive()
-    console.log(userInfo.fonction)
   }, []);
 
   const togleMoteurPlanning = ( ) =>{
@@ -74,6 +73,9 @@ const HistoriquePreventive = ({navigation}) => {
       const data = await response.data
       setData(data);
       setFiltrerData(data);
+      console.log(data.createdOn)
+      console.log(data.updatedOn)
+      console.log(access_token)
     
     } catch (error){
       console.log(error)
@@ -84,7 +86,8 @@ const HistoriquePreventive = ({navigation}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune information disponible")
@@ -146,14 +149,14 @@ const HistoriquePreventive = ({navigation}) => {
                 onPress ={()=> {
                     setModalitem(item)
                     // setmodalVisible(true)
-                    navigation.navigate('His_preventive_dtl',{dataIntevention:item})
+                    navigation.navigate('His_preventive_dtl',{dataItem:item})
                   }}
                 >
                 
                   <View style={{flex: 5, backgroundColor:'#316094',borderRadius:5, paddingLeft: 10, }}>
                     <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Moteur : {item.moteur.item_moteur} </Text>
                     <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Item : {item.item_preventive} </Text>
-                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {item.createdOn}</Text>
+                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {item.updatedOn}</Text>
                    </View>
 
                   
@@ -179,7 +182,7 @@ const HistoriquePreventive = ({navigation}) => {
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 18,textAlign:'center',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Historique des Intervention Préventive </Text>
+            Historique des Interventions Préventive </Text>
           </View>
         </View>
 

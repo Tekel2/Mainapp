@@ -1,32 +1,31 @@
 import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
+
+const imageUrl = "/media/media/22/12/27/rn_image_picker_lib_temp_63030251-50fb-4f33-be55-fff8e6e3032f.jpg"
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const DetailsPreventive = ({navigation,route}) => {
+const DetailsInstallation = ({navigation,route}) => {
 
-  const {logout,access_token} = useContext(AuthContext)
+    const {logout,access_token} = useContext(AuthContext)
 
 
-  const {dataItem} = route.params
-  const [data , setData] = useState([])
+    const {dataItem} = route.params
+    const [data , setData] = useState([])
+   
 //   const [dataAteler , setDataAtelier] = useState([])
-  const [isLoadingInstalled, setIsLoadingInstalled] = useState(false)
+    const [isLoadingInstalled, setIsLoadingInstalled] = useState(false)
       
-  const [dataMoteur, setDataMoteur] = useState([])
-
-//   function getData(){
-//     return route.params.moteurItem
-//   }
-
+    const [dataMoteur, setDataMoteur] = useState([])
+    
+        
   useEffect(()=>{
-//    setDataMoteur(getData)
-console.log(dataItem)
+    // handleClick()
   }, [])
   
   const [refreshing, setRefreshing] = React.useState(false);
@@ -34,68 +33,14 @@ console.log(dataItem)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    getatelier_eqt("atelier-eqt",dataItem.id )
+
   }, []);
 
 
-  useEffect(() =>{
-    getatelier_eqt("atelier-eqt",dataItem.id )
-  }, [])
-
-//   useEffect(() =>{
-//     if(!isLoadingInstalled){
-//         fetchDataAtelier("http://192.168.227.30:8000/api/atelier",dataInstal.equipement.id )
-//     }
-//   }, [])
 
 
-
-const getatelier_eqt = async (route, id) => {
-    
-    setIsLoadingInstalled(true)
-
-    const configGetMotor = {
-      method: 'get',
-      url: `${baseUrlApi}/${route}/${id}/`,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `JWT ${access_token}`
-      }
-    }
-    try{
-
-      const response = await axios(configGetMotor);
-      const data = await response.data
-      setData(data);
-      setIsLoadingInstalled(false)
-
-    } catch (error){
-      console.log(error)
-      setIsLoadingInstalled(false)
-
-      if(!error.response){
-        alert("Aucune reponse du serveur");
-      }
-      else if (error.response?.status === 400){
-        alert("Certains informations ne sont pas renseignées")
-      }
-      else if (error.response?.status === 401){
-        alert("Votre sessions est expirer")
-        logout()
-        // fetchmoteurInstalled()
-      }
-      else if (error.response?.status === 404){
-        alert("Aucune corespondance a votre demande")
-      }
-      // alert("An error has occurred");
-      // setIsloading(false)
-    }
-  }
-
-  
 
   const loading =()=>{
-    // if (!isLoadingInstalled){
         return(
             <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
                 <ActivityIndicator color='#000' size={'large'}/>
@@ -119,15 +64,15 @@ const getatelier_eqt = async (route, id) => {
 
             <View style>
                 <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
-                Détails intervention Préventive</Text>
+                Rapport de l'installations</Text>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Preventive</Text>
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Curative</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.item_preventive}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.item_installation}</Text>
                 </View>
             </View>
 
@@ -148,7 +93,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
                 </View>
             <View style={{flex:1}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_atelier}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.atelier.nom_atelier}</Text>
                 </View>
             </View>
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
@@ -156,7 +101,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sur l'Equipement</Text>
                 </View>
             <View style={{flex:1}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_equipement}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.equipement.nom_equipenent}</Text>
                 </View>
             </View>
 
@@ -189,40 +134,50 @@ const getatelier_eqt = async (route, id) => {
             </View>
 
             {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date modification</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.updatedOn}</Text>
+                </View>
+            </View> */}
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.motif_remplacement}</Text>
                 </View>
-            </View> */}
+            </View>
+            
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Avant</Text>
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) général</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.observation_avant}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.observation_general}</Text>
                 </View>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Après</Text>
-                </View>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.observation_apres}</Text>
-                </View>
-            </View>
-
-            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Couplage</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.couplage}</Text>
                 </View>
-            </View> */}
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Température</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.temperature} °C  /{(dataItem.temperature * 9/5) + 32} °F</Text>
+                </View>
+            </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
@@ -323,6 +278,15 @@ const getatelier_eqt = async (route, id) => {
                 </View>
             </View>
 
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Proposition</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.recommendation}</Text>
+                </View>
+            </View>
+
             {
                 dataItem.photo_1 !== null || dataItem.photo_2 !== null ||dataItem.photo_3 !== null ?
 
@@ -389,16 +353,7 @@ const getatelier_eqt = async (route, id) => {
                 : null
             }
 
-
-        </View>     
-
-
-
-
-
-       
-
-
+        </View>  
 
     </ScrollView>
     )
@@ -435,4 +390,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default DetailsPreventive;
+export default DetailsInstallation;

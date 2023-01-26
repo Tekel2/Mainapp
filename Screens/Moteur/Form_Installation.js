@@ -10,7 +10,7 @@ import { baseUrlApi } from '../../API/urlbase';
 
 const  Form_Installation = ({navigation, route}) => {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
   const {moteurItem} = route.params
   const [isLoading, setIsLoading] = useState(true)
   const couplage = ["Etoile", "Triangle"]
@@ -94,7 +94,8 @@ const  Form_Installation = ({navigation, route}) => {
         alert("Cet atelier ne dispose pas encore de d'équipent")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session est expirer")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -136,7 +137,8 @@ const  Form_Installation = ({navigation, route}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session est expirer")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -177,7 +179,8 @@ const  Form_Installation = ({navigation, route}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session est expirer")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -215,7 +218,8 @@ const  Form_Installation = ({navigation, route}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session est expirer")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")

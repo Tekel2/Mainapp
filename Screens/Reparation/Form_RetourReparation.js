@@ -13,7 +13,7 @@ const Form_RetourReparation =  ({route, navigation})=> {
  
   
   const {dataItem} = route.params
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
   const [checkBoxTestValide, setCheckBoxTestValide] = useState(false)
 
   const [dataSuperviseur, setDataSuperviseur] = useState([])
@@ -88,7 +88,8 @@ const getSuperviseur = async ( route, ) =>{
       alert("Certains informations ne sont pas renseignées")
     }
     else if (error.response?.status === 401){
-      alert("Vous n'est pas authorisé")
+      alert("Votre session a expirée")
+      logout()
     }
     else if (error.response?.status === 404){
       alert("Aucune corespondance a votre demande")
@@ -126,7 +127,8 @@ const getTechnicien = async ( route, ) =>{
       alert("Certains informations ne sont pas renseignées")
     }
     else if (error.response?.status === 401){
-      alert("Vous n'est pas authorisé")
+      alert("Votre session a expirée")
+      logout()
     }
     else if (error.response?.status === 404){
       alert("Aucune corespondance a votre demande")

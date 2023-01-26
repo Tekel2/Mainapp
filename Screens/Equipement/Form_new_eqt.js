@@ -7,9 +7,10 @@ import { AuthContext } from '../../context/Authcontext';
 const  Form_new_eqt =({navigation, route}) =>{
 
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
   const [nomeqt, setNomeqt] = useState('')
+  const [nbreMoteur, setNbreMoteur] = useState(1)
   const [itemeqt, setItemeqt] = useState('')
   const [atelierID, setatelierID] = useState(0)
  
@@ -29,24 +30,40 @@ const  Form_new_eqt =({navigation, route}) =>{
     
   }
 
-  const data = () => {
-    return {
-      create_by : userInfo.id,
-      atelier : item.id,
-      item_equipenent : itemeqt,
-      nom_equipenent : nomeqt,
+  const handleNombreMoteur = (val) => {
+    if( val>=1 ) {
+        setNbreMoteur(val)
     }
+    else{
+      alert("Un équipement doit avois au moins un moteur")
+    }
+    
   }
 
-  const postData = async (data, route, ) =>{
-    console.log(data)
+  // const data = () => {
+  //   return {
+  //     create_by : userInfo.id,
+  //     atelier : item.id,
+  //     item_equipenent : itemeqt,
+  //     nom_equipenent : nomeqt,
+  //   }
+  // }
+
+  const postData = async (route, ) =>{
+    // console.log(data)
+    const datatofetch=new FormData();
+    datatofetch.append('create_by',userInfo.id)
+    datatofetch.append('atelier',item.id)
+    datatofetch.append('item_equipenent',itemeqt)
+    datatofetch.append('nom_equipenent',nomeqt)
+    datatofetch.append('nombre_moteur',nbreMoteur)
     try {
       // setIsloading(true)
       const response = await axios.post(`${baseUrlApi}/${route}/`, 
-          data,
+          datatofetch,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               'Authorization': `JWT ${access_token}`
             }
           },
@@ -63,6 +80,7 @@ const  Form_new_eqt =({navigation, route}) =>{
       }
       else if (error.response?.status === 401){
         alert("Vous n'est pas authorisé")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -74,9 +92,9 @@ const  Form_new_eqt =({navigation, route}) =>{
     }    
   }
 
-const saveDatatoServer = (data) => {
-  console.log(data)
-}
+// const saveDatatoServer = (data) => {
+//   console.log(data)
+// }
 
     return (
         <SafeAreaView 
@@ -123,6 +141,20 @@ const saveDatatoServer = (data) => {
                   onChangeText={(val) => handleEqtitem(val)}
               />              
           </View>
+          <View style={{flex:1}}>
+            <Text style={styles.titrechamp}>Nombre de moteur</Text>
+            <TextInput
+                  placeholder="nom"
+                  placeholderTextColor="#777"
+                  autoCapitalize="sentences"
+                  // multiline={true}
+                  // value={nbreMoteur}
+
+                  keyboardType={'decimal-pad'}
+                  style={[styles.textinput,styles.textinputmulti]}
+                  onChangeText={(val) => handleNombreMoteur(val)}
+              />              
+          </View>
           
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
@@ -131,7 +163,7 @@ const saveDatatoServer = (data) => {
 
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}              
-              onPress={() => {postData( data(), 'equipement' )}}
+              onPress={() => {postData('equipement' )}}
               >
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>

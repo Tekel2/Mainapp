@@ -16,7 +16,7 @@ const Form_new_planning = ({route, navigation}) => {
 
 
     const {moteurItem, methode} = route.params
-    const {access_token, userInfo} = useContext(AuthContext)
+    const {access_token, userInfo, logout} = useContext(AuthContext)
 
     const [dateIntDebut , setDateInstDebut] = useState(null)
     const [dateIntFin , setDateInstFin] = useState(null)
@@ -72,14 +72,19 @@ const Form_new_planning = ({route, navigation}) => {
         // console.log(moteurItem.date_int)
         // console.log(moteurItem.tache)
         // console.log(methode)
-        // setIsloading(true)
+        setIsloading(true)
 
         // wait(3000).then(()=>{
             if(methode === 'put'){
-            {moteurItem.date_end_int !== null ? setDateInstFin(moteurItem.date_end_int) : null}
-            {moteurItem.date_int !== null ? setDateInstDebut(moteurItem.date_int) : null}
-            {moteurItem.tache !== null ? setTaches(moteurItem.tache) : ''}
-            setIsloading(false)}
+              setDateInstFin(moteurItem.date_end_int)
+              setDateInstDebut(moteurItem.date_int)
+              setTaches(moteurItem.tache)
+              setIsloading(false)
+            }
+            else{
+              setIsloading(false)
+
+            }
         // }
             
         // )
@@ -124,7 +129,8 @@ const Form_new_planning = ({route, navigation}) => {
             alert("Certains informations ne sont pas renseignées")
           }
           else if (error.response?.status === 401){
-            alert("Vous n'est pas authorisé")
+            alert("Votre session a expirée")
+            logout()
           }
           else if (error.response?.status === 404){
             alert("Aucune corespondance a votre demande")
@@ -163,7 +169,8 @@ const Form_new_planning = ({route, navigation}) => {
             alert("Certains informations ne sont pas renseignées")
           }
           else if (error.response?.status === 401){
-            alert("Vous n'est pas authorisé")
+            alert("Votre session a expirée")
+            logout()    
           }
           else if (error.response?.status === 404){
             alert("Aucune corespondance a votre demande")
@@ -202,14 +209,48 @@ const Form_new_planning = ({route, navigation}) => {
         )
       }
 
+    let nbre = 0;
+
     const datePostOrput =(datte, methode)=>{
-        console.log(datte,"  444444  ", methode)
-        if(methode === 'post'){
-            return ""+datte.toLocaleDateString()
-        }
-        else  if(methode === 'put'){
-            return ""+datte
-        }
+      try{
+        console.log(datte)
+        localdate = datte.toLocaleDateString()
+        console.log(localdate)
+        // console.log(typeof(localdate))
+        console.log("111111111111111")
+
+        return "localdate";
+      }
+      catch(error){
+        if (error.type== undefined)
+        console.log("*******************")
+        return "datte"
+      }
+      
+        // console.log(datte,"  444444  ", methode)
+        // console.log("------------------------------------------------------------------------")
+        // if(methode === 'post'){
+        //     return ""+datte.toLocaleDateString()
+        // }
+        // else  if(methode === 'put'){
+        //     // return { datte.toLocaleDateString() === undefined  ? ""+datte : ""+datte.toLocaleDateString() }
+        //    try{
+        //     console.log("----------------", datte,"  444444  ", methode)
+        //     console.log("----------------", datte.toLocaleDateString())
+        //     // return datte.toLocaleDateString()
+        //     return ""+datte.toLocaleDateString()
+        //    }
+        //    catch(error){
+            
+        //     console.log(error.type)
+        //     if (error.type===undefined){
+        //       console.log("***************")
+        //       // return datte
+        //       return "datte"
+        //     }
+        //     // return ""+datte
+        //    }
+        // }
 
     }
 
@@ -231,6 +272,7 @@ const Form_new_planning = ({route, navigation}) => {
                     mode="date"
                     onConfirm={handleConfirmDebut}
                     onCancel={hideDatePickerDebut}
+                    // value={}
                 />
                 <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
                     {dateIntDebut ? dateIntDebut.toLocaleDateString() : '- - -'}
@@ -279,10 +321,20 @@ const Form_new_planning = ({route, navigation}) => {
                     onConfirm={handleConfirmDebut}
                     onCancel={hideDatePickerDebut}
                 />
-                <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
-                    {/* {dateIntDebut ? dateIntDebut.toLocaleDateString() : '- - -'} */}
+                {/* <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
+                    {dateIntDebut ? dateIntDebut.toLocaleDateString() : '- - -'}
                     {dateIntDebut ? datePostOrput(dateIntDebut, methode) : '- - -'}
-                </Text>
+                </Text> */}
+                  {
+                    dateIntDebut.toLocaleDateString() === undefined ?
+                    <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
+                        dateIntDebut.toLocaleDateString() 
+                    </Text> :
+                    <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
+                        dateIntDebut
+                    </Text>                  
+                  }
+               
 
             </View>
             <View style={{flex:1, flexDirection:'row',marginTop:10,}}>
@@ -302,7 +354,7 @@ const Form_new_planning = ({route, navigation}) => {
                 />
                 <Text style={{flex:2, fontSize:20, color:'#0A233E', flexWrap:'wrap', fontWeight:"bold"}}>
                     {/* {dateIntFin ? dateIntFin.toLocaleDateString() : '- - -'} */}
-                    {dateIntDebut ? datePostOrput(dateIntDebut, methode) : '- - -'}
+                    {/* {dateIntDebut ? datePostOrput(dateIntDebut, methode) : '- - -'} */}
 
                 </Text>
 
@@ -346,7 +398,8 @@ const Form_new_planning = ({route, navigation}) => {
                     placeholderTextColor="#777"
                     autoCapitalize="sentences"
                     numberOfLines={7}
-                    multiline={true}                  
+                    multiline={true}   
+                    value={taches}               
                     style={[styles.textinput,styles.textinputmulti]}
                     onChangeText={(val) => handle_Taches(val)}
 

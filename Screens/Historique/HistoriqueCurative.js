@@ -12,7 +12,7 @@ const wait = (timeout) => {
 
 const HistoriqueCurative = ({navigation}) => {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -86,7 +86,8 @@ const HistoriqueCurative = ({navigation}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune information disponible")
@@ -143,11 +144,11 @@ const HistoriqueCurative = ({navigation}) => {
               </View>
             <TouchableOpacity 
                 style={{flexDirection:'row', flex:3, height:70, }}
-              //   onPress={() => navigation.navigate('moteur_detail')}
-                onPress ={()=> {
-                    setModalitem(item)
-                    setmodalVisible(true)
-                  }}
+                onPress={() => navigation.navigate('His_curative_dtl', {dataItem:item})}
+                // onPress ={()=> {
+                //     setModalitem(item)
+                //     setmodalVisible(true)
+                //   }}
                 >
                 
                   <View style={{flex: 5, backgroundColor:'#316094',borderRadius:5, paddingLeft: 10, }}>
@@ -179,7 +180,7 @@ const HistoriqueCurative = ({navigation}) => {
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 18,textAlign:'center',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Historique des Intervention Curative </Text>
+            Historique des Interventions Curative </Text>
           </View>
         </View>
 

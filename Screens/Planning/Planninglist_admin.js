@@ -16,7 +16,7 @@ const Planninglist_admin = ({navigation}) => {
   // const [data, setData] = React.useState({
     
   // });
-  const {access_token,userInfo} = useContext(AuthContext)
+  const {access_token,userInfo,logout} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -78,6 +78,8 @@ const Planninglist_admin = ({navigation}) => {
         setData([]);
         setFiltrerData([]);
         setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+        alert("Votre session est expirer")
+        logout()
 
 
       }
@@ -207,7 +209,7 @@ const Planninglist_admin = ({navigation}) => {
                           <TouchableOpacity 
                             style={{flexDirection:'row', flex:1, height:80, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            // onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
+                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
 
                             >
                           <View style={{flex: 5,

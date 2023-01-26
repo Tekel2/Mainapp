@@ -10,7 +10,7 @@ const wait = (timeout) => {
 
 const InstallationDetail = ({navigation,route}) => {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
 
   const {moteurItem} = route.params

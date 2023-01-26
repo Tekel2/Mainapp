@@ -65,7 +65,8 @@ const Recherche_moteur_reparation = ({navigation, route}) => {
       else if (response.status == 401){
         setData([]);
         setFiltrerData([]);
-        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+        alert("Votre session a expirée")
+        logout()
 
 
       }

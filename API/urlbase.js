@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Create axios client, pre-configured with baseURL
 
 const port = 8000;
-const localIP = '192.168.188.30';
+const localIP = '192.168.117.30';
 const routeAuth = 'auth';
 const routeAPI = 'api';
 // const action = 'login';

@@ -12,7 +12,7 @@ const wait = (timeout) => {
 
 const HistoriqueHS = ({navigation}) => {
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
   const [data , setData] = useState([])
   const [filtrerData, setFiltrerData] = useState([])
@@ -84,7 +84,8 @@ const HistoriqueHS = ({navigation}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune information disponible")
@@ -144,9 +145,9 @@ const HistoriqueHS = ({navigation}) => {
                 style={{flexDirection:'row', flex:3, height:70, }}
               //   onPress={() => navigation.navigate('His_reparation_dtl')}
                 onPress ={()=> {
-                    setModalitem(item)
+                    // setModalitem(item)
                     // setmodalVisible(true)
-                    // navigation.navigate('His_reparation_dtl',{dataIntevention:item})
+                    navigation.navigate('His_hs_dtl',{dataItem:item})
                   }}
                 >
                 
@@ -179,7 +180,7 @@ const HistoriqueHS = ({navigation}) => {
         <View style={{ flexDirection:'row',}}>
           <View style={{flex:1, alignContent:'flex-end'}}>
             <Text style={{paddingLeft: 18,textAlign:'center',fontSize:28,flexWrap:'wrap', fontWeight:'900', color:'#316094'}}>
-            Historique Moteur Hors Service </Text>
+            Historique Moteurs Hors Service </Text>
           </View>
         </View>
 

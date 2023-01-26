@@ -15,6 +15,11 @@ import HistoriqueCurative from '../Screens/Historique/HistoriqueCurative';
 import HistoriqueInstallation from '../Screens/Historique/HistoriqueInstallation';
 import HistoriqueReparation from '../Screens/Historique/HistoriqueReparation';
 import DetailsPreventive from '../Screens/Historique/DetailsPreventive';
+import DetailsCurative from '../Screens/Historique/DetailsCurative';
+import DetailsHS from '../Screens/Historique/DetailsHS';
+import DetailsInstallation from '../Screens/Historique/DetailsInstallation';
+import Imageviewer from '../Screens/Historique/Imageviewer';
+import DetailsReparation from '../Screens/Historique/DetailsReparation';
 
 
 const Stack = createStackNavigator();
@@ -41,6 +46,11 @@ const HistoriqueNavigator = ({navigation}) => (
         <Stack.Screen name="His_install" component={HistoriqueInstallation}/>
         <Stack.Screen name="His_reparation" component={HistoriqueReparation}/>
         <Stack.Screen name="His_preventive_dtl" component={DetailsPreventive}/>
+        <Stack.Screen name="His_curative_dtl" component={DetailsCurative}/>
+        <Stack.Screen name="His_hs_dtl" component={DetailsHS}/>
+        <Stack.Screen name="His_install_dtl" component={DetailsInstallation}/>
+        <Stack.Screen name="His_reparartion_dtl" component={DetailsReparation}/>
+        <Stack.Screen name="His_imageviewer" component={Imageviewer}/>
       
     </Stack.Navigator>
 );

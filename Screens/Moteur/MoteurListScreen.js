@@ -34,7 +34,7 @@ const MoteurListScreen = ({navigation}) => {
   newRequet = false
   isValidProfie = true
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {userInfo,access_token, logout} = useContext(AuthContext)
 
 
   const [moteurInstalled , setMoteurInstalled] = useState([])
@@ -90,8 +90,8 @@ const MoteurListScreen = ({navigation}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
-        useRefreshToken()
+        alert("Votre session a expirée")
+        logout()
         // fetchmoteurInstalled()
       }
       else if (error.response?.status === 404){
@@ -129,8 +129,8 @@ const MoteurListScreen = ({navigation}) => {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
-        useRefreshToken()
+        alert("Votre session a expirée")
+        logout()
         // fetchmoteurInstalled()
       }
       else if (error.response?.status === 404){

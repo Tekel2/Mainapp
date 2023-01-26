@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
 
@@ -8,7 +8,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const DetailsPreventive = ({navigation,route}) => {
+const DetailsReparation = ({navigation,route}) => {
 
   const {logout,access_token} = useContext(AuthContext)
 
@@ -26,7 +26,7 @@ const DetailsPreventive = ({navigation,route}) => {
 
   useEffect(()=>{
 //    setDataMoteur(getData)
-console.log(dataItem)
+    console.log(dataItem.moteur_hs.superviceur)
   }, [])
   
   const [refreshing, setRefreshing] = React.useState(false);
@@ -34,12 +34,13 @@ console.log(dataItem)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    getatelier_eqt("atelier-eqt",dataItem.id )
+    //getatelier_eqt("atelier-eqt",dataItem.id )
   }, []);
 
 
   useEffect(() =>{
-    getatelier_eqt("atelier-eqt",dataItem.id )
+    //getatelier_eqt("atelier-eqt",dataItem.id )
+    // console.log(dataItem)
   }, [])
 
 //   useEffect(() =>{
@@ -48,51 +49,6 @@ console.log(dataItem)
 //     }
 //   }, [])
 
-
-
-const getatelier_eqt = async (route, id) => {
-    
-    setIsLoadingInstalled(true)
-
-    const configGetMotor = {
-      method: 'get',
-      url: `${baseUrlApi}/${route}/${id}/`,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `JWT ${access_token}`
-      }
-    }
-    try{
-
-      const response = await axios(configGetMotor);
-      const data = await response.data
-      setData(data);
-      setIsLoadingInstalled(false)
-
-    } catch (error){
-      console.log(error)
-      setIsLoadingInstalled(false)
-
-      if(!error.response){
-        alert("Aucune reponse du serveur");
-      }
-      else if (error.response?.status === 400){
-        alert("Certains informations ne sont pas renseignées")
-      }
-      else if (error.response?.status === 401){
-        alert("Votre sessions est expirer")
-        logout()
-        // fetchmoteurInstalled()
-      }
-      else if (error.response?.status === 404){
-        alert("Aucune corespondance a votre demande")
-      }
-      // alert("An error has occurred");
-      // setIsloading(false)
-    }
-  }
-
-  
 
   const loading =()=>{
     // if (!isLoadingInstalled){
@@ -119,15 +75,41 @@ const getatelier_eqt = async (route, id) => {
 
             <View style>
                 <Text style={{flexWrap:'wrap', fontWeight: 'bold', fontSize:20, color:'#0A233E'}}>
-                Détails intervention Préventive</Text>
+                Rapport Réparation</Text>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Preventive</Text>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'normal', flexWrap:'wrap', fontWeight:'800', fontSize:22, color:'#ED7524', textAlign:'center', }}>
+                        Moteur {dataItem.reparation_encour ? "Réparation encours" : "Déjà réparé"}
+                    </Text>
+                </View>
+                
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10, marginTop: 20}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Prestataire</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.item_preventive}</Text>
+                    <Text style= {{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.prestataire}</Text>
+                </View>
+            </View>
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10, marginBottom:30}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Contact </Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style= {{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.contact_prestataire}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Réparation</Text>
+                </View>
+            <View style={{flex:1, marginLeft:10}}> 
+                    <Text style= {{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.item_reparation}</Text>
                 </View>
             </View>
 
@@ -136,46 +118,46 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Item Moteur</Text>
                 </View>
             <View style={{flex:1,}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.moteur.item_moteur}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.moteur_hs.moteur.item_moteur}</Text>
                 </View>
             </View>
 
             {/* <View style={{flex:1}}>
                 <Text style={{flexWrap:'wrap', fontWeight: '400', fontSize:18, color:'#000'}}>Démonter à :</Text>
             </View> */}
-            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                        <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dans l'Atelier</Text>
                 </View>
-            <View style={{flex:1}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_atelier}</Text>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{data.nom_atelier}</Text>
                 </View>
             </View>
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10}}> 
+                <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sur l'Equipement</Text>
                 </View>
-            <View style={{flex:1}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{data.nom_equipement}</Text>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{data.nom_equipement}</Text>
                 </View>
-            </View>
+            </View> */}
 
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10}}> 
+                <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Superviser Par </Text>
                 </View>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.superviceur.username}</Text>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.create_by.username}</Text>
                 </View>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Technicien</Text>
-                </View>
-            <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.technicien.username}</Text>
+                <View style={{flex:1, marginLeft:10}}> 
+                        <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Dernier Technicien</Text>
+                    </View>
+                <View style={{flex:1, marginLeft:10}}> 
+                        <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.moteur_hs.technicien.username}</Text>
                 </View>
             </View>
 
@@ -184,7 +166,16 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date modification</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.updatedOn}</Text>
                 </View>
             </View>
 
@@ -193,25 +184,25 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.motif_remplacement}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.motif_remplacement}</Text>
                 </View>
             </View> */}
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Avant</Text>
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation general</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.observation_avant}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.observation_general}</Text>
                 </View>
             </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
-                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Observation(s) Après</Text>
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.observation_apres}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.motif_reparation}</Text>
                 </View>
             </View>
 
@@ -220,7 +211,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Couplage</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.couplage}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.couplage}</Text>
                 </View>
             </View> */}
 
@@ -229,7 +220,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite u1 U2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.continuite_u1_U2} Ohm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.continuite_u1_U2} Ohm</Text>
                 </View>
             </View>
 
@@ -238,7 +229,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite v1 v2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.continuite_v1_v2} Ohm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.continuite_v1_v2} Ohm</Text>
                 </View>
             </View>
 
@@ -247,7 +238,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>continuite w1 w2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.continuite_w1_w2} Ohm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.continuite_w1_w2} Ohm</Text>
                 </View>
             </View>
 
@@ -256,7 +247,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 u2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_w2_u2} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_w2_u2} MOhm</Text>
                 </View>
             </View>
 
@@ -265,7 +256,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement w2 v2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_w2_v2} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_w2_v2} MOhm</Text>
                 </View>
             </View>
 
@@ -274,7 +265,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement u2 v2</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_u2_v2} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_u2_v2} MOhm</Text>
                 </View>
             </View>
 
@@ -283,7 +274,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse u1</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_masse_u1_m} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_masse_u1_m} MOhm</Text>
                 </View>
             </View>
 
@@ -292,7 +283,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolementmasse v1</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_masse_v1_m} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_masse_v1_m} MOhm</Text>
                 </View>
             </View>
 
@@ -301,7 +292,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>isolement masse w1 </Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.isolement_bobine_masse_w1_m} MOhm</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.moteur_hs.isolement_bobine_masse_w1_m} MOhm</Text>
                 </View>
             </View>
 
@@ -310,7 +301,7 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Sérage </Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.serage?'Parfait':'Nom'}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.serage?'Parfait':'Nom'}</Text>
                 </View>
             </View>
 
@@ -319,12 +310,67 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Equilibrage </Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.equilibrage?'Parfait':'Nom'}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}> {dataItem.equilibrage?'Parfait':'Nom'}</Text>
+                </View>
+            </View>
+
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                <View style={{flex:1, marginLeft:10}}> 
+                    <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Proposition</Text>
+                </View>
+                <View style={{flex:1}}> 
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.recommendation}</Text>
                 </View>
             </View>
 
             {
-                dataItem.photo_1 !== null || dataItem.photo_2 !== null ||dataItem.photo_3 !== null ?
+                dataItem.photo_bon_sortie !== null || dataItem.photo_moteur !== null?
+
+                <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                
+                    <View style={{flex:1, marginLeft:10}}> 
+                        <Text style={{fontStyle:'italic', fontSize:18, color:'#000', textAlign:'center'}}>Image(s) de la sortie</Text>
+                    </View>
+                   
+                </View>
+                :
+                <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+                
+                    <View style={{flex:1, marginLeft:10}}> 
+                        <Text style={{fontStyle:'normal', fontSize:20, color:'#666', textAlign:'center'}}>- Aucune image -</Text>
+                    </View>
+                   
+                </View>
+            }
+
+            {
+                dataItem.photo_bon_sortie !== null?
+                <TouchableOpacity
+                    style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_bon_sortie})}}
+                >                    
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_bon_sortie}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    
+                </TouchableOpacity>
+
+                : null
+            }
+            {
+                dataItem.photo_moteur !== null?
+                <TouchableOpacity
+                    style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_moteur})}}
+                >                    
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_moteur}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    
+                </TouchableOpacity>
+                : null
+            }
+          
+
+
+            {
+                dataItem.moteur_hs.photo_1 !== null || dataItem.moteur_hs.photo_2 !== null ||dataItem.moteur_hs.photo_3 !== null ?
 
                 <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
                 
@@ -344,50 +390,51 @@ const getatelier_eqt = async (route, id) => {
             }
 
             {
-                dataItem.photo_1 !== null?
+                dataItem.moteur_hs.photo_1 !== null?
                 <TouchableOpacity
                     style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
-                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_1})}}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.moteur_hs.photo_1})}}
                 >                    
-                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_1}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.moteur_hs.photo_1}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
                     
                 </TouchableOpacity>
 
                 : null
             }
             {
-                dataItem.photo_2 !== null?
+                dataItem.moteur_hs.photo_2 !== null?
                 <TouchableOpacity
                     style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
-                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_2})}}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.moteur_hs.photo_2})}}
                 >                    
-                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_2}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.moteur_hs.photo_2}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
                     
                 </TouchableOpacity>
                 : null
             }
             {
-                dataItem.photo_3 !== null?
+                dataItem.moteur_hs.photo_3 !== null?
                 <TouchableOpacity
                     style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
-                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_3})}}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.moteur_hs.photo_3})}}
                 >                    
-                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_3}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.moteur_hs.photo_3}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
                     
                 </TouchableOpacity>
                 : null
             }
             {
-                dataItem.photo_4 !== null?
+                dataItem.moteur_hs.photo_4 !== null?
                 <TouchableOpacity
                     style={{flexDirection:'row', flex:1, marginTop:10, marginHorizontal: 10, marginBottom: 20 }}
-                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.photo_4})}}
+                    onPress={() => {navigation.navigate('His_imageviewer', {dataURI:dataItem.moteur_hs.photo_4})}}
                 >                    
-                    <Image source={{ uri:`${baseUrlmedia}${dataItem.photo_4}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
+                    <Image source={{ uri:`${baseUrlmedia}${dataItem.moteur_hs.photo_4}`  }} style={{ width: 350, height: 200, marginHorizontal:10, borderRadius:4}} />
                     
                 </TouchableOpacity>
                 : null
             }
+            
 
 
         </View>     
@@ -435,4 +482,4 @@ const styles = StyleSheet.create({
    
   });
 
-export default DetailsPreventive;
+export default DetailsReparation;

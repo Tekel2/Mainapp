@@ -1,11 +1,13 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
+import { AuthContext } from '../../context/Authcontext';
 
 
 
 const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
 
     const {moteurItem} = route.params
+    const {userInfo,access_token, logout} = useContext(AuthContext)
    
     // useEffect(()=>{
     //     console.log(moteurItem)
@@ -24,7 +26,7 @@ const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
             </View>
         
           <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
-            <Text style={{fontSize: 20, color: '#316094', fontWeight: '500'}}>Caractéristiques MOTEUR : </Text>
+            <Text style={{fontSize: 20, color: '#316094', fontWeight: '500'}}>Caractéristiques MOTEUR </Text>
             <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
           </View>
 
@@ -39,7 +41,16 @@ const Moteur_CaracteristiqueScreen = ({navigation, route}) => {
                 
             </View>
             :
-            null
+            <View style={{}}>
+           { 
+            userInfo.fonction < 3?
+            <TouchableOpacity
+              onPress={() =>navigation.navigate('moteur_new_moteur',{moteurItem:moteurItem})}
+            >
+              <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_Edit.png")}/>
+            </TouchableOpacity>
+            : null}
+          </View>
           }
         </View>
 

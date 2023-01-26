@@ -12,7 +12,7 @@ import { LineChart } from 'react-native-chart-kit';
 function BilanMoteurScreen ({route, navigation}) {
 
 
-  const {userInfo,access_token} = useContext(AuthContext)
+  const {logout,access_token} = useContext(AuthContext)
   
   
   const [data, setData] = useState({
@@ -69,7 +69,8 @@ function BilanMoteurScreen ({route, navigation}) {
         alert("Certains informations ne sont pas renseignées")
       }
       else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
+        alert("Votre session a expirée")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucun planning de disponible")

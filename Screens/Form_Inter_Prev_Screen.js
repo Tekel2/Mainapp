@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useContext, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, Alert, PermissionsAndroid } from 'react-native';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import CaracteristiqueScreen from './Moteur/CaracteristiqueScreen';
@@ -11,7 +11,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 const Form_Inter_Prev_Screen = ({navigation,route}) => {
 
   const {dataItem} = route.params
-  const {userInfo, access_token} = useContext(AuthContext)
+  const {userInfo, access_token, logout} = useContext(AuthContext)
 
 
   const [checkBoxSerage, setCheckBoxSerage] = useState(false)
@@ -135,6 +135,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
   useEffect(() =>{
     getSuperviseur('superviceur_list')
     getTechnicien('technicien_list')
+    console.log(dataItem)
 
   },[])
 
@@ -175,6 +176,7 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
       }
       else if (error.response?.status === 401){
         alert("Vous n'est pas authorisé")
+        logout()
       }
       else if (error.response?.status === 404){
         alert("Aucune corespondance a votre demande")
@@ -301,58 +303,150 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
 
 
 
-const getImage_1_View = () =>{
+const getImage_1_View = async  () =>{
   const options = {
     storageOption : {
       path: 'images',
       mediaType: 'photo',
     },
+    mediaType: 'photo',
     includeBase64: true
   };
 
-  launchCamera(options, response =>{
-    // console.log('Response = ', response)
-    if (response.didCancel){
-      console.log('User conceeled Image Picker')
-    }
-    else if (response.error){
-      console.log('ImagePicker Error', response.error)
-    }
-    else if (response.customButton){
-      console.log('User tape custom button', response.customButton)
-    }
-    else {
-    //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-    const source = { uri: response.assets[0].uri };
-    setImage_1_View(source)
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: "App Camera Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-
-    let localUri = response.assets[0].uri;
-    // setPhotoShow(localUri);
-    let filename = localUri.split('/').pop();
-
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-
-    // let formData = new FormData();
-    //   formData.append('photo', { uri: localUri, name: filename, type });
-    setData({
-      ...data,
-      photo_1: { uri: localUri, name: filename, type }
-      
-    })
+      launchCamera(options, response =>{
     
-      // console.log(formData)
-    // console.log("URI ", response.assets[0].uri)
-    // console.log("Filename ", response.assets[0].uri.split('/').pop())
-    // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-    // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+        console.log('Response = ', response)
+        if (response.didCancel){
+          console.log('User conceeled Image Picker')
+        }
+        else if (response.error){
+          console.log('ImagePicker Error', response.error)
+        }
+        else if (response.customButton){
+          console.log('User tape custom button', response.customButton)
+        }
+        else {
+        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+        const source = { uri: response.assets[0].uri };
+        setImage_1_View(source)
+  
+  
+        let localUri = response.assets[0].uri;
+        // setPhotoShow(localUri);
+        let filename = localUri.split('/').pop();
+  
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+  
+        // let formData = new FormData();
+        //   formData.append('photo', { uri: localUri, name: filename, type });
+        setData({
+          ...data,
+          photo_1: { uri: localUri, name: filename, type }
+          
+        })
+        
+        //   console.log(formData)
+        // console.log("URI ", response.assets[0].uri)
+        // console.log("Filename ", response.assets[0].uri.split('/').pop())
+        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+        
+  
+        }
+      })
+    } else {
+      console.log("Camera permission denied");
+    }
+  } catch (err) {
+    console.warn(err);
+  } 
+
+
+};
+const getImage_2_View = async () =>{
+  const options = {
+    storageOption : {
+      path: 'images',
+      mediaType: 'photo',
+    },
+    includeBase64: true
+  };
+
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: "App Camera Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      
+      launchCamera(options, response =>{
     
+        // console.log('Response = ', response)
+        if (response.didCancel){
+          console.log('User conceeled Image Picker')
+        }
+        else if (response.error){
+          console.log('ImagePicker Error', response.error)
+        }
+        else if (response.customButton){
+          console.log('User tape custom button', response.customButton)
+        }
+        else {
+        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+        const source = { uri: response.assets[0].uri };
+        setImage_2_View(source)
 
+        let localUri = response.assets[0].uri;
+        // setPhotoShow(localUri);
+        let filename = localUri.split('/').pop();
+
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        // let formData = new FormData();
+        //   formData.append('photo', { uri: localUri, name: filename, type });
+        setData({
+          ...data,
+          photo_2: { uri: localUri, name: filename, type }
+          
+        })
+        
+        //   console.log(formData)
+        // console.log("URI ", response.assets[0].uri)
+        // console.log("Filename ", response.assets[0].uri.split('/').pop())
+        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+        }
+      })
+    } else {
+      console.log("Camera permission denied");
     }
-  })
+  } catch (err) {
+    console.warn(err);
+  }
+
 };
-const getImage_2_View = () =>{
+const getImage_3_View = async () =>{
   const options = {
     storageOption : {
       path: 'images',
@@ -361,41 +455,69 @@ const getImage_2_View = () =>{
     includeBase64: true
   };
 
-  launchCamera(options, response =>{
-    // console.log('Response = ', response)
-    if (response.didCancel){
-      console.log('User conceeled Image Picker')
-    }
-    else if (response.error){
-      console.log('ImagePicker Error', response.error)
-    }
-    else if (response.customButton){
-      console.log('User tape custom button', response.customButton)
-    }
-    else {
-    //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-    const source = { uri: response.assets[0].uri };
-    setImage_2_View(source)
-
-    let localUri = response.assets[0].uri;
-    // setPhotoShow(localUri);
-    let filename = localUri.split('/').pop();
-
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-
-    // let formData = new FormData();
-    //   formData.append('photo', { uri: localUri, name: filename, type });
-    setData({
-      ...data,
-      photo_2: { uri: localUri, name: filename, type }
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: "App Camera Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       
-    })
+      launchCamera(options, response =>{
+    
+        // console.log('Response = ', response)
+        if (response.didCancel){
+          console.log('User conceeled Image Picker')
+        }
+        else if (response.error){
+          console.log('ImagePicker Error', response.error)
+        }
+        else if (response.customButton){
+          console.log('User tape custom button', response.customButton)
+        }
+        else {
+        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+        const source = { uri: response.assets[0].uri };
+        setImage_3_View(source)
 
+        let localUri = response.assets[0].uri;
+        // setPhotoShow(localUri);
+        let filename = localUri.split('/').pop();
+
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        // let formData = new FormData();
+        //   formData.append('photo', { uri: localUri, name: filename, type });
+        setData({
+          ...data,
+          photo_3: { uri: localUri, name: filename, type }
+          
+        })
+        
+        //   console.log(formData)
+        // console.log("URI ", response.assets[0].uri)
+        // console.log("Filename ", response.assets[0].uri.split('/').pop())
+        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+        }
+      })
+    } else {
+      console.log("Camera permission denied");
     }
-  })
+  } catch (err) {
+    console.warn(err);
+  }
+
+
 };
-const getImage_3_View = () =>{
+
+const getImage_4_View = async() =>{
   const options = {
     storageOption : {
       path: 'images',
@@ -404,82 +526,63 @@ const getImage_3_View = () =>{
     includeBase64: true
   };
 
-  launchCamera(options, response =>{
-    // console.log('Response = ', response)
-    if (response.didCancel){
-      console.log('User conceeled Image Picker')
-    }
-    else if (response.error){
-      console.log('ImagePicker Error', response.error)
-    }
-    else if (response.customButton){
-      console.log('User tape custom button', response.customButton)
-    }
-    else {
-    //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-    const source = { uri: response.assets[0].uri };
-    setImage_3_View(source)
-
-    let localUri = response.assets[0].uri;
-    // setPhotoShow(localUri);
-    let filename = localUri.split('/').pop();
-
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-
-    // let formData = new FormData();
-    //   formData.append('photo', { uri: localUri, name: filename, type });
-    setData({
-      ...data,
-      photo_3: { uri: localUri, name: filename, type }
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: "App Camera Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       
-    })
+      launchCamera(options, response =>{
+    
+        // console.log('Response = ', response)
+        if (response.didCancel){
+          console.log('User conceeled Image Picker')
+        }
+        else if (response.error){
+          console.log('ImagePicker Error', response.error)
+        }
+        else if (response.customButton){
+          console.log('User tape custom button', response.customButton)
+        }
+        else {
+        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+        const source = { uri: response.assets[0].uri };
+        setImage_4_View(source)
 
+        let localUri = response.assets[0].uri;
+        // setPhotoShow(localUri);
+        let filename = localUri.split('/').pop();
+
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        // let formData = new FormData();
+        //   formData.append('photo', { uri: localUri, name: filename, type });
+        setData({
+          ...data,
+          photo_4: { uri: localUri, name: filename, type:type }
+          
+        })
+        
+       
+        }
+      })
+    } else {
+      console.log("Camera permission denied");
     }
-  })
-};
-const getImage_4_View = () =>{
-  const options = {
-    storageOption : {
-      path: 'images',
-      mediaType: 'photo',
-    },
-    includeBase64: true
-  };
+  } catch (err) {
+    console.warn(err);
+  }
 
-  launchCamera(options, response =>{
-    // console.log('Response = ', response)
-    if (response.didCancel){
-      console.log('User conceeled Image Picker')
-    }
-    else if (response.error){
-      console.log('ImagePicker Error', response.error)
-    }
-    else if (response.customButton){
-      console.log('User tape custom button', response.customButton)
-    }
-    else {
-    //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-    const source = { uri: response.assets[0].uri };
-    setImage_4_View(source)
-
-    let localUri = response.assets[0].uri;
-    // setPhotoShow(localUri);
-    let filename = localUri.split('/').pop();
-
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-
-    // let formData = new FormData();
-    //   formData.append('photo', { uri: localUri, name: filename, type });
-    setData({
-      ...data,
-      photo_4: { uri: localUri, name: filename, type }
-      
-    })
-
-    }
-  })
+  
+  
 };
 
 
@@ -1166,8 +1269,8 @@ function viewModal(val){
         </View>
         <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                       }}>
-          <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Dans l'atelier SECHEUR</Text>
-          <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Sur l'équiment COMPRESSEUR</Text>
+          <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Atelier : {dataItem.atelier.nom_atelier}</Text>
+          <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}> Equipement : {dataItem.equipement.nom_equipenent}</Text>
         </View>
       
         <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
