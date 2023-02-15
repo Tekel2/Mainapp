@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
+import { FormatDate } from '../../Components/Functions';
 import { AuthContext } from '../../context/Authcontext';
 
 const wait = (timeout) => {
@@ -33,13 +34,13 @@ const DetailsCurative = ({navigation,route}) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    getatelier_eqt("atelier-eqt",dataItem.id )
+    getatelier_eqt("atelier-eqt",dataItem.moteur.id )
   }, []);
 
 
   useEffect(() =>{
-    getatelier_eqt("atelier-eqt",dataItem.id )
-    console.log(dataItem)
+    getatelier_eqt("atelier-eqt",dataItem.moteur.id )
+    // console.log(dataItem)
   }, [])
 
 //   useEffect(() =>{
@@ -184,18 +185,18 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{FormatDate(dataItem.createdOn)}</Text>
                 </View>
             </View>
 
-            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
                 <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date modification</Text>
                 </View>
                 <View style={{flex:1}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.updatedOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{FormatDate(dataItem.updatedOn)}</Text>
                 </View>
-            </View>
+            </View> */}
 
             {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 

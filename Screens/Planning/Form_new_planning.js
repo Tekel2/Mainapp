@@ -99,8 +99,8 @@ const Form_new_planning = ({route, navigation}) => {
             create_by : userInfo.id,
             atelier : moteurItem.atelier.id,
             equipement : moteurItem.equipement.id,
-            date_int : FormatDate(dateIntDebut),
-            date_end_int : FormatDate(dateIntFin),
+            date_int : dateIntDebut,
+            date_end_int : dateIntFin,
             tache : taches
         }
     }
@@ -146,7 +146,7 @@ const Form_new_planning = ({route, navigation}) => {
     }
 
     const postData = async (data, route, ) =>{
-        console.log(data)
+        // console.log(data)
         try {
           setIsloading(true)
           const response = await axios.post(`${baseUrlApi}/${route}/True/`, 

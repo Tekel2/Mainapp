@@ -128,6 +128,18 @@ const HistoriquePreventive = ({navigation}) => {
     }
   }
 
+  const FormatDate = (data) => {
+    console.log(data)
+    let dateTimeString =
+        new Date(data).getDate() +
+        '/' +
+        (new Date(data).getMonth() + 1) +
+        '/' +         
+        new Date(data).getFullYear()
+    
+    return dateTimeString; // It will look something like this 3-5-2021 16:23
+}; 
+
 
   const renderContent=()=>{
     return(
@@ -156,7 +168,7 @@ const HistoriquePreventive = ({navigation}) => {
                   <View style={{flex: 5, backgroundColor:'#316094',borderRadius:5, paddingLeft: 10, }}>
                     <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Moteur : {item.moteur.item_moteur} </Text>
                     <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Item : {item.item_preventive} </Text>
-                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {item.updatedOn}</Text>
+                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {FormatDate(item.createdOn)}</Text>
                    </View>
 
                   

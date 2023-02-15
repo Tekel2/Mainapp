@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
+import { FormatDate } from '../../Components/Functions';
 import { AuthContext } from '../../context/Authcontext';
 
 const wait = (timeout) => {
@@ -166,7 +167,7 @@ const DetailsReparation = ({navigation,route}) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'500', color:'#0A233E'}}>{FormatDate(dataItem.createdOn)}</Text>
                 </View>
             </View>
 

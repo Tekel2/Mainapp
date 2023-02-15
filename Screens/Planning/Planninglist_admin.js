@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { RefreshControl, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { RefreshControl, StyleSheet, View, Pressable, Text, Modal, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import { axiosInstanceAPI, baseUrlApi } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
 
@@ -23,6 +23,9 @@ const Planninglist_admin = ({navigation}) => {
   const [moteuPlanning, setMoteurPlanning] = useState(false)
 
   const [selected, setSelected] = useState();
+
+  const [modalvisible, setmodalVisible] = useState(false)
+  const [modalitem, setModalitem] = useState(false)
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -113,6 +116,126 @@ const Planninglist_admin = ({navigation}) => {
     }
   }
 
+  const deletePlanning = async (idplanning) => {
+    console.log(access_token)
+
+    const configGetMotor = {
+      method: 'delete',
+      url: `${baseUrlApi}/planningdtl/${idplanning}/`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `JWT ${access_token}`
+      }
+    }
+    console.log(configGetMotor)
+    try{
+
+      const response = await axios(configGetMotor);
+      if (response.status == 200){
+        const data = await response.data
+        // console.log(data)
+        setData(data);
+        setFiltrerData(data);
+      }
+      else if (response.status == 401){
+        setData([]);
+        setFiltrerData([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+        alert("Votre session est expirer")
+        logout()
+
+
+      }
+      else if (response.status == 404){
+        setData([]);
+        setFiltrerData([]);
+        setMessageErr('- Aucun moteur installé ou en attente de d\'installation -')
+
+      }
+      
+      // console.log(json)
+      // console.log(response.status)
+    } catch (error){
+      console.log(error)
+    }
+  }
+
+
+  function viewModal(val){
+    return(
+      
+      <View >
+        <Modal
+          // animationType="slide"
+          transparent={true}
+          visible={modalvisible}
+          
+          // style={styles.MainContainerModal}
+        >
+          <View  style={{ flex: 1, backgroundColor: 'rgba(49, 96, 148, 0.15)',  }}>
+  
+            {/* <View  style={{ flex: 1, justifyContent: 'center', 
+                              marginHorizontal:10,
+                            borderRadius:8
+                            }}>
+   */}
+              {/* <Text style={styles.titremodal}>SUPRESSION</Text> */}
+              
+              <View style={{backgroundColor: '#fff',height:200,
+                            marginHorizontal:10, flex:1, 
+                            marginVertical: '75%', paddingHorizontal: 10, paddingVertical:10,
+                            borderRadius:8, paddingBottom:0, }}>
+                <View style={{}}>
+                <View style={{flexDirection:'row', marginTop:10}}>
+                  <Text style={{backgroundColor:'#ff0000', borderRadius:100, height:20,color:'#ff0000', width:20}}> TEK</Text>
+                  <Text style={{color: '#316094', fontSize:18, textAlign:'left', flexWrap:'wrap', marginLeft:10,
+                              fontWeight:'900',
+                              }}>
+                      SUPRESSION
+                  </Text>
+                </View>
+                  {/* <View style= {{flexDirection:'row',alignItems:'flex-start'}}>
+                    <Text style={styles.testcontentmodal}>Début: {val.date_int}</Text>
+                    <Text style={[styles.testcontentmodal,{ marginLeft:10}]}>Fin: {val.date_end_int}</Text>
+                  </View> */}
+                </View>
+
+                <View style={{flex: 5,borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
+                  <Text style={{fontSize: 13, color:'#000', fontWeight:'500'}}>ItemPlanning: {val.item_planning} </Text>
+                  <Text style={{fontSize: 13, color:'#000', fontWeight:'500'}}>Début: {val.date_int}   |   Fin: {val.date_end_int}</Text>
+                  {/* <Text style={{fontSize: 12, color:'#000', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
+                  <Text style={{fontSize: 13, color:'#000', fontWeight:'500'}}>Item moteur: {val.moteur.item_moteur} </Text>
+                  <Text style={{fontSize: 13, color:'#000', fontWeight:'500'}}>Atelier: {val.atelier.nom_atelier} </Text>
+                  <Text style={{fontSize: 13, color:'#000', fontWeight:'500'}}>Equipment: {val.equipement.nom_equipenent} </Text>
+                </View>
+                
+               <View style={{flexDirection: 'row',justifyContent:'flex-end'}}>
+               <Pressable
+                  style={{backgroundColor: '#fff',  marginRight:'30%'}}
+                  onPress={()=>{setmodalVisible(false)}}
+                >
+                    <Text style={styles.txtbtnmodal}>Non</Text>
+                </Pressable>
+                <Pressable
+                  style={{backgroundColor: '#fff',  marginRight:10 }}
+                  onPress={()=>{
+                    deletePlanning(val.id) 
+                  setmodalVisible(false)}}
+                >
+                    <Text style={[styles.txtbtnmodal, {color:'#ff0000'}]}>Oui</Text>
+                </Pressable>
+               </View>
+               
+              </View>            
+             
+            {/* </View> */}
+
+          </View>
+        </Modal>
+      </View>
+    )
+  
+    } 
  
     return (
         <SafeAreaView style={styles.MainContainer} >
@@ -180,6 +303,7 @@ const Planninglist_admin = ({navigation}) => {
                 onRefresh={onRefresh}
               />}
             >
+
                 {
                   filtrerData.map((item, index) =>{
                     return(
@@ -192,7 +316,7 @@ const Planninglist_admin = ({navigation}) => {
                           <View> 
                           </View>
                         <TouchableOpacity 
-                            style={{flexDirection:'row', flex:3, height:80, }}
+                            style={{flexDirection:'row', flex:3, height:90, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
                             >
                             
@@ -207,9 +331,13 @@ const Planninglist_admin = ({navigation}) => {
 
                           </TouchableOpacity>
                           <TouchableOpacity 
-                            style={{flexDirection:'row', flex:1, height:80, }}
+                            style={{flexDirection:'row', flex:1, height:90, }}
                           //   onPress={() => navigation.navigate('moteur_detail')}
-                            onPress={() => navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })}
+                            onPress={() => 
+                            // navigation.navigate('Planning_new',{moteurItem:item, methode:'put' })
+                            {setModalitem(item)
+                            setmodalVisible(true)}
+                            }
 
                             >
                           <View style={{flex: 5,
@@ -219,10 +347,11 @@ const Planninglist_admin = ({navigation}) => {
                                       justifyContent:'center',
                                       borderWidth:1 ,
                                       borderColor:'#316094',}}>
-                              <Text style={{fontSize: 18, color:'#E4E4E4', fontWeight:'900',color:'#0A233E'}}>Modifier</Text>
+                              <Text style={{fontSize: 15, color:'#ff0000', fontWeight:'900',color:'#0A233E'}}>Supprimer</Text>
                           </View>
 
                           </TouchableOpacity>
+                          { modalvisible ? viewModal(modalitem): null}
                     </View>
                   )
                   })
@@ -273,6 +402,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
     // flex: 1,
   },
+  testcontentmodal:{
+    color: '#000',
+    fontSize: 18,
+    paddingLeft: 10,
+    paddingRight: 8,
+  
+  },
+  txtbtnmodal:{
+      // height: 30,
+      color:'#316094',
+      fontSize:25,
+      fontWeight: '900' ,
+      textAlign: 'right',
+      marginHorizontal:10,
+      // marginBottom: 20,
+      // marginVertical: 10
+    },
   main_container_: {
     height: 100,
     marginBottom: 5,

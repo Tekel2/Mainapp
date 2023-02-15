@@ -4,6 +4,8 @@ import Drawernavigation from './Drawernavigation';
 import AuthNavigator from './AuthNavigator'
 import { AuthContext } from "../context/Authcontext";
 import { ActivityIndicator, View } from "react-native";
+import { Provider } from "react-redux";
+import { Store } from "../Reduxe/store";
 
 function AppNav (){
 
@@ -19,10 +21,12 @@ function AppNav (){
     }
 
     return(
-        <NavigationContainer>
-            { access_token !== null && refresh_token !== null  ? <Drawernavigation/> : <AuthNavigator/>}
-            {/* <Drawernavigation/> */}
-      </NavigationContainer>
+        <Provider store={Store}>
+            <NavigationContainer>
+                { access_token !== null && refresh_token !== null  ? <Drawernavigation/> : <AuthNavigator/>}
+                {/* <Drawernavigation/> */}
+            </NavigationContainer>
+      </Provider>
     )
 }
 

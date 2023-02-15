@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
+import { FormatDate } from '../../Components/Functions';
 import { AuthContext } from '../../context/Authcontext';
 
 const imageUrl = "/media/media/22/12/27/rn_image_picker_lib_temp_63030251-50fb-4f33-be55-fff8e6e3032f.jpg"
@@ -129,7 +130,7 @@ const DetailsInstallation = ({navigation,route}) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{FormatDate(dataItem.createdOn)}</Text>
                 </View>
             </View>
 

@@ -1,11 +1,12 @@
 import React, { Component, useState, useContext, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, PermissionsAndroid } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, PermissionsAndroid, Alert } from 'react-native';
 // import CheckBox from '@react-native-community/checkbox';
 import SelectDropdown from 'react-native-select-dropdown'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { AuthContext } from '../../context/Authcontext';
 import axios from 'axios';
 import { baseUrlApi } from '../../API/urlbase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const  Form_Installation = ({navigation, route}) => {
@@ -62,6 +63,8 @@ const  Form_Installation = ({navigation, route}) => {
     getSuperviseur('superviceur_list')
     getEquipement('equipement')
     getTechnicien('technicien_list')
+
+    getStoredata(moteurItem.item_moteur)
 
   },[])
 
@@ -913,9 +916,21 @@ const datatofetch = () => {
   }
 }
 
+const  removeItemValue= async(key) =>{
+  try {
+      await AsyncStorage.removeItem('INT'+key);
+      return true;
+  }
+  catch(exception) {
+      return false;
+  }
+}
+
 
 const fetchDataInstallationMoteur = async () => {
   // console.log(datatofetch())
+
+  setIsLoading(true)
 
   const datatofetch=new FormData();
   datatofetch.append('moteur',moteurItem.id)
@@ -927,7 +942,7 @@ const fetchDataInstallationMoteur = async () => {
   datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
   datatofetch.append('observation_general',data.obsevervation_gene)
   datatofetch.append('motif_remplacement',data.motifremplacement)
-  datatofetch.append('observation_apres',data.obsevervation_gene)
+  datatofetch.append('ancienmoteur_item', data.ancienmoteur_item)
   datatofetch.append('couplage',data.couplage)
   datatofetch.append('recommendation',data.proposition)
   datatofetch.append('continuite_u1_U2',parseFloat(data.continuite_U1_U2.replace(/,/g, '')))
@@ -959,19 +974,119 @@ const fetchDataInstallationMoteur = async () => {
       }
     },
     );
-
+    removeItemValue(moteurItem.item_moteur)
+    setIsLoading(false);
     navigation.navigate('moteur_Home')
     
   } catch (error) {
     alert("An error has occurred");
-    // setIsLoading(false);
+    setIsLoading(false);
     console.log(error)
-  }
-
-
-    
+  }    
 }
 
+
+
+const localSave =(key)=>{
+  try{
+    var dataIntervention = {
+      ID : moteurItem.item_moteur,
+      temperature: data.temperature,
+      observation_general: data.obsevervation_gene,
+      motif_remplacement: data.motifremplacement,
+      ancienmoteur_item: data.ancienmoteur_item,
+      couplage: data.couplage,
+      recommendation: data.proposition,
+      continuite_u1_U2:  data.continuite_U1_U2,
+      continuite_v1_v2:  data.continuite_V1_V2,
+      continuite_w1_w2:  data.continuite_W1_W2,
+      isolement_bobine_w2_u2:  data.isolementbobine_W2_U2,
+      isolement_bobine_w2_v2:  data.isolementbobine_W2_V2,
+      isolement_bobine_u2_v2: data.isolementbobine_U1_V2,
+      isolement_bobine_masse_u1_m: data.isolementbobinemasse_U1_M,
+      isolement_bobine_masse_v1_m: data.isolementbobinemasse_V1_M,
+      isolement_bobine_masse_w1_m: data.isolementbobinemasse_W1_M, 
+      serage : checkBoxSerage,
+      equilibrage : checkBoxEquil,
+      photo_1 : {'photo':data.photo_1, 'image':image_1_View},
+      photo_2 : {'photo':data.photo_2, 'image':image_2_View},
+      photo_3 : {'photo':data.photo_3, 'image':image_3_View},
+      photo_4 : {'photo':data.photo_4, 'image':image_4_View},
+      technicien : data.idTech,
+      superviceur : data.idsuperv
+    }
+
+ 
+    AsyncStorage.setItem('INT'+key, JSON.stringify(dataIntervention))
+    .then(()=>{
+      // dispatch(setCuratives(newCurative))
+      // dispatch(setPlanningItem(dataItem.item_planning))
+      Alert.alert('Intervention sauvergardée localement')
+      navigation.goBack();
+    })
+  } catch(error){
+    console.log("..........",error)
+  }
+}
+
+const getStoredata =async(key)=>{
+  // setIsLoading(true)
+  try{
+    const inter = JSON.parse(await AsyncStorage.getItem('INT'+key));
+    console.log('inter.continuite_V1_V2', inter.observation_general)
+    if (inter){
+
+      // console.log("-----")
+      setData({
+        ...data,
+        temperature: inter.temperature,
+        obsevervation_gene: inter.observation_general,
+        motifremplacement: inter.motif_remplacement,
+        ancienmoteur_item: inter.ancienmoteur_item,
+        couplage: inter.couplage,
+        proposition: inter.recommendation,
+        continuite_U1_U2:  inter.continuite_u1_U2,
+        continuite_V1_V2:  inter.continuite_v1_v2,
+        continuite_W1_W2:  inter.continuite_w1_w2,
+        isolementbobine_W2_U2: inter. isolement_bobine_w2_u2,
+        isolementbobine_W2_V2: inter. isolement_bobine_w2_v2,
+        isolementbobine_U1_V2: inter. isolement_bobine_u2_v2,
+        isolementbobinemasse_U1_M: inter. isolement_bobine_masse_u1_m,
+        isolementbobinemasse_V1_M: inter. isolement_bobine_masse_v1_m,
+        isolementbobinemasse_W1_M: inter. isolement_bobine_masse_w1_m, 
+
+
+        // continuite_u1_U2:  inter.continuite_U1_U2,
+        // continuite_v1_v2:  inter.continuite_V1_V2,
+        // continuite_w1_w2:  inter.continuite_W1_W2,
+        // isolement_bobine_w2_u2:  inter.isolementbobine_W2_U2,
+        // isolement_bobine_w2_v2:  inter.isolementbobine_W2_V2,
+        // isolement_bobine_u2_v2: inter.isolementbobine_U1_V2,
+        // isolement_bobine_masse_u1_m: inter.isolementbobinemasse_U1_M,
+        // isolement_bobine_masse_v1_m: inter.isolementbobinemasse_V1_M,
+        // isolement_bobine_masse_w1_m: inter.isolementbobinemasse_W1_M, 
+
+
+        photo_1:inter.photo_1.photo,
+        photo_2:inter.photo_2.photo,
+        photo_3:inter.photo_3.photo,
+        photo_4:inter.photo_4.photo,
+
+      })
+      setCheckBoxSerage(inter.serage)
+      setCheckBoxEquil(inter.equilibrage)
+      setImage_1_View(inter.photo_1.image)
+      setImage_2_View(inter.photo_2.image)
+      setImage_3_View(inter.photo_3.image)
+      setImage_4_View(inter.photo_4.image)
+    }
+    setIsLoading(false)
+  }
+  catch (error){
+    console.log(error)
+  }
+ 
+}
 
   const selectEqt =(item)=>{
     if (data.idAtelier === item.atelier.id){
@@ -994,6 +1109,7 @@ const contentForm = ()=>{
                   autoCapitalize="words"
                   numberOfLines={7}
                   multiline={true}
+                  value={data.obsevervation_gene}
                   onChangeText={(val) => handle_Obsevervation_gene(val)}
                             
                   style={[styles.textinput,styles.textinputmulti]}
@@ -1064,6 +1180,7 @@ const contentForm = ()=>{
                 placeholderTextColor="#777"
                 autoCapitalize="words"
                 style={[styles.textinput, {}]}
+                value={data.ancienmoteur_item}
                 onChangeText={(val) => handle_Ancienmoteur_item(val)}
               />  
           </View>
@@ -1076,6 +1193,7 @@ const contentForm = ()=>{
                 autoCapitalize="words"
                 numberOfLines={3}
                 multiline={true}
+                value={data.motifremplacement}
                 // style={[styles.textinput, {}]}
                 style={[styles.textinput,styles.textinputmulti]}
                 onChangeText={(val) => handle_Motifremplacement(val)}
@@ -1121,6 +1239,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.continuite_U1_U2}
                           onChangeText={(val) => handle_Continuite_U1_U2(val)}
                         />  
                    </View>  
@@ -1132,6 +1251,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.continuite_V1_V2}
                           onChangeText={(val) => handle_Continuite_V1_V2(val)}
                         />  
                    </View>  
@@ -1143,6 +1263,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.continuite_W1_W2}
                           onChangeText={(val) => handle_Continuite_W1_W2(val)}
                         />  
                    </View>    
@@ -1161,6 +1282,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobine_W2_U2}
                           onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                         />  
                    </View>  
@@ -1172,6 +1294,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobine_W2_V2}
                           onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                         />  
                    </View>  
@@ -1183,6 +1306,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobine_U1_V2}
                           onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                         />  
                    </View>    
@@ -1201,6 +1325,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobinemasse_U1_M}
                           onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                         />  
                    </View>  
@@ -1212,6 +1337,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobinemasse_V1_M}
                           onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                         />  
                    </View>  
@@ -1223,6 +1349,7 @@ const contentForm = ()=>{
                           autoCapitalize="words"
                           keyboardType='decimal-pad'
                           style={[styles.textinput, {}]}
+                          value={data.isolementbobinemasse_W1_M}
                           onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                         />  
                    </View>    
@@ -1238,6 +1365,7 @@ const contentForm = ()=>{
                 autoCapitalize="words"
                 keyboardType='decimal-pad'
                 style={[styles.textinput, {}]}
+                value={data.temperature}
                 onChangeText={(val) => handle_Temperature(val)}
               />  
           </View>
@@ -1346,6 +1474,7 @@ const contentForm = ()=>{
                   autoCapitalize="words"
                   numberOfLines={7}
                   multiline={true}
+                  value={data.proposition}
                   style={[styles.textinput,styles.textinputmulti]}
                 onChangeText={(val) => handle_Proposition(val)}
 
@@ -1413,7 +1542,7 @@ const contentForm = ()=>{
           <View style={{flexDirection: 'row', marginTop:25}}>
             <TouchableOpacity 
               style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-              onPress={() => {resetAllTextInput()}}
+              // onPress={() => {}}
 
               >
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/annuler.png")}/>
@@ -1426,6 +1555,15 @@ const contentForm = ()=>{
                 <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/enregistrer.png")}/>
             </TouchableOpacity>
            
+          </View>
+
+          <View>
+            <TouchableOpacity 
+                style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+                onPress={() => {localSave(moteurItem.item_moteur)}}
+              >
+                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_local_save.png")}/>
+              </TouchableOpacity>
           </View>
           
         </ScrollView>

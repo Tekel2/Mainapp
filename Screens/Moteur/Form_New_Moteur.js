@@ -68,7 +68,6 @@ const handle_input = (input, val, )=>{
 }
 }
 
-
 const handle_ItemMoteur = (val) => {
   if( val.trim().length >= 5 ) {
       setData({
@@ -308,6 +307,16 @@ useEffect(()=>{
   // console.log(access_token)
 })
 
+const  removeItemValue= async(key) =>{
+  try {
+      await AsyncStorage.removeItem('NEW'+key);
+      return true;
+  }
+  catch(exception) {
+      return false;
+  }
+}
+
 const fetchDataMoteur = async () => {
 
   const datatofetch = new FormData();
@@ -348,6 +357,7 @@ const fetchDataMoteur = async () => {
         }
       },
       );
+      removeItemValue()
       navigation.navigate('moteur_Home')
 
     } catch (error) {
@@ -369,6 +379,99 @@ const fetchDataMoteur = async () => {
       // setIsloading(false
       console.log(error)
     }    
+}
+
+const localSave =()=>{
+  try{
+    var dataIntervention = {
+      ID : moteurItem.moteur.item_moteur,
+      reference: data.reference,
+      numeroserie: data.numeroserie,
+      marque: data.marque,
+      type_moteur: data.type_moteur,
+      phase: data.phase,
+      frequence: data.frequence,
+      cosfi: data.cosfi,
+      rendement: data.rendement,
+      puissance: data.puissance,
+      tour_min: data.tour_min,
+      temperature_ambiante_user: data.temperature_ambiante_user,
+      tension_etoile: data.tension_etoile,
+      tension_triangle: data.tension_triangle,
+      courant_triangle: data.courant_triangle,
+      courant_etoile: data.indice_protection,
+      poids: data.poids,
+      indice_protection: data.courant_etoile,
+      poids: data.poids,  
+    }
+
+
+
+    // const index = curatives.findIndex(cur => cur.ID === moteurItem.moteur.item_moteur)
+    // let newCurative = []
+    // if (index > -1){
+    //   newCurative = [...curatives]
+    //   newCurative[index] = dataIntervention
+    // }
+    // else {
+    //   newCurative = [...curatives, dataIntervention]
+    // }
+    AsyncStorage.setItem('NEW'+moteurItem.moteur.item_moteur, JSON.stringify(dataIntervention))
+    .then(()=>{
+      // dispatch(setCuratives(newCurative))
+      // dispatch(setPlanningItem(dataItem.item_planning))
+      Alert.alert('Intervention sauvergardée localement')
+      navigation.goBack();
+    })
+  } catch(error){
+    console.log("..........",error)
+  }
+}
+
+const getStoredata =async(key)=>{
+  // setIsLoading(true)
+  try{
+    const inter = JSON.parse(await AsyncStorage.getItem('NEW'+key));
+    console.log('inter.continuite_V1_V2', inter.continuite_v1_v2)
+    if (inter){
+
+      console.log("-----")
+      setData({
+        ...data,
+        solution: inter.solution,
+        descriptionpanne: inter.description_panne,
+        obsevervation_gene_av: inter.observation_avant,
+        obsevervation_gene_ap: inter.observation_apres,
+        obsevervation_conectique: inter.observation_conectique,
+        continuite_U1_U2: inter.continuite_u1_U2,
+        continuite_V1_V2: inter.continuite_v1_v2,
+        continuite_W1_W2: inter.continuite_w1_w2,
+        isolementbobine_W2_U2: inter.isolement_bobine_w2_u2,
+        isolementbobine_W2_V2: inter.isolement_bobine_w2_v2,
+        isolementbobine_U1_V2: inter.isolement_bobine_u2_v2,
+        isolementbobinemasse_U1_M: inter.isolement_bobine_masse_u1_m,
+        isolementbobinemasse_V1_M: inter.isolement_bobine_masse_v1_m,
+        isolementbobinemasse_W1_M: inter.isolement_bobine_masse_w1_m,
+        proposition: inter.proposition,
+        temperature: inter.temperature,
+        photo_1:inter.photo_1.photo,
+        photo_2:inter.photo_2.photo,
+        photo_3:inter.photo_3.photo,
+        photo_4:inter.photo_4.photo,
+      })
+      setCheckBoxSerage(inter.serage)
+      setCheckBoxEquil(inter.equilibrage)
+      setImage_1_View(inter.photo_1.image)
+      setImage_2_View(inter.photo_2.image)
+      setImage_3_View(inter.photo_3.image)
+      setImage_4_View(inter.photo_4.image)
+    }
+    setIsLoading(false)
+  }
+  catch (error){
+    console.log(error)
+  }
+ 
 }
 
     return (
@@ -613,6 +716,16 @@ const fetchDataMoteur = async () => {
             </TouchableOpacity>
            
           </View>
+          <View>
+            <TouchableOpacity 
+                style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+                onPress={() => {localSave()}}
+              >
+                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_local_save.png")}/>
+              </TouchableOpacity>
+          </View>
+
+          
           
         </ScrollView>
            

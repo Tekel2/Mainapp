@@ -133,6 +133,7 @@ const MoteurListScreen = ({navigation}) => {
 
   const searcheFilterFunction = (text) =>{
     if(text){
+        // console.log(moteurInstalled)
         const newmoteurInstalled = moteurInstalled.filter(item => {
             // console.log(item.equipement)
             // console.log(text)

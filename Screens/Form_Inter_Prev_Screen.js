@@ -7,11 +7,18 @@ import { AuthContext } from '../context/Authcontext';
 import axios from 'axios';
 import { baseUrlApi } from '../API/urlbase';
 import SelectDropdown from 'react-native-select-dropdown';
+import { useDispatch, useSelector } from 'react-redux';
+import {setPreventives,setPreventiveID, setPlanningItem} from '../Reduxe/action'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Form_Inter_Prev_Screen = ({navigation,route}) => {
 
   const {dataItem} = route.params
   const {userInfo, access_token, logout} = useContext(AuthContext)
+
+  const dispatch = useDispatch();
+  const {preventives,planningItem}=useSelector(state =>state.preventiveReducer)
 
 
   const [checkBoxSerage, setCheckBoxSerage] = useState(false)
@@ -28,12 +35,6 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
   const [modalvisible, setmodalVisible] = useState(false)
   const [modalitem, setModalitem] = useState(false)
   // const [isloading, setIsloading] = useState(false)
-
-
-
-  // const {preventive, preventiveID} = useSelector(state => state.preventiveReducer);
-  // const dispatch = useDispatch()
-  
 
   const [data, setData] = React.useState({
     obsevervation_gene_av: '',
@@ -59,83 +60,30 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
 
 });
 
+const handleInput =(input, val)=>{
+  if (val.trim().length >= 3){
+    setData({
+      ...data,
+      [input]:val
+    })
+  }
+  else if(typeof(parseFloat(data[input].replace(/,/g, ''))) === "float" ){
+    setData({
+      ...data,
+      [input]:val
+    })
+  }
+}
 
-  // const savePreventive = () =>{
-  //   try{
-  //     var Preventive ={
-  //       ID:preventiveID,
-  //       obsevervation_gene_av:data.obsevervation_gene_av,
-  //       obsevervation_conectique:data.obsevervation_conectique,
-  //       continuite_U1_U2: data.continuite_U1_U2,
-  //       continuite_V1_V2: data.continuite_V1_V2,
-  //       continuite_W1_W2: data.continuite_W1_W2,
-  //       isolementbobine_W2_U2: data.isolementbobine_W2_U2,
-  //       isolementbobine_W2_V2: data.isolementbobine_W2_V2,
-  //       isolementbobine_U1_V2: data.isolementbobine_U1_V2,
-  //       isolementbobinemasse_U1_M: data.isolementbobinemasse_U1_M,
-  //       isolementbobinemasse_V1_M: data.isolementbobinemasse_V1_M,
-  //       isolementbobinemasse_W1_M: data.isolementbobinemasse_W1_M,
-  //       proposition: data.proposition,
-  //       temperature: data.temperature,
-  //       image:image, 
-  //       image_2:image_2, 
-  //       image_3:image_3, 
-  //       image_4:image_4, 
-
-  //     }
-  //     let newPreventive = [...preventive, Preventive];
-  //     AsyncStorage.setItem('Preventive', JSON.stringify(newPreventive))
-  //     .then(()=>{
-  //       dispatch(setPreventive(newPreventive))
-  //       Alert.alert('Success!', 'Intervention Preventive sauvegardé')
-  //       navigation.goBack()
-  //     })
-  //     .catch(err => console.log(err))
-  //   } catch (error){
-  //     console.log(error)
-  //   }
-  // }
-
-    // const getPreventive = () =>{
-    //   const prev = preventive.find(prevent=>prevent.ID === preventiveID)
-    //   if (prev){
-    //     // console.log('5555555555555555')
-    //     setImage(prev.Image)
-    //     setImage_2(prev.Image_2)
-    //     setImage_3(prev.Image_3)
-    //     setImage_4(prev.Image_4)
-    //     setData({
-    //       ...data,
-    //       obsevervation_gene_av:prev.obsevervation_gene_av,
-    //       // obsevervation_conectique:prev.obsevervation_conectique,
-    //       // continuite_U1_U2: prev.continuite_U1_U2,
-    //       // continuite_V1_V2: prev.continuite_V1_V2,
-    //       // continuite_W1_W2: prev.continuite_W1_W2,
-    //       // isolementbobine_W2_U2: prev.isolementbobine_W2_U2,
-    //       // isolementbobine_W2_V2: prev.isolementbobine_W2_V2,
-    //       // isolementbobine_U1_V2: prev.isolementbobine_U1_V2,
-    //       // isolementbobinemasse_U1_M: prev.isolementbobinemasse_U1_M,
-    //       // isolementbobinemasse_V1_M: prev.isolementbobinemasse_V1_M,
-    //       // isolementbobinemasse_W1_M: prev.isolementbobinemasse_W1_M,
-    //       // proposition: prev.proposition,
-    //       // temperature: prev.temperature,
-    //   });
-    //   }
-
-    // }
-
-
-
-  // useEffect(()=>{
-    
-  //   getPreventive();
-  //   // console.log(image)
-  // })
+  
 
   useEffect(() =>{
     getSuperviseur('superviceur_list')
     getTechnicien('technicien_list')
-    console.log(dataItem)
+    // getLocalPreventive()
+    getStoredata(dataItem.item_planning)
+    // removeItemValue('Preventive')
+    // console.log(dataItem.item_planning)
 
   },[])
 
@@ -226,364 +174,487 @@ const Form_Inter_Prev_Screen = ({navigation,route}) => {
     }    
   }
 
+  // const datatofetch = () => {
+  //   return {
+  //     create_by: userInfo.id,
+  //     moteur : dataItem.moteur.id,
+  //     planning : dataItem.id,
+  //     temperature : parseFloat(data.temperature.replace(/,/g, '')),
+  //     observation_avant : data.obsevervation_gene_av,
+  //     observation_apres : data.obsevervation_gene_ap,
+  //     proposition : data.proposition,
+  //     observation_conectique : data.obsevervation_conectique,
+  //     continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
+  //     continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
+  //     continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
+  //     isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
+  //     isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
+  //     isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
+  //     isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
+  //     isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
+  //     isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
+  //     serage : checkBoxSerage,
+  //     equilibrage : checkBoxEquil,
+  //     photo_1 : data.photo_1,
+  //     photo_2 : data.photo_2,
+  //     photo_3 : data.photo_3,
+  //     photo_4 : data.photo_4,
+  //     technicien : data.idTech,
+  //     superviceur : data.idsuperv
+  //   }
+  // }
+
+  const postData = async (route ) =>{
+
+    try{
+      const datatofetch=new FormData();
+
+      datatofetch.append('create_by', userInfo.id)
+      datatofetch.append('moteur' , dataItem.moteur.id)
+      datatofetch.append('planning', dataItem.id)
+      datatofetch.append('temperature', parseFloat(data.temperature.replace(/,/g, '')))
+      datatofetch.append('observation_avant', data.obsevervation_gene_av)
+      datatofetch.append('observation_apres', data.obsevervation_gene_ap)
+      datatofetch.append('proposition',  data.proposition,)
+      datatofetch.append('observation_conectique', data.obsevervation_conectique,)
+      datatofetch.append('continuite_u1_U2', parseFloat(data.continuite_U1_U2.replace(/,/g, '')))
+      datatofetch.append('continuite_v1_v2', parseFloat(data.continuite_V1_V2.replace(/,/g, '')))
+      datatofetch.append('continuite_w1_w2', parseFloat(data.continuite_W1_W2.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_w2_u2', parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_w2_v2', parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_u2_v2', parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_masse_u1_m', parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_masse_v1_m', parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')))
+      datatofetch.append('isolement_bobine_masse_w1_m', parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')))
+      datatofetch.append('serage', checkBoxSerage)
+      datatofetch.append('equilibrage', checkBoxEquil)
+      datatofetch.append('photo_1', data.photo_1)
+      datatofetch.append('photo_2', data.photo_2)
+      datatofetch.append('photo_3', data.photo_3)
+      datatofetch.append('photo_4', data.photo_4)
+      datatofetch.append('technicien', data.idTech)
+      datatofetch.append('superviceur', data.idsuperv)
 
 
-  const datatofetch = () => {
-    return {
-      create_by: userInfo.id,
-      moteur : dataItem.moteur.id,
-      planning : dataItem.id,
-      temperature : parseFloat(data.temperature.replace(/,/g, '')),
-      observation_avant : data.obsevervation_gene_av,
-      observation_apres : data.obsevervation_gene_ap,
-      proposition : data.proposition,
-      observation_conectique : data.obsevervation_conectique,
-      continuite_u1_U2 : parseFloat(data.continuite_U1_U2.replace(/,/g, '')),// parseFloat('1,022.55'.replace(/,/g, ''))
-      continuite_v1_v2 : parseFloat(data.continuite_V1_V2.replace(/,/g, '')),
-      continuite_w1_w2 : parseFloat(data.continuite_W1_W2.replace(/,/g, '')),
-      isolement_bobine_w2_u2 : parseFloat(data.isolementbobine_W2_U2.replace(/,/g, '')),
-      isolement_bobine_w2_v2 : parseFloat(data.isolementbobine_W2_V2.replace(/,/g, '')),
-      isolement_bobine_u2_v2 : parseFloat(data.isolementbobine_U1_V2.replace(/,/g, '')),
-      isolement_bobine_masse_u1_m : parseFloat(data.isolementbobinemasse_U1_M.replace(/,/g, '')),
-      isolement_bobine_masse_v1_m : parseFloat(data.isolementbobinemasse_V1_M.replace(/,/g, '')),
-      isolement_bobine_masse_w1_m : parseFloat(data.isolementbobinemasse_W1_M.replace(/,/g, '')),
-      serage : checkBoxSerage,
-      equilibrage : checkBoxEquil,
-      // photo_1 : data.photo_1,
-      // photo_2 : data.photo_2,
-      // photo_3 : data.photo_3,
-      // photo_4 : data.photo_4,
-      technicien : data.idTech,
-      superviceur : data.idsuperv
+      try {
+        setIsLoading(true)
+        const response = await axios.post(`${baseUrlApi}/${route}/`,datatofetch,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                'Authorization': `JWT ${access_token}`
+              }
+            },
+          );
+        
+        setIsLoading(false)
+        removeItemValue(dataItem.item_planning)
+        navigation.navigate('Home')
+
+      } catch (error) {
+        if(!error.response){
+        setIsLoading(false)
+        alert("Aucune reponse du serveur");
+        }
+        else if (error.response?.status === 400){
+        setIsLoading(false)
+        alert("Certains informations ne sont pas renseignées")
+        }
+        else if (error.response?.status === 401){
+          alert("Vous n'est pas authorisé")
+        }
+        else if (error.response?.status === 404){
+          alert("Aucune corespondance a votre demande")
+        }
+        // alert("An error has occurred");
+        console.log(error.status)
+        // setIsloading(false)
+
+      } 
+    }  
+    catch (error) {
+      console.log(error.TypeError)
+      if(error.TypeError === undefined){
+        setIsLoading(false)
+        alert("Certaines informations ne sont pas renseignées.");
+        }
     }
   }
 
-  const postData = async (data, route, ) =>{
-    console.log("--------",data,"---------")
+  const  removeItemValue= async(key) =>{
     try {
-      setIsLoading(true)
-      const response = await axios.post(`${baseUrlApi}/${route}/`, 
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              'Authorization': `JWT ${access_token}`
-            }
-          },
-        );
-      
-      setIsLoading(false)
-      navigation.navigate('Home')
-
-    } catch (error) {
-      if(!error.response){
-      setIsLoading(false)
-      alert("Aucune reponse du serveur");
-      }
-      else if (error.response?.status === 400){
-      setIsLoading(false)
-      alert("Certains informations ne sont pas renseignées")
-      }
-      else if (error.response?.status === 401){
-        alert("Vous n'est pas authorisé")
-      }
-      else if (error.response?.status === 404){
-        alert("Aucune corespondance a votre demande")
-      }
-      // alert("An error has occurred");
-      console.log(error.status)
-      // setIsloading(false)
-
+        await AsyncStorage.removeItem(key);
+        return true;
     }
-
-
-    
-}
-  
-
-
-
-const getImage_1_View = async  () =>{
-  const options = {
-    storageOption : {
-      path: 'images',
-      mediaType: 'photo',
-    },
-    mediaType: 'photo',
-    includeBase64: true
-  };
-
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: "App Camera Permission",
-        message:"App needs access to your camera ",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
-      launchCamera(options, response =>{
-    
-        console.log('Response = ', response)
-        if (response.didCancel){
-          console.log('User conceeled Image Picker')
-        }
-        else if (response.error){
-          console.log('ImagePicker Error', response.error)
-        }
-        else if (response.customButton){
-          console.log('User tape custom button', response.customButton)
-        }
-        else {
-        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-        const source = { uri: response.assets[0].uri };
-        setImage_1_View(source)
-  
-  
-        let localUri = response.assets[0].uri;
-        // setPhotoShow(localUri);
-        let filename = localUri.split('/').pop();
-  
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-  
-        // let formData = new FormData();
-        //   formData.append('photo', { uri: localUri, name: filename, type });
-        setData({
-          ...data,
-          photo_1: { uri: localUri, name: filename, type }
-          
-        })
-        
-        //   console.log(formData)
-        // console.log("URI ", response.assets[0].uri)
-        // console.log("Filename ", response.assets[0].uri.split('/').pop())
-        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
-        
-  
-        }
-      })
-    } else {
-      console.log("Camera permission denied");
+    catch(exception) {
+        return false;
     }
-  } catch (err) {
-    console.warn(err);
-  } 
-
-
-};
-const getImage_2_View = async () =>{
-  const options = {
-    storageOption : {
-      path: 'images',
-      mediaType: 'photo',
-    },
-    includeBase64: true
-  };
-
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: "App Camera Permission",
-        message:"App needs access to your camera ",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      
-      launchCamera(options, response =>{
-    
-        // console.log('Response = ', response)
-        if (response.didCancel){
-          console.log('User conceeled Image Picker')
-        }
-        else if (response.error){
-          console.log('ImagePicker Error', response.error)
-        }
-        else if (response.customButton){
-          console.log('User tape custom button', response.customButton)
-        }
-        else {
-        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-        const source = { uri: response.assets[0].uri };
-        setImage_2_View(source)
-
-        let localUri = response.assets[0].uri;
-        // setPhotoShow(localUri);
-        let filename = localUri.split('/').pop();
-
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-
-        // let formData = new FormData();
-        //   formData.append('photo', { uri: localUri, name: filename, type });
-        setData({
-          ...data,
-          photo_2: { uri: localUri, name: filename, type }
-          
-        })
-        
-        //   console.log(formData)
-        // console.log("URI ", response.assets[0].uri)
-        // console.log("Filename ", response.assets[0].uri.split('/').pop())
-        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
-        }
-      })
-    } else {
-      console.log("Camera permission denied");
-    }
-  } catch (err) {
-    console.warn(err);
   }
 
-};
-const getImage_3_View = async () =>{
-  const options = {
-    storageOption : {
-      path: 'images',
-      mediaType: 'photo',
-    },
-    includeBase64: true
-  };
-
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: "App Camera Permission",
-        message:"App needs access to your camera ",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
+  const localSave = async (key)=>{
+    try{
+      var dataPreventive = {
+        ID : dataItem.item_planning,
+        temperature : data.temperature,
+        observation_avant : data.obsevervation_gene_av,
+        observation_apres : data.obsevervation_gene_ap,
+        proposition : data.proposition,
+        observation_conectique : data.obsevervation_conectique,
+        continuite_u1_U2 : data.continuite_U1_U2,// '1,022.55'
+        continuite_v1_v2 : data.continuite_V1_V2,
+        continuite_w1_w2 : data.continuite_W1_W2,
+        isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+        isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+        isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+        isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+        isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+        isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+        serage : checkBoxSerage,
+        equilibrage : checkBoxEquil,
+        photo_1 : {'photo':data.photo_1, 'image':image_1_View},
+        photo_2 : {'photo':data.photo_2, 'image':image_2_View},
+        photo_3 : {'photo':data.photo_3, 'image':image_3_View},
+        photo_4 : {'photo':data.photo_4, 'image':image_4_View},
+        
+        technicien : data.idTech,
+        superviceur : data.idsuperv
       }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+      AsyncStorage.setItem(key, JSON.stringify(dataPreventive))
+      .then(()=>{
+        Alert.alert('Intervention sauvergarder localement')
+        navigation.goBack();
+      })
+    } catch(error){
+      console.log(error)
+    }
+  }
+
+  const getStoredata =async(key)=>{
+    setIsLoading(true)
+    try{
+      const Preventive = JSON.parse(await AsyncStorage.getItem(key));
       
-      launchCamera(options, response =>{
-    
-        // console.log('Response = ', response)
-        if (response.didCancel){
-          console.log('User conceeled Image Picker')
-        }
-        else if (response.error){
-          console.log('ImagePicker Error', response.error)
-        }
-        else if (response.customButton){
-          console.log('User tape custom button', response.customButton)
-        }
-        else {
-        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-        const source = { uri: response.assets[0].uri };
-        setImage_3_View(source)
-
-        let localUri = response.assets[0].uri;
-        // setPhotoShow(localUri);
-        let filename = localUri.split('/').pop();
-
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-
-        // let formData = new FormData();
-        //   formData.append('photo', { uri: localUri, name: filename, type });
+      if (Preventive){
         setData({
           ...data,
-          photo_3: { uri: localUri, name: filename, type }
-          
+          obsevervation_gene_av: Preventive.observation_avant,
+          obsevervation_gene_ap: Preventive.observation_apres,
+          obsevervation_conectique: Preventive.observation_conectique,
+          continuite_U1_U2: Preventive.continuite_u1_U2,
+          continuite_V1_V2: Preventive.continuite_V1_V2,
+          continuite_W1_W2: Preventive.continuite_w1_w2,
+          isolementbobine_W2_U2: Preventive.isolement_bobine_w2_u2,
+          isolementbobine_W2_V2: Preventive.isolement_bobine_w2_v2,
+          isolementbobine_U1_V2: Preventive.isolement_bobine_u2_v2,
+          isolementbobinemasse_U1_M: Preventive.isolement_bobine_masse_u1_m,
+          isolementbobinemasse_V1_M: Preventive.isolement_bobine_masse_v1_m,
+          isolementbobinemasse_W1_M: Preventive.isolement_bobine_masse_w1_m,
+          proposition: Preventive.proposition,
+          temperature: Preventive.temperature,
+          photo_1:Preventive.photo_1.photo,
+          photo_2:Preventive.photo_2.photo,
+          photo_3:Preventive.photo_3.photo,
+          photo_4:Preventive.photo_4.photo,
         })
-        
-        //   console.log(formData)
-        // console.log("URI ", response.assets[0].uri)
-        // console.log("Filename ", response.assets[0].uri.split('/').pop())
-        // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
-        // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
-        }
-      })
-    } else {
-      console.log("Camera permission denied");
+
+        setCheckBoxSerage(Preventive.serage)
+        setCheckBoxEquil(Preventive.equilibrage)
+        setImage_1_View(Preventive.photo_1.image)
+        setImage_2_View(Preventive.photo_2.image)
+        setImage_3_View(Preventive.photo_3.image)
+        setImage_4_View(Preventive.photo_4.image)
+      }
+      setIsLoading(false)
     }
-  } catch (err) {
-    console.warn(err);
+    catch (error){
+      console.log(error)
+    }
+   
   }
 
 
-};
 
-const getImage_4_View = async() =>{
-  const options = {
-    storageOption : {
-      path: 'images',
+  const getImage_1_View = async  () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
       mediaType: 'photo',
-    },
-    includeBase64: true
-  };
+      includeBase64: true
+    };
 
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: "App Camera Permission",
-        message:"App needs access to your camera ",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+        launchCamera(options, response =>{
       
-      launchCamera(options, response =>{
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_1_View(source)
     
-        // console.log('Response = ', response)
-        if (response.didCancel){
-          console.log('User conceeled Image Picker')
-        }
-        else if (response.error){
-          console.log('ImagePicker Error', response.error)
-        }
-        else if (response.customButton){
-          console.log('User tape custom button', response.customButton)
-        }
-        else {
-        //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
-        const source = { uri: response.assets[0].uri };
-        setImage_4_View(source)
-
-        let localUri = response.assets[0].uri;
-        // setPhotoShow(localUri);
-        let filename = localUri.split('/').pop();
-
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-
-        // let formData = new FormData();
-        //   formData.append('photo', { uri: localUri, name: filename, type });
-        setData({
-          ...data,
-          photo_4: { uri: localUri, name: filename, type:type }
+    
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+    
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+    
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_1: { uri: localUri, name: filename, type }
+            
+          })
           
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          
+    
+          }
         })
-        
-       
-        }
-      })
-    } else {
-      console.log("Camera permission denied");
-    }
-  } catch (err) {
-    console.warn(err);
-  }
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    } 
 
-  
-  
-};
+
+  };
+  const getImage_2_View = async () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        
+        launchCamera(options, response =>{
+      
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_2_View(source)
+
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_2: { uri: localUri, name: filename, type }
+            
+          })
+          
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+  };
+  const getImage_3_View = async () =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        
+        launchCamera(options, response =>{
+      
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_3_View(source)
+
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_3: { uri: localUri, name: filename, type }
+            
+          })
+          
+          //   console.log(formData)
+          // console.log("URI ", response.assets[0].uri)
+          // console.log("Filename ", response.assets[0].uri.split('/').pop())
+          // console.log("match ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()))
+          // console.log("Type ", /\.(\w+)$/.exec(response.assets[0].uri.split('/').pop()) ? `image/${/\.(\w+)$/.exec(response.assets[0].uri.split('/').pop())[1]}` : `image`)
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+
+  };
+  const getImage_4_View = async() =>{
+    const options = {
+      storageOption : {
+        path: 'images',
+        mediaType: 'photo',
+      },
+      includeBase64: true
+    };
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        
+        launchCamera(options, response =>{
+      
+          // console.log('Response = ', response)
+          if (response.didCancel){
+            console.log('User conceeled Image Picker')
+          }
+          else if (response.error){
+            console.log('ImagePicker Error', response.error)
+          }
+          else if (response.customButton){
+            console.log('User tape custom button', response.customButton)
+          }
+          else {
+          //  const source = {uri : 'data:image/jpeg;base64,' + response.base64}
+          const source = { uri: response.assets[0].uri };
+          setImage_4_View(source)
+
+          let localUri = response.assets[0].uri;
+          // setPhotoShow(localUri);
+          let filename = localUri.split('/').pop();
+
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+
+          // let formData = new FormData();
+          //   formData.append('photo', { uri: localUri, name: filename, type });
+          setData({
+            ...data,
+            photo_4: { uri: localUri, name: filename, type:type }
+            
+          })
+          
+        
+          }
+        })
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+    
+    
+  };
 
 
   const toggleSerage =() =>{
@@ -821,6 +892,11 @@ setData({
 }
 
 
+  const setLocalPreventive =()=>{
+
+  }
+
+
 useEffect(()=>{
   // console.log(dataItem)
 })
@@ -872,8 +948,10 @@ function viewModal(val){
                 placeholderTextColor="#777"
                 autoCapitalize="sentences"
                 numberOfLines={7}
-                multiline={true}                  
+                multiline={true}           
+                value={data.obsevervation_gene_av}       
                 style={[styles.textinput,styles.textinputmulti]}
+                // onChangeText={(val) => handleInput(data.obsevervation_gene_av,val)}
                 onChangeText={(val) => handle_Obsevervation_gene_av(val)}
 
             />              
@@ -887,7 +965,10 @@ function viewModal(val){
                 numberOfLines={7}
                 multiline={true}
                 style={[styles.textinput,styles.textinputmulti]}
+                value={data.des}
                 onChangeText={(val) => handle_Obsevervation_conectique(val)}
+                // onChangeText={(val) => handleInput(data.obsevervation_conectique,val)}
+
             />              
         </View>
 
@@ -902,7 +983,11 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.continuite_U1_U2}
                         onChangeText={(val) => handle_Continuite_U1_U2(val)}
+                        
+                        // onChangeText={(val) => handleInput(data.continuite_U1_U2,val)}
+
                       />  
                   </View>  
                   <View style={{flex:1}}>
@@ -913,6 +998,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.continuite_V1_V2}
+                        // onChangeText={(val) => handleInput(data.continuite_V1_V2,val)}
                         onChangeText={(val) => handle_Continuite_V1_V2(val)}
                       />  
                   </View>  
@@ -924,6 +1011,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.continuite_W1_W2}
+                        // onChangeText={(val) => handleInput(data.continuite_W1_W2,val)}
                         onChangeText={(val) => handle_Continuite_W1_W2(val)}
                       />  
                   </View>    
@@ -937,11 +1026,13 @@ function viewModal(val){
                   <View style={{flex:1}}>
                       <Text style={[styles.titrechamp, {textAlign:'center'}]}> W2 - U2</Text>
                       <TextInput
+                        value={data.isolementbobine_W2_U2}
                         placeholder="MegaOhm"
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        // onChangeText={(val) => handleInput(data.isolementbobine_W2_U2,val)}
                         onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                       />  
                   </View>  
@@ -953,6 +1044,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobine_W2_V2}
+                        // onChangeText={(val) => handleInput(data.isolementbobine_W2_V2,val)}
                         onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                       />  
                   </View>  
@@ -964,6 +1057,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobine_U1_V2}
+                        // onChangeText={(val) => handleInput(data.isolementbobine_U1_V2,val)}
                         onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                       />  
                   </View>    
@@ -982,6 +1077,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_U1_M}
+                        // onChangeText={(val) => handleInput(data.isolementbobinemasse_U1_M,val)}
                         onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                       />  
                   </View>  
@@ -993,6 +1090,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_V1_M}
+                        // onChangeText={(val) => handleInput(data.isolementbobinemasse_V1_M,val)}
                         onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                       />  
                   </View>  
@@ -1004,6 +1103,8 @@ function viewModal(val){
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_W1_M}
+                        // onChangeText={(val) => handleInput(data.isolementbobinemasse_W1_M,val)}
                         onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                       />  
                   </View>    
@@ -1019,6 +1120,8 @@ function viewModal(val){
               autoCapitalize="sentences"
               keyboardType='decimal-pad'
               style={[styles.textinput, {}]}
+              value={data.temperature}
+              // onChangeText={(val) => handleInput(data.temperature,val)}
               onChangeText={(val) => handle_Temperature(val)}
             />  
         </View>
@@ -1046,6 +1149,8 @@ function viewModal(val){
                 numberOfLines={7}
                 multiline={true}
                 style={[styles.textinput,styles.textinputmulti]}
+                value={data.obsevervation_gene_ap}
+                // onChangeText={(val) => handleInput(data.obsevervation_gene_ap,val)}
                 onChangeText={(val) => handle_Obsevervation_gene_ap(val)}
 
             />              
@@ -1130,7 +1235,7 @@ function viewModal(val){
               image_4_View?
                 <View >
                   <Image style={{width:150, height:150, margin:10, borderRadius:8}} source={image_4_View}/>
-              </View>                
+                </View>                
               :
               null
             }
@@ -1156,6 +1261,9 @@ function viewModal(val){
                 numberOfLines={7}
                 multiline={true}
                 style={[styles.textinput,styles.textinputmulti]}
+                value={data.proposition}
+                
+                // onChangeText={(val) => handleInput(data.proposition,val)}
                 onChangeText={(val) => handle_Proposition(val)}
             />              
         </View>
@@ -1198,10 +1306,12 @@ function viewModal(val){
               selectedRowTextStyle={{color:'#ED7524', fontWeight: '900', }}
               buttonStyle={{borderWidth:1,borderRadius:4, justifyContent:'center', flex: 1, width:'100%'}}
               // buttonTextStyle={{textAlign:'center', color:'#111'}}
+              // defaultValue={}
 
               onSelect={(selectedItem, index) => {
                   console.log(selectedItem, index)
                   handle_superviseur(selectedItem.id)
+                  
               }}
 
               buttonTextAfterSelection={(selectedItem, index) => {
@@ -1219,18 +1329,29 @@ function viewModal(val){
         </View>
 
 
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}>
+        <View style={{flexDirection: 'row', marginTop:10}}>
+          <TouchableOpacity 
+          style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+          onPress={()=>{navigation.navigate('Home')}}
+          >
               <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/annuler.png")}/>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
-            onPress={() => {postData(datatofetch(), 'preventive')}}
+            onPress={() => {postData('preventive')}}
           >
               <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/enregistrer.png")}/>
           </TouchableOpacity>
           
+        </View>
+        <View>
+          <TouchableOpacity 
+              style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+              onPress={() => {localSave(dataItem.item_planning)}}
+            >
+                <Image style={{alignSelf:'center',}} source={require("./sources/assets/images/btn_local_save.png")}/>
+            </TouchableOpacity>
         </View>
         {viewModal(modalitem)}
         

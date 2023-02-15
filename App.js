@@ -21,10 +21,9 @@ const App = () =>{
 
   return(
     // <Provider store={Store}>
-    <AuthProvider>
-        <AppNav/> 
-    </AuthProvider>
-      
+      <AuthProvider>
+          <AppNav/> 
+      </AuthProvider>      
     // </Provider>
    
   )

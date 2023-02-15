@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Modal, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import { baseUrlApi } from '../../API/urlbase';
+import { FormatDate } from '../../Components/Functions';
 import { AuthContext } from '../../context/Authcontext';
 
 
@@ -154,7 +155,7 @@ const HistoriqueCurative = ({navigation}) => {
                   <View style={{flex: 5, backgroundColor:'#316094',borderRadius:5, paddingLeft: 10, }}>
                     <Text style={{fontSize: 20, color:'#E4E4E4', fontWeight:'800'}}>Moteur : {item.moteur.item_moteur} </Text>
                     <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Item : {item.item_curative} </Text>
-                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {item.createdOn}</Text>
+                    <Text style={{fontSize: 15, color:'#E4E4E4', fontWeight:'500'}}>Date Intervention : {FormatDate(item.createdOn)}</Text>
                    </View>
 
                   

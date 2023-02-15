@@ -1,9 +1,13 @@
 import axios, { Axios } from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { RefreshControl, StyleSheet, View, Modal, Pressable, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { RefreshControl, StyleSheet, View, Modal, Pressable, Text, Image, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, FlatList, ScrollView, Alert } from 'react-native';
 import warnOnce from 'react-native/Libraries/Utilities/warnOnce';
+import { useDispatch, useSelector } from 'react-redux';
 import { axiosInstanceAPI, baseUrlApi } from '../API/urlbase';
+import { FormatDate } from '../Components/Functions';
 import { AuthContext } from '../context/Authcontext';
+import {setPreventives,setPreventiveID, setPlanningItem} from '../Reduxe/action'
+
 
 
 
@@ -15,6 +19,9 @@ const wait = (timeout) => {
 const HomeScreen = ({navigation}) => {
 
   const {access_token, logout} = useContext(AuthContext)
+  const dispatch = useDispatch();
+  const {preventives,preventiveIDs}=useSelector(state =>state.preventiveReducer)
+
 
     // const [data, setData] = React.useState({
       
@@ -128,6 +135,18 @@ const HomeScreen = ({navigation}) => {
     setIsloading(false)
   }
 
+  const FormatDate = (data) => {
+    console.log(data)
+    let dateTimeString =
+        new Date(data).getDate() +
+        '/' +
+        (new Date(data).getMonth() + 1) +
+        '/' +         
+        new Date(data).getFullYear()
+    
+    return dateTimeString; // It will look something like this 3-5-2021 16:23
+}; 
+
   const loading=()=>{
     return(
       <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
@@ -220,25 +239,71 @@ function viewModal(val){
     for(var i in obj) { return false; }
     return true;
   }
+//   const FormatDate = (data) => {
+//     let dateTimeString =
+//         data.getFullYear() +
+//         '/' +
+//         (data.getMonth() + 1) +
+//         '/' +
+//         data.getDate() 
+    
+//     return dateTimeString; // It will look something like this 3-5-2021 16:23
+// };
+
+  const checkPeriode = (item)=>{
+    var todayIS = new Date() 
+    // var day = todayIS.getDate();
+    // var month = todayIS.getMonth() + 1;
+    // var year = todayIS.getFullYear();
+    // todayIS = year+'-'+month+'-'+day
+    console.log(FormatDate(todayIS))
+    var debut = item.date_int
+    var fin = item.date_end_int
+    console.log('today', todayIS.getDate())
+    console.log(debut ,'|  Fin:',  item.date_end_int)
+
+    if ((todayIS > item.date_int) && (todayIS < item.date_end_int)){
+      // if (todayIS < item.date_end_int){
+      alert('intervention encours')
+    //  }
+    //   else{
+    //     alert('Période d\'intervention dépassée!\n \nProgrammer une nouvelle intervention pour la maintenance préventive__')
+
+    //   }
+    }
+
+    else if (todayIS < item.date_int){
+      alert('Se n\'est pas encore la pédiode d\'intervention sur ce MOTEUR.')
+    }
+    else{
+      alert('Période d\'intervention dépassée!\n \nProgrammer une nouvelle intervention pour la maintenance préventive++')
+    }
+    
+  } 
 
   const renderHome=()=>{
     return(
         filtrerData.map((item, index) =>{ 
           key={index}
           return(
-            <View 
+            <View
               style={{marginBottom:6, 
                       flexDirection:'row',  
                       justifyContent: 'flex-start', 
                       flex:1}}>
                 <TouchableOpacity 
                     style={{flexDirection:'row', flex:3, height:80, }}
-                    onPress={() => navigation.navigate('Form_Pre',{dataItem:item})}
+                    onPress={() => {
+                      // dispatch(setPlanningItem(item.item_planning))
+                      // navigation.navigate('Form_Pre',{dataItem:item})
+                      checkPeriode(item)
+                      }
+                      }
                     >
                     
                       <View style={{flex: 5, backgroundColor:'#316094',borderTopLeftRadius:5,borderBottomLeftRadius:5, paddingLeft: 10, }}>
                         <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>ItemPlanning: {item.item_planning} </Text>
-                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: {item.date_int}   |   Fin: {item.date_end_int}</Text>
+                        <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Début: {FormatDate(item.date_int)}   |   Fin: {FormatDate(item.date_end_int)}</Text>
                         {/* <Text style={{fontSize: 12, color:'#E4E4E4', fontWeight:'500'}}>Fin: 12/12/2022</Text> */}
                         <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Item moteur: {item.moteur.item_moteur} </Text>
                         <Text style={{fontSize: 13, color:'#E4E4E4', fontWeight:'500'}}>Atelier: {item.atelier.nom_atelier} </Text>
@@ -314,7 +379,8 @@ function viewModal(val){
                             // onChangeText={(val) => besointextInputChange(val)}
                             clearButtonMode="while-editing"
                             // maxLength= {22}
-                            // keyboardType='ascii-capable'
+                            // keyboardType='numeric'
+                            keyboardType={moteurPlanning ? 'ascii-capable' : 'numeric'}
                             placeholder=  {moteurPlanning ? "rechercher item planning" : "rechercher item moteur"} //
                             placeholderTextColor = "#A4A5A4"
                             onChangeText={(val) => searcheFilterFunction(val)}

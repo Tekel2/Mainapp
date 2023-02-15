@@ -52,11 +52,12 @@ const MoteurListScreen = ({navigation}) => {
     setRefreshing(true);
     wait(1000).then(() => setRefreshing(false));
     fetchmoteurInstalled()
+    wait(1500).then(()=>fetchmoteurNonInstalled())
   }, []);
 
   useEffect(() =>{
     fetchmoteurInstalled()
-    wait(2000).then(()=>fetchmoteurNonInstalled())
+    wait(1500).then(()=>fetchmoteurNonInstalled())
     
     // console.log(access_token)
   }, [])

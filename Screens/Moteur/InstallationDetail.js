@@ -3,6 +3,7 @@ import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { baseUrlApi } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
+import FormatDate from '../../Components/Functions'
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -14,7 +15,7 @@ const InstallationDetail = ({navigation,route}) => {
 
 
   const {moteurItem} = route.params
-  const [dataInstal , setDatainstall] = useState([])
+  const [dateInstal , setDateinstall] = useState([])
   const [dataAteler , setDataAtelier] = useState([])
   const [isLoadingInstalled, setIsLoadingInstalled] = useState(true)
       
@@ -36,9 +37,21 @@ const InstallationDetail = ({navigation,route}) => {
 //     fetchDataInstallation("moteur_installed",moteurItem.moteur.id )
 //   }, []);
 
+    const FormatDate = (data) => {
+        console.log(data)
+        let dateTimeString =
+            new Date(data).getDate() +
+            '/' +
+            (new Date(data).getMonth() + 1) +
+            '/' +         
+            new Date(data).getFullYear()
+        
+        return dateTimeString; // It will look something like this 3-5-2021 16:23
+    }; 
 
   useEffect(() =>{
     // fetchDataInstallation("moteur_installed",moteurItem.id )
+  
   }, [])
 
 //   useEffect(() =>{
@@ -171,7 +184,7 @@ const InstallationDetail = ({navigation,route}) => {
                 <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date Installation</Text>
             </View>
            <View style={{flex:1, marginLeft:10}}> 
-                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{moteurItem.createdOn}</Text>
+                <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {FormatDate(moteurItem.createdOn)} </Text>
             </View>
         </View>
 

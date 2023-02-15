@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, RefreshControl, SafeAreaView, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { baseUrlApi, baseUrlmedia } from '../../API/urlbase';
+import { FormatDate } from '../../Components/Functions';
 import { AuthContext } from '../../context/Authcontext';
 
 const wait = (timeout) => {
@@ -26,7 +27,7 @@ const DetailsPreventive = ({navigation,route}) => {
 
   useEffect(()=>{
 //    setDataMoteur(getData)
-console.log(dataItem)
+    // console.log(dataItem.moteur.id)
   }, [])
   
   const [refreshing, setRefreshing] = React.useState(false);
@@ -34,12 +35,12 @@ console.log(dataItem)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    getatelier_eqt("atelier-eqt",dataItem.id )
+    getatelier_eqt("atelier-eqt",dataItem.moteur.id)
   }, []);
 
 
   useEffect(() =>{
-    getatelier_eqt("atelier-eqt",dataItem.id )
+    getatelier_eqt("atelier-eqt",dataItem.moteur.id)
   }, [])
 
 //   useEffect(() =>{
@@ -184,18 +185,18 @@ const getatelier_eqt = async (route, id) => {
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Date intervention</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
-                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{dataItem.createdOn}</Text>
+                    <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}>{FormatDate(dataItem.createdOn)}</Text>
                 </View>
             </View>
 
-            {/* <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
+            <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Motif de remplacement</Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.motif_remplacement}</Text>
                 </View>
-            </View> */}
+            </View>
 
             <View style={{flexDirection:'row', flex:1, marginTop:10,borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
@@ -314,14 +315,14 @@ const getatelier_eqt = async (route, id) => {
                 </View>
             </View>
 
-            <View style={{flexDirection:'row', flex:1, marginTop:10, borderBottomWidth:1, marginHorizontal: 10}}>
+            {/* <View style={{flexDirection:'row', flex:1, marginTop:10, borderBottomWidth:1, marginHorizontal: 10}}>
             <View style={{flex:1, marginLeft:10,justifyContent:'center'}}> 
                     <Text style={{fontStyle:'italic', fontSize:18, color:'#000'}}>Equilibrage </Text>
                 </View>
             <View style={{flex:1, marginLeft:10}}> 
                     <Text style={{fontSize:18, fontWeight:'bold', color:'#0A233E'}}> {dataItem.equilibrage?'Parfait':'Nom'}</Text>
                 </View>
-            </View>
+            </View> */}
 
             {
                 dataItem.photo_1 !== null || dataItem.photo_2 !== null ||dataItem.photo_3 !== null ?

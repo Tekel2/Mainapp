@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, { Component, useContext, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, PermissionsAndroid } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, ScrollView, Modal, Pressable, TextInput, PermissionsAndroid, Alert } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { baseUrlApi } from '../../API/urlbase';
 import { AuthContext } from '../../context/Authcontext';
 import SelectDropdown from 'react-native-select-dropdown'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -50,10 +51,16 @@ const Form_HorserviceScreen = ({route, navigation}) =>{
 });
 
 useEffect(() =>{
-  console.log(moteurItem)
+  console.log(moteurItem.moteur.item_moteur)
+  console.log(access_token)
   getSuperviseur('superviceur_list')
   getTechnicien('technicien_list')
-  getInfoInstallation('moteur_installed', moteurItem.id)
+  // getInfoInstallation('moteur_installed', moteurItem.id)
+
+},[])
+
+useEffect(() =>{
+  getStoredata(moteurItem.moteur.item_moteur)
 
 },[])
 
@@ -338,7 +345,6 @@ useEffect(() =>{
     }
 
   };
-
   const handle_Motifhorservice = (val) => {
     if( val.trim().length >= 5 ) {
         setData({
@@ -352,7 +358,6 @@ useEffect(() =>{
         });
     }
   }
-
   const handle_Continuite_U1_U2 = (val) => {
     if( val.trim().length >= 5 ) {
         setData({
@@ -600,51 +605,24 @@ useEffect(() =>{
     }    
   }
 
-  // liste de donnée d'une installation
-  const getInfoInstallation = async ( route, id) =>{
-
+  const  removeItemValue= async(key) =>{
     try {
-      setIsLoading(true)
-      const response = await axios.get(`${baseUrlApi}/${route}/${id}/`, 
-          {
-            headers: {
-              "Content-Type": "application/json",
-              'Authorization': `JWT ${access_token}`
-            }
-          },
-        );
-        // navigation.navigate('Equipement')
-        const data = await response.data
-        setDataInstallation(data)
-        // console.log('technicien  : ', data)
-        setIsLoading(false)
-
-    } catch (error) {
-      if(!error.response){
-        alert("Aucune reponse du serveur");
-      }
-      else if (error.response?.status === 500){
-        alert("Certains informations ne sont pas renseignées")
-      }
-      else if (error.response?.status === 401){
-        alert("Votre session est expirer")
-        logout()
-      }
-      else if (error.response?.status === 404){
-        alert("Aucune corespondance a votre demande")
-      }
-      // alert("An error has occurred");
-      console.log(error)
-      setIsLoading(false)
-
-    }    
+        await AsyncStorage.removeItem('HS'+key);
+        return true;
+    }
+    catch(exception) {
+        return false;
+    }
   }
+
 
   const fetchData_HS = async () => {
 
+    setIsLoading(true)
+
     const datatofetch=new FormData();
 
-    datatofetch.append('moteur',moteurItem.id)
+    datatofetch.append('moteur',moteurItem.moteur.id)
     datatofetch.append('create_by',userInfo.id)
     datatofetch.append('temperature',parseFloat(data.temperature.replace(/,/g, '')))
     datatofetch.append('motifhorservice',data.motifhorservice)
@@ -666,44 +644,147 @@ useEffect(() =>{
     datatofetch.append('technicien',data.idTech)
     datatofetch.append('superviceur',data.idsuperv)
 
+    // console.log(datatofetch._parts)
+
+    try {
+      // const response = await axios.post(`${baseUrlApi}/hors_service/`,datatofetch, 
+      const response = await axios.post(`${baseUrlApi}/hors_service/`,datatofetch, 
+
+        {
+          headers: {
+            // "Accept":" */*",
+            // "Content-Type": "application/json",
+            'content-type': 'multipart/form-data',
+            'Authorization': `JWT ${access_token}`
+          }
+        },
+        );
+      // removeItemValue(moteurItem.moteur.item_moteur)
+      navigation.navigate('moteur_Home')
+
+  } catch (error) {
+    if(!error.response){
+      alert("Aucune reponse du serveur");
+    }
+    else if (error.response?.status === 400){
+      alert("Certains informations ne sont pas renseignées")
+    }
+    else if (error.response?.status === 401){
+      alert("Votre session a expirée")
+      logout()
+    }
+    else if (error.response?.status === 404){
+      alert("Aucune corespondance a votre demande")
+    }
+    // alert("An error has occurred");
+    // console.log(error.status)
+    setIsLoading(false)
+    console.log(error)
+  }    
+
 
      
-    try {
-      setIsLoading(true)
-      const response = await axios.post(`${baseUrlApi}/hors_service/`,datatofetch, 
-      
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          'Authorization': `JWT ${access_token}`
-        }
-      },
-      );
+    // try {
+    //   setIsLoading(true)
+    //   const response = await axios.post(`${baseUrlApi}/hors_service/`,datatofetch, 
+    //       {
+    //         headers: {
+    //           "Content-Type": "multipart/form-data",
+    //           'Authorization': `JWT ${access_token}`
+    //         }
+    //       },
+    //       );
 
-      navigation.navigate('moteur_Home')
-      setIsLoading(false)
+    //   removeItemValue(moteurItem.moteur.item_moteur)
+    //   navigation.navigate('moteur_Home')
+    //   setIsLoading(false)
       
-    } catch (error) {
-      if(!error.response){
-        alert("Aucune reponse du serveur");
+    // } catch (error) {
+    //   alert("An error has occurred");
+    //   setIsLoading(false);
+    //   console.log(error)
+    // }
+      
+  }
+
+
+  const localSave =(key)=>{
+    try{
+      var dataIntervention = {
+        ID : moteurItem.moteur.item_moteur,
+        temperature : data.temperature,
+        proposition : data.proposition,
+        observation_general : data.obsevervation_gene,
+        motifhorservice: data.motifhorservice,
+        description_panne: data.descriptionpanne,
+        observation_conectique : data.obsevervation_conectique,
+        continuite_u1_U2 : data.continuite_U1_U2,
+        continuite_v1_v2 : data.continuite_V1_V2,
+        continuite_w1_w2 : data.continuite_W1_W2,
+        isolement_bobine_w2_u2 : data.isolementbobine_W2_U2,
+        isolement_bobine_w2_v2 : data.isolementbobine_W2_V2,
+        isolement_bobine_u2_v2 : data.isolementbobine_U1_V2,
+        isolement_bobine_masse_u1_m : data.isolementbobinemasse_U1_M,
+        isolement_bobine_masse_v1_m : data.isolementbobinemasse_V1_M,
+        isolement_bobine_masse_w1_m : data.isolementbobinemasse_W1_M,
+        photo_1 : {'photo':data.photo_1, 'image':image_1_View},
+        photo_2 : {'photo':data.photo_2, 'image':image_2_View},
+        photo_3 : {'photo':data.photo_3, 'image':image_3_View},
+        photo_4 : {'photo':data.photo_4, 'image':image_4_View},
+        // technicien : data.idTech,
+        // superviceur : data.idsuperv
       }
-      else if (error.response?.status === 400){
-        alert("Certains informations ne sont pas renseignées")
+
+
+      AsyncStorage.setItem('HS'+key, JSON.stringify(dataIntervention))
+      .then(()=>{
+        Alert.alert('Intervention sauvergardée localement')
+        navigation.goBack();
+      })
+    } catch(error){
+      console.log("..........",error)
+    }
+  }
+
+  const getStoredata =async(key)=>{
+    // setIsLoading(true)
+    try{
+      const inter = JSON.parse(await AsyncStorage.getItem('HS'+key));
+      // console.log('inter.continuite_V1_V2', inter.continuite_v1_v2)
+      if (inter){
+
+        // console.log("-----")
+        setData({
+          ...data,
+          motifhorservice: inter.motifhorservice,
+          obsevervation_gene: inter.observation_general,
+          continuite_U1_U2: inter.continuite_u1_U2,
+          continuite_V1_V2: inter.continuite_v1_v2,
+          continuite_W1_W2: inter.continuite_w1_w2,
+          isolementbobine_W2_U2: inter.isolement_bobine_w2_u2,
+          isolementbobine_W2_V2: inter.isolement_bobine_w2_v2,
+          isolementbobine_U1_V2: inter.isolement_bobine_u2_v2,
+          isolementbobinemasse_U1_M: inter.isolement_bobine_masse_u1_m,
+          isolementbobinemasse_V1_M: inter.isolement_bobine_masse_v1_m,
+          isolementbobinemasse_W1_M: inter.isolement_bobine_masse_w1_m,
+          proposition: inter.proposition,
+          temperature: inter.temperature,
+          photo_1:inter.photo_1.photo,
+          photo_2:inter.photo_2.photo,
+          photo_3:inter.photo_3.photo,
+          photo_4:inter.photo_4.photo,
+        })
+        setImage_1_View(inter.photo_1.image)
+        setImage_2_View(inter.photo_2.image)
+        setImage_3_View(inter.photo_3.image)
+        setImage_4_View(inter.photo_4.image)
       }
-      else if (error.response?.status === 401){
-        alert("Votre session est expirer")
-        logout()
-      }
-      else if (error.response?.status === 404){
-        alert("Aucune corespondance a votre demande")
-      }
-      // alert("An error has occurred");
-      setIsLoading(false);
+      setIsLoading(false)
+    }
+    catch (error){
       console.log(error)
     }
-  
-  
-      
+   
   }
 
   
@@ -727,6 +808,7 @@ useEffect(() =>{
                 autoCapitalize="sentences"
                 numberOfLines={4}
                 multiline={true}
+                value={data.motifhorservice}
                 style={[styles.textinput,styles.textinputmulti]}
                 onChangeText={(val) => handle_Motifhorservice(val)}
 
@@ -745,6 +827,7 @@ useEffect(() =>{
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.continuite_U1_U2}
                         onChangeText={(val) => handle_Continuite_U1_U2(val)}
                       />  
                   </View>  
@@ -755,6 +838,7 @@ useEffect(() =>{
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
+                        value={data.continuite_V1_V2}
                         style={[styles.textinput, {}]}
                         onChangeText={(val) => handle_Continuite_V1_V2(val)}
                       />  
@@ -766,6 +850,7 @@ useEffect(() =>{
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
+                        value={data.continuite_W1_W2}
                         style={[styles.textinput, {}]}
                         onChangeText={(val) => handle_Continuite_W1_W2(val)}
                       />  
@@ -784,6 +869,7 @@ useEffect(() =>{
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
+                        value={data.isolementbobine_W2_U2}
                         style={[styles.textinput, {}]}
                         onChangeText={(val) => handle_Isolementbobine_W2_U2(val)}
                       />  
@@ -795,6 +881,7 @@ useEffect(() =>{
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
+                        value={data.isolementbobine_W2_V2}
                         style={[styles.textinput, {}]}
                         onChangeText={(val) => handle_Isolementbobine_W2_V2(val)}
                       />  
@@ -806,6 +893,7 @@ useEffect(() =>{
                         placeholderTextColor="#777"
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
+                        value={data.isolementbobine_U1_V2}
                         style={[styles.textinput, {}]}
                         onChangeText={(val) => handle_Isolementbobine_U1_V2(val)}
                       />  
@@ -825,6 +913,7 @@ useEffect(() =>{
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_U1_M}
                         onChangeText={(val) => handle_Isolementbobinemasse_U1_M(val)}
                       />  
                   </View>  
@@ -836,6 +925,7 @@ useEffect(() =>{
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_V1_M}
                         onChangeText={(val) => handle_Isolementbobinemasse_V1_M(val)}
                       />  
                   </View>  
@@ -847,6 +937,7 @@ useEffect(() =>{
                         autoCapitalize="sentences"
                         keyboardType='decimal-pad'
                         style={[styles.textinput, {}]}
+                        value={data.isolementbobinemasse_W1_M}
                         onChangeText={(val) => handle_Isolementbobinemasse_W1_M(val)}
                       />  
                   </View>    
@@ -862,6 +953,7 @@ useEffect(() =>{
                 autoCapitalize="sentences"
                 numberOfLines={7}
                 multiline={true}
+                value={data.proposition}
                 style={[styles.textinput,styles.textinputmulti]}
                 onChangeText={(val) => handle_Proposition(val)}
 
@@ -875,6 +967,7 @@ useEffect(() =>{
               autoCapitalize="sentences"
               keyboardType='decimal-pad'
               style={[styles.textinput, {}]}
+              value={data.temperature}
               onChangeText={(val) => handle_Temperature(val)}
             />  
         </View>
@@ -968,6 +1061,7 @@ useEffect(() =>{
                 autoCapitalize="sentences"
                 numberOfLines={4}
                 multiline={true}
+                value={data.obsevervation_gene}
                 style={[styles.textinput,styles.textinputmulti]}
                 onChangeText={(val) => handle_Observation_gen(val)}
 
@@ -1045,6 +1139,14 @@ useEffect(() =>{
           </TouchableOpacity>
           
         </View>
+        <View>
+            <TouchableOpacity 
+                style={{justifyContent: 'center', alignContent: 'center',margin: 10,}}
+                onPress={() => {localSave(moteurItem.moteur.item_moteur)}}
+              >
+                  <Image style={{alignSelf:'center',}} source={require("../sources/assets/images/btn_local_save.png")}/>
+              </TouchableOpacity>
+          </View>
         
       </ScrollView>
     )
@@ -1062,14 +1164,14 @@ useEffect(() =>{
       
         <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center',}}>
           <Text style={{fontSize: 20, color: '#316094', fontWeight: 'bold'}}>MOTEUR : </Text>
-          <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.item_moteur}</Text>
+          <Text style={{fontSize: 20, color: '#ED7524', fontWeight: 'bold', marginLeft:15}}>{moteurItem.moteur.item_moteur}</Text>
         </View>
         <View style={{flexDirection: 'column', justifyContent: 'center', alignContent: 'center', marginTop:10 , 
                       }}>
           <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
-           Dans l'atelier {dataInstallation.atelier !== undefined ?dataInstallation.atelier.nom_atelier : null}</Text>
+           Dans l'atelier {moteurItem.atelier !== undefined ?moteurItem.atelier.nom_atelier : null}</Text>
           <Text style={{fontSize: 16, color: '#111', fontWeight: 'bold'}}>
-           Sur l'équiment {dataInstallation.equipement !== undefined ? dataInstallation.equipement.nom_equipenent : null}</Text>
+           Sur l'équiment {moteurItem.equipement !== undefined ? moteurItem.equipement.nom_equipenent : null}</Text>
         </View>
       
         <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center', marginTop:10}}>
